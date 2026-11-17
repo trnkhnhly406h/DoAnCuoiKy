@@ -1,0 +1,310 @@
+<div class="dashboard-wrapper-full">
+  
+  <div class="dashboard-page">
+<div class="row g-3 dashboard-page">
+  <!-- CỘT CHÍNH -->
+  <section class="col-12 col-xl-8 dashboard-main-column">
+    <!-- THỐNG KÊ TỔNG QUAN -->
+    <div class="stats-panel panel">
+      <div class="stats-toolbar">
+        <span class="filter-symbol">☷</span>
+        <div class="period-tabs" aria-label="Lọc thẻ thống kê">
+          <button
+            type="button"
+            [class.active]="khoangThongKe === 'week'"
+            (click)="chonKhoangThongKe('week')">
+            1 tuần
+          </button>
+          <span>|</span>
+          <button
+            type="button"
+            [class.active]="khoangThongKe === 'month'"
+            (click)="chonKhoangThongKe('month')">
+            1 tháng
+          </button>
+          <span>|</span>
+          <button
+            type="button"
+            [class.active]="khoangThongKe === 'quarter'"
+            (click)="chonKhoangThongKe('quarter')">
+            3 tháng
+          </button>
+          <span>|</span>
+          <button
+            type="button"
+            [class.active]="khoangThongKe === 'custom'"
+            (click)="chonKhoangThongKe('custom')">
+            Tùy chọn ngày
+          </button>
+        </div>
+      </div>
+
+      <!-- CHỌN NGÀY -->
+      <div class="date-range" *ngIf="hienLich">
+        <label>
+          Ngày bắt đầu
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            [(ngModel)]="ngayBatDau" />
+        </label>
+        <label>
+          Ngày kết thúc
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            [(ngModel)]="ngayKetThuc" />
+        </label>
+        <button
+          type="button"
+          class="btn btn-primary apply-button"
+          (click)="apDungKhoangNgay()">
+          Áp dụng
+        </button>
+      </div>
+
+      <!-- CÁC THẺ THỐNG KÊ -->
+      <div class="stats-grid">
+        <!-- TỔNG DOANH THU -->
+        <article class="stat-card revenue-card">
+          <p>Tổng doanh thu</p>
+          <strong>{{ dinhDangTien(tongDoanhThu) }}</strong>
+          <div
+            class="stat-change"
+            [class.increase]="thayDoiDoanhThu !== null && thayDoiDoanhThu > 0"
+            [class.decrease]="thayDoiDoanhThu !== null && thayDoiDoanhThu < 0">
+            <ng-container *ngIf="thayDoiDoanhThu !== null; else noRevenueCompare">
+              <span class="change-arrow" *ngIf="thayDoiDoanhThu > 0">↑</span>
+              <span class="change-arrow" *ngIf="thayDoiDoanhThu < 0">↓</span>
+              <span *ngIf="thayDoiDoanhThu === 0">−</span>
+              <span>
+                {{ thayDoiDoanhThu >= 0
+                    ? (thayDoiDoanhThu | number:'1.0-1')
+                    : (thayDoiDoanhThu * -1 | number:'1.0-1') }}%
+              </span>
+              <span class="change-label">so với kỳ trước</span>
+            </ng-container>
+            <ng-template #noRevenueCompare>
+              <span class="change-label">Chưa có dữ liệu kỳ trước</span>
+            </ng-template>
+          </div>
+        </article>
+
+        <!-- TỔNG ĐƠN HÀNG -->
+        <article class="stat-card orders-card">
+          <p>Tổng đơn hàng</p>
+          <strong>{{ tongDonHang }} đơn</strong>
+          <div
+            class="stat-change"
+            [class.increase]="thayDoiDonHang !== null && thayDoiDonHang > 0"
+            [class.decrease]="thayDoiDonHang !== null && thayDoiDonHang < 0">
+            <ng-container *ngIf="thayDoiDonHang !== null; else noOrdersCompare">
+              <span class="change-arrow" *ngIf="thayDoiDonHang > 0">↑</span>
+              <span class="change-arrow" *ngIf="thayDoiDonHang < 0">↓</span>
+              <span *ngIf="thayDoiDonHang === 0">−</span>
+              <span>
+                {{ thayDoiDonHang >= 0
+                    ? (thayDoiDonHang | number:'1.0-1')
+                    : (thayDoiDonHang * -1 | number:'1.0-1') }}%
+              </span>
+              <span class="change-label">so với kỳ trước</span>
+            </ng-container>
+            <ng-template #noOrdersCompare>
+              <span class="change-label">Chưa có dữ liệu kỳ trước</span>
+            </ng-template>
+          </div>
+        </article>
+
+        <!-- TỶ LỆ THANH TOÁN -->
+        <article class="stat-card payment-card">
+          <p>Tỷ lệ thanh toán</p>
+          <strong>{{ tyLeThanhToan | number:'1.1-1' }}%</strong>
+          <div
+            class="stat-change"
+            [class.increase]="thayDoiTyLeThanhToan !== null && thayDoiTyLeThanhToan > 0"
+            [class.decrease]="thayDoiTyLeThanhToan !== null && thayDoiTyLeThanhToan < 0">
+            <ng-container *ngIf="thayDoiTyLeThanhToan !== null; else noPaymentCompare">
+              <span class="change-arrow" *ngIf="thayDoiTyLeThanhToan > 0">↑</span>
+              <span class="change-arrow" *ngIf="thayDoiTyLeThanhToan < 0">↓</span>
+              <span *ngIf="thayDoiTyLeThanhToan === 0">−</span>
+              <span>
+                {{ thayDoiTyLeThanhToan >= 0
+                    ? (thayDoiTyLeThanhToan | number:'1.0-1')
+                    : (thayDoiTyLeThanhToan * -1 | number:'1.0-1') }}%
+              </span>
+              <span class="change-label">so với kỳ trước</span>
+            </ng-container>
+            <ng-template #noPaymentCompare>
+              <span class="change-label">Chưa có dữ liệu kỳ trước</span>
+            </ng-template>
+          </div>
+        </article>
+
+        <!-- KHÁCH HÀNG MỚI (ĐÃ BỎ LINK XEM CHI TIẾT) -->
+        <article class="stat-card customers-card">
+          <p>Khách hàng mới</p>
+          <strong>{{ khachHangMoi }} người</strong>
+          <div
+            class="stat-change"
+            [class.increase]="thayDoiKhachHangMoi !== null && thayDoiKhachHangMoi > 0"
+            [class.decrease]="thayDoiKhachHangMoi !== null && thayDoiKhachHangMoi < 0">
+            <ng-container *ngIf="thayDoiKhachHangMoi !== null; else noCustomersCompare">
+              <span class="change-arrow" *ngIf="thayDoiKhachHangMoi > 0">↑</span>
+              <span class="change-arrow" *ngIf="thayDoiKhachHangMoi < 0">↓</span>
+              <span *ngIf="thayDoiKhachHangMoi === 0">−</span>
+              <span>
+                {{ thayDoiKhachHangMoi >= 0
+                    ? (thayDoiKhachHangMoi | number:'1.0-1')
+                    : (thayDoiKhachHangMoi * -1 | number:'1.0-1') }}%
+              </span>
+              <span class="change-label">so với kỳ trước</span>
+            </ng-container>
+            <ng-template #noCustomersCompare>
+              <span class="change-label">Chưa có dữ liệu kỳ trước</span>
+            </ng-template>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- ĐƠN HÀNG GẦN ĐÂY -->
+    <section class="recent-panel panel">
+      <div class="section-heading">
+        <div>
+          <h2>Đơn hàng gần đây</h2>
+          <p>5 đơn hàng mới nhất</p>
+        </div>
+        <span class="live-indicator">
+          <i></i>
+          Cập nhật {{ capNhatLuc | date:'HH:mm:ss' }}
+        </span>
+      </div>
+      <div class="table-wrap">
+        <table class="table table-sm align-middle orders-table">
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Tên game</th>
+              <th>Tổng tiền</th>
+              <th>Thanh toán</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- BẤM 1 CHỖ BẤT KỲ Ở DÒNG NÀY SẼ CHUYỂN CHÍNH XÁC SANG CHI TIẾT ĐƠN HÀNG -->
+            <tr 
+              *ngFor="let don of donHangGanDay" 
+              (click)="xemChiTietDonHang(don.maDonHang)"
+              style="cursor: pointer;"
+              title="Xem chi tiết đơn hàng {{ don.maDonHang }}"
+            >
+              <td>
+                <span class="text-primary fw-bold">{{ don.maDonHang }}</span>
+              </td>
+              <td>
+                <span class="text-light fw-medium">{{ don.tenGame }}</span>
+              </td>
+              <td>{{ don.tongTien | number }} VND</td>
+              <td>
+                <span
+                  class="payment-pill"
+                  [class.momo]="don.phuongThuc === 'momo'"
+                  [class.paypal]="don.phuongThuc === 'paypal'"
+                  [class.vnpay]="don.phuongThuc === 'vnpay'">
+                  {{ don.phuongThuc }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="status-pill"
+                  [class.refunded]="don.trangThai === 'Đã hoàn tiền'"
+                  [class.pending]="don.trangThai === 'Đang xử lý'">
+                  {{ don.trangThai }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="donHangGanDay.length === 0">
+              <td colspan="5" class="text-center py-4">
+                Chưa có đơn hàng
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <!-- CỘT BÊN PHẢI -->
+  <aside class="col-12 col-xl-4 dashboard-side-column">
+    <!-- BIỂU ĐỒ -->
+    <section class="chart-panel panel">
+      <h2>Biểu đồ doanh thu - đơn hàng</h2>
+      <div class="chart-filters">
+        <label class="select-wrap">
+          <span class="visually-hidden">Khoảng thời gian biểu đồ</span>
+          <select
+            class="form-select form-select-sm"
+            [(ngModel)]="khoangBieuDo"
+            (change)="doiBoLocBieuDo()">
+            <option value="today">Hôm nay</option>
+            <option value="week">7 ngày gần nhất</option>
+            <option value="month">Tháng này</option>
+            <option value="threeMonths">3 tháng gần nhất</option>
+            <option value="year">Năm nay</option>
+          </select>
+        </label>
+        <label class="select-wrap">
+          <span class="visually-hidden">Loại dữ liệu biểu đồ</span>
+          <select
+            class="form-select form-select-sm"
+            [(ngModel)]="loaiBieuDo"
+            (change)="doiBoLocBieuDo()">
+            <option value="both">Doanh thu và đơn hàng</option>
+            <option value="revenue">Doanh thu</option>
+            <option value="orders">Đơn hàng</option>
+          </select>
+        </label>
+      </div>
+      <div class="chart-area">
+        <canvas #chartCanvas></canvas>
+      </div>
+      <div class="chart-summary">
+        <div>
+          <span>Tổng doanh thu</span>
+          <strong>{{ dinhDangTien(tongDoanhThuBieuDo) }}</strong>
+        </div>
+        <div>
+          <span>Tổng số lượng đơn hàng</span>
+          <strong>{{ tongDonBieuDo }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOP GAME BÁN CHẠY (CLICK ĐỂ ĐẾN TRANG CHI TIẾT GAME) -->
+    <section class="top-games-panel panel">
+      <div class="section-heading">
+        <div>
+          <h2>Top game bán chạy</h2>
+          <p>Top 5 theo lượt bán</p>
+        </div>
+        <span class="live-dot" title="Danh sách được làm mới định kỳ"></span>
+      </div>
+      <ol class="top-games-list">
+        <li 
+          *ngFor="let game of topGame; let i = index" 
+          (click)="xemChiTietGame(game.id)"
+          style="cursor: pointer;"
+          title="Xem chi tiết {{ game.tenGame }}"
+        >
+          <span class="rank">{{ i + 1 }}</span>
+          <img [src]="game.hinhAnh" [alt]="game.tenGame" />
+          <span class="game-name">{{ game.tenGame }}</span>
+          <span class="sales-count">{{ game.luotBan }} lượt bán</span>
+        </li>
+      </ol>
+    </section>
+  </aside>
+</div>
+</div>
+
+</div>

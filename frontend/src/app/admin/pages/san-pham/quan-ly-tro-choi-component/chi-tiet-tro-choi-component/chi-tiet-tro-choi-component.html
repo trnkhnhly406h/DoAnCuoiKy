@@ -1,0 +1,253 @@
+<div class="game-detail-page">
+  <header class="page-top">
+    <div class="page-identity">
+      <span class="game-code" *ngIf="!dangThemMoi">{{ id }}</span>
+      <h1>{{ tenTieuDe }}</h1>
+    </div>
+    <button class="back-button" type="button" aria-label="Quay về danh sách sản phẩm" (click)="quayVe()">
+      <i class="bi bi-arrow-left"></i><span>Quay về</span>
+    </button>
+  </header>
+
+  <section class="panel general-panel">
+    <h2>Thông tin chung</h2>
+    <div class="panel-rule"></div>
+    <div class="form-grid">
+      <label class="field full-width">
+  <span>Tên sản phẩm <b>*</b></span>
+  <input [(ngModel)]="tenGame" (ngModelChange)="onTenGameChange()" placeholder="Nhập tên sản phẩm" />
+</label>
+
+<!-- Ô Slug URL -->
+<div class="field full-width slug-field">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <span>Đường dẫn thân thiện (Slug / URL) <b>*</b></span>
+    <button *ngIf="!dangThemMoi" type="button" class="btn-unlock-slug" (click)="batTatSuaSlug()" style="background: none; border: 1px solid #4a5568; color: #cbd5e1; border-radius: 4px; padding: 2px 8px; cursor: pointer; font-size: 12px;">
+      <i class="bi" [ngClass]="choPhepSuaSlug ? 'bi-unlock-fill' : 'bi-lock-fill'"></i>
+      {{ choPhepSuaSlug ? ' Khóa lại' : ' Mở khóa để sửa' }}
+    </button>
+  </div>
+  <input 
+    [(ngModel)]="duongDanSlug" 
+    [readonly]="!dangThemMoi && !choPhepSuaSlug"
+    placeholder="vi-du: black-myth-wukong" 
+    [style.opacity]="(!dangThemMoi && !choPhepSuaSlug) ? '0.6' : '1'"
+  />
+  <small style="color: #94a3b8; font-size: 12px; margin-top: 4px; display: block;">
+    URL hiển thị: <code>https://steal.vn/game/{{ duongDanSlug || 'ten-game' }}</code>
+    <span *ngIf="!dangThemMoi && choPhepSuaSlug" style="color: #f59e0b; display: block; margin-top: 2px;">
+      ⚠️ Cảnh báo: Đổi slug sẽ làm đứt gãy link giỏ hàng/yêu thích của khách hàng đã lưu link cũ.
+    </span>
+  </small>
+</div>
+      <div class="field genre-field">
+        <span>Thể loại <b>*</b></span>
+        <button class="genre-select" type="button" (click)="hienDropdownTheLoai = !hienDropdownTheLoai">
+          <span class="genre-tags"><em *ngFor="let item of theLoai">{{ item }}</em></span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <div class="genre-menu" *ngIf="hienDropdownTheLoai">
+          <div class="genre-menu-header">
+            <strong>Chọn thể loại</strong>
+            <button type="button" (click)="theLoai = []">Xóa chọn</button>
+          </div>
+          <label *ngFor="let item of danhSachTheLoai">
+            <input type="checkbox" [checked]="coTheLoai(item)" (change)="chuyenTheLoai(item)" />
+            <span>{{ item }}</span>
+          </label>
+          <p>Có thể chọn nhiều thể loại. Bấm lại để bỏ chọn.</p>
+        </div>
+      </div>
+
+      <label class="field"><span>Độ tuổi quy định <b>*</b></span><input [(ngModel)]="doTuoi" placeholder="Ví dụ: 15" /></label>
+      <label class="field third-width"><span>Nhà phát triển <b>*</b></span><input [(ngModel)]="nhaPhatTrien" placeholder="Nhập nhà phát triển" /></label>
+      <label class="field third-width"><span>Nhà phát hành <b>*</b></span><input [(ngModel)]="nhaPhatHanh" placeholder="Nhập nhà phát hành" /></label>
+      <label class="field third-width"><span>Ngày phát hành <b>*</b></span><input type="date" [(ngModel)]="ngayPhatHanh" /></label>
+      <label class="field full-width"><span>Mô tả ngắn <b>*</b></span><input [(ngModel)]="moTaNgan" placeholder="Nhập mô tả ngắn" /></label>
+      <label class="field full-width"><span>Mô tả chi tiết <b>*</b></span><textarea rows="6" [(ngModel)]="moTaChiTiet" placeholder="Nhập mô tả chi tiết"></textarea></label>
+    </div>
+  </section>
+
+  <section class="panel price-panel">
+    <h2>Đơn giá</h2>
+    <div class="panel-rule"></div>
+    <div class="form-grid price-grid">
+      <label class="field"><span>Đơn giá gốc <b>*</b></span><input type="number" min="0" [(ngModel)]="gia" placeholder="Nhập đơn giá" /></label>
+      <label class="field"><span>Giảm giá (%)</span><input type="number" min="0" max="100" [(ngModel)]="phanTramGiamGia" /></label>
+    </div>
+    <p class="discount-price">Giá đã giảm: <strong>{{ gia === null ? '—' : formatGia(giaDaGiam) }}</strong></p>
+  </section>
+
+  
+<section class="panel media-panel">
+  <h2>Hình ảnh</h2>
+  <div class="panel-rule"></div>
+
+  <div class="media-layout">
+    <div class="media-actions">
+      <label class="upload-button">
+        Thêm ảnh
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          (change)="themAnhTuMay($event)"
+        />
+      </label>
+
+      <button
+        type="button"
+        class="upload-button url-upload"
+        (click)="moThemUrl()"
+      >
+        Thêm từ URL
+      </button>
+
+      <p>{{ hinhAnh.length }}/3 ảnh</p>
+    </div>
+
+    <div class="image-list">
+      <div
+        class="image-item"
+        *ngFor="let img of hinhAnh; let i = index"
+      >
+        <img
+          [src]="img"
+          [alt]="'Ảnh sản phẩm ' + (i + 1)"
+        />
+
+        <div class="image-controls">
+          <button
+            type="button"
+            [disabled]="i === 0"
+            (click)="doiViTriAnh(i, -1)"
+            aria-label="Di chuyển ảnh sang trái"
+          >
+            ←
+          </button>
+
+          <button
+            type="button"
+            [disabled]="i === hinhAnh.length - 1"
+            (click)="doiViTriAnh(i, 1)"
+            aria-label="Di chuyển ảnh sang phải"
+          >
+            →
+          </button>
+
+          <button
+            type="button"
+            (click)="xoaAnh(i)"
+            aria-label="Xóa ảnh"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      <div class="empty-image" *ngIf="hinhAnh.length < 3">
+        Ảnh {{ hinhAnh.length + 1 }}
+      </div>
+    </div>
+
+    <!-- Đã đóng image-list trước khi mở video-box -->
+    <div class="video-box">
+      <h3>Video</h3>
+
+      <iframe
+        *ngIf="video && videoEmbedUrl"
+        [src]="videoEmbedUrl"
+        title="Video giới thiệu sản phẩm"
+        allowfullscreen
+      ></iframe>
+
+      <div class="video-placeholder" *ngIf="!video">
+        Chưa có video
+      </div>
+
+      <button
+        class="upload-button"
+        type="button"
+        (click)="moThemVideo()"
+      >
+        {{ video ? 'Đổi video URL' : 'Thêm video URL' }}
+      </button>
+
+      <small *ngIf="video && !videoEmbedUrl">
+        Đã lưu URL video.
+      </small>
+    </div>
+  </div>
+</section>
+
+
+  <section class="panel system-panel">
+  <h2>Yêu cầu cấu hình hệ thống</h2>
+  <div class="panel-rule"></div>
+
+  <div class="system-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Hạng mục</th>
+          <th>Mức tối thiểu</th>
+          <th>Mức đề nghị</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of yeuCauHeThong; let i = index">
+          <th>{{ row.hangMuc }}</th>
+          <td>
+            <input
+              [ngModel]="row.toiThieu"
+              (ngModelChange)="capNhatYeuCau(i, 'toiThieu', $event)"
+            />
+          </td>
+          <td>
+            <input
+              [ngModel]="row.deNghi"
+              (ngModelChange)="capNhatYeuCau(i, 'deNghi', $event)"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+  <div class="page-actions">
+    <button type="button" class="cancel-button" (click)="huy()">Hủy</button>
+    <button type="button" class="save-button" (click)="luuSanPham()">Lưu</button></div>
+
+  
+<div
+  class="modal-backdrop-custom"
+  *ngIf="hienPopupThongBao"
+  (click)="dongPopupThongBao()"
+>
+  <section
+    class="confirm-modal"
+    role="dialog"
+    aria-modal="true"
+    (click)="$event.stopPropagation()"
+  >
+    <div [class.success-icon]="laThanhCong" [class.error-icon]="!laThanhCong">
+      <i [class]="laThanhCong ? 'bi bi-check-lg' : 'bi bi-exclamation-triangle-fill'"></i>
+    </div>
+    <h2>{{ laThanhCong ? 'Thành công' : 'Thông báo' }}</h2>
+    <p>{{ thongBao }}</p>
+    <div class="confirm-actions">
+      <button
+        type="button"
+        class="btn-save"
+        (click)="dongPopupThongBao()"
+      >
+        Đóng
+      </button>
+    </div>
+  </section>
+</div>
+
+  <div class="modal-backdrop" *ngIf="hienPopupThemUrl"><div class="modal-card"><h2>{{ loaiMediaThem === 'image' ? 'Thêm ảnh từ URL' : 'Thêm video từ URL' }}</h2><label class="field"><span>URL</span><input [(ngModel)]="urlMedia" placeholder="https://..." /></label><p class="error-text" *ngIf="loi">{{ loi }}</p><div class="modal-actions"><button type="button" class="cancel-button" (click)="hienPopupThemUrl = false">Hủy</button><button type="button" class="save-button" (click)="xacNhanThemUrl()">Xác nhận</button></div></div></div>
+</div>

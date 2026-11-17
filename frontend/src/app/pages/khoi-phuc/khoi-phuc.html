@@ -1,0 +1,128 @@
+<div class="auth-modal-overlay" (click)="close()">
+  <div class="auth-modal-container" (click)="$event.stopPropagation()">
+   <!-- NÚT DẤU X ĐÓNG POPUP -->
+<button type="button" class="btn-close-x" (click)="close()">✕</button>    <!-- LOGO HEADER CHUNG -->
+    <div class="auth-logo-header">
+      <div class="logo-circle">
+        <img src="https://res.cloudinary.com/dhbnmxe6t/image/upload/v1791604871/4140074_jmxewt.png" alt="logo" appImgFallback>
+      </div>
+      <span class="steal-title">STEAL</span>
+    </div>
+
+    <!-- BƯỚC 1: NHẬP EMAIL KIỂM TRA TÀI KHOẢN -->
+    <div *ngIf="step === 1">
+      <h3 class="step-title">KHÔI PHỤC TÀI KHOẢN CỦA BẠN</h3>
+      <p class="otp-hint">Nhập địa chỉ email đã đăng ký của bạn để bắt đầu khôi phục mật khẩu.</p>
+
+      <div class="auth-form-group">
+        <label class="auth-label">Địa chỉ email</label>
+        <input type="email" class="auth-input" [(ngModel)]="recoveryEmail" (ngModelChange)="emailErrorMsg = ''" (keyup.enter)="submitRecoveryEmail()" placeholder="Nhập email đã đăng ký..." />
+      </div>
+
+      <div class="error-msg-red" *ngIf="emailErrorMsg">{{ emailErrorMsg }}</div>
+
+
+<button
+  type="button"
+  class="btn-submit-auth"
+  [disabled]="isSubmittingEmail"
+  (click)="submitRecoveryEmail()"
+>
+  {{ isSubmittingEmail ? 'Đang kiểm tra...' : 'Tiếp tục' }}
+</button>
+    </div>
+
+    <!-- BƯỚC 2: XÁC THỰC OTP (6 Ô RIÊNG BIỆT) -->
+    <div *ngIf="step === 2" class="otp-step-container">
+      <h3 class="step-title">KHÔI PHỤC TÀI KHOẢN CỦA {{ accountName | uppercase }}</h3>
+      <p class="otp-hint">Mã xác minh đã được gửi đến email của bạn. Nhập mã bên dưới để tiếp tục.</p>
+
+      <!-- KHUNG 6 Ô NHẬP OTP -->
+      <div class="otp-box-wrapper">
+        <app-otp-input variant="underline" (codeChange)="onOtpChange($event)" (submitted)="submitOtp()"></app-otp-input>
+      </div>
+
+      <!-- DÒNG GỬI LẠI MÃ -->
+      <div class="otp-resend-row">
+        <span>Chưa nhận được mã?</span>
+        <span class="span-resend-link" (click)="resendOtp($event)">{{ resendLabel }}</span>
+        <span class="span-resend-link" (click)="backToStep1()"> · Đổi email</span>
+      </div>
+
+      <div class="error-msg-red" *ngIf="otpErrorMsg">{{ otpErrorMsg }}</div>
+
+      <button type="button" class="btn-submit-auth" (click)="submitOtp()">Tiếp tục</button>
+
+      <!-- GIẢ LẠP OTP Ở CUỐI -->
+      <div class="otp-tiny-footer" *ngIf="showTestOtp">
+        <span> Giả lập OTP (random): <strong>{{ currentOtp }}</strong></span>
+      </div>
+    </div>
+
+    <!-- BƯỚC 3: TẠO MẬT KHẨU MỚI -->
+    <div *ngIf="step === 3">
+      <h3 class="step-title">KHÔI PHỤC TÀI KHOẢN CỦA {{ accountName | uppercase }}</h3>
+
+      <div class="auth-form-group">
+        <label class="auth-label">Chọn mật khẩu mới</label>
+        <div class="input-with-eye">
+
+<input
+  id="recoveryNewPassword"
+  name="recoveryNewPassword"
+  [type]="showPass ? 'text' : 'password'"
+  class="auth-input"
+  [(ngModel)]="newPass"
+  autocomplete="new-password"
+  placeholder="Nhập mật khẩu mới..."
+/>
+
+          <!-- SVG Icon Mắt mở / Mắt nhắm Akar Icons -->
+          <span class="eye-icon" (click)="showPass = !showPass">
+            <svg *ngIf="showPass" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#583684" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg *ngIf="!showPass" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#583684" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          </span>
+        </div>
+
+        <!-- 3 ĐIỀU KIỆN MẬT KHẨU ĐỔI MÀU XANH / ĐỎ -->
+        <div class="password-conditions-list">
+          <div [style.color]="hasMinLength ? '#2ecc71' : '#e74c3c'">
+            {{ hasMinLength ? '✔' : '✖' }} Ít nhất 8 ký tự
+          </div>
+          <div [style.color]="hasLetterAndNumber ? '#2ecc71' : '#e74c3c'">
+            {{ hasLetterAndNumber ? '✔' : '✖' }} Bao gồm chữ cái và số
+          </div>
+          <div [style.color]="hasSpecialChar ? '#2ecc71' : '#e74c3c'">
+            {{ hasSpecialChar ? '✔' : '✖' }} Có chứa ký tự đặc biệt
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-form-group">
+        <label class="auth-label">Xác nhận mật khẩu</label>
+        <div class="input-with-eye">
+
+<input
+  id="recoveryConfirmPassword"
+  name="recoveryConfirmPassword"
+  [type]="showConfirmPass ? 'text' : 'password'"
+  class="auth-input"
+  [(ngModel)]="confirmNewPass"
+  autocomplete="new-password"
+  placeholder="Nhập lại mật khẩu mới..."
+/>
+          <!-- SVG Icon Mắt mở / Mắt nhắm Akar Icons -->
+          <span class="eye-icon" (click)="showConfirmPass = !showConfirmPass">
+            <svg *ngIf="showConfirmPass" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#583684" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg *ngIf="!showConfirmPass" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#583684" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          </span>
+        </div>
+      </div>
+
+      <div class="error-msg-red" *ngIf="passErrorMsg">{{ passErrorMsg }}</div>
+
+      <button type="button" class="btn-submit-auth" (click)="finishRecovery()">Hoàn tất</button>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<section class="reviews-card">
+  <div class="reviews-head">
+    <h3>ĐÁNH GIÁ CỦA NGƯỜI CHƠI</h3>
+    <span class="reviews-avg" *ngIf="reviews.length">★ {{ average | number:'1.1-1' }}/5 · {{ reviews.length }} đánh giá</span>
+  </div>
+
+  <div class="review-form" *ngIf="canWrite">
+    <ng-container *ngIf="owned; else notOwned">
+      <div class="star-row" (mouseleave)="hover = 0">
+        <button type="button" *ngFor="let s of stars" class="star" [class.on]="s <= (hover || rating)"
+                (mouseenter)="hover = s" (click)="rating = s" [attr.aria-label]="s + ' sao'">★</button>
+      </div>
+      <textarea [(ngModel)]="text" maxlength="500" rows="3" placeholder="Chia sẻ cảm nhận của bạn về game này..."></textarea>
+      <div class="form-actions">
+        <button type="button" class="btn-post" (click)="submit()">{{ hasMine ? 'Cập nhật đánh giá' : 'Đăng đánh giá' }}</button>
+        <button type="button" class="btn-del" *ngIf="hasMine" (click)="remove()">Xóa</button>
+      </div>
+    </ng-container>
+    <ng-template #notOwned><p class="hint">Bạn cần tải game về thư viện để viết đánh giá.</p></ng-template>
+  </div>
+
+  <p class="hint" *ngIf="!canWrite">
+    <ng-container *ngIf="owned">Bạn đã sở hữu game này — <a [routerLink]="['/thu-vien', gameId]">viết đánh giá trong Thư viện</a>.</ng-container>
+    <ng-container *ngIf="!owned">Tải game về thư viện để có thể đánh giá.</ng-container>
+  </p>
+
+  <div class="review-item" *ngFor="let r of reviews">
+    <img [src]="r.avatar" [alt]="r.user" class="rv-avatar" appImgFallback />
+    <div class="rv-body">
+      <div class="rv-top">
+        <strong>{{ r.user }}</strong><span class="rv-stars">{{ '★'.repeat(r.rating) }}{{ '☆'.repeat(5 - r.rating) }}</span>
+        <span class="rv-date">{{ r.at | date:'dd/MM/yyyy' }}</span>
+        <span class="rv-me" *ngIf="isMine(r)">Của bạn</span>
+      </div>
+      <p>{{ r.text }}</p>
+    </div>
+  </div>
+</section>

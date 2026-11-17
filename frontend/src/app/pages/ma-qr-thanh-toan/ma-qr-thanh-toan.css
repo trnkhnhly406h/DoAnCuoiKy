@@ -1,0 +1,306 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700;800&display=swap');
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.qr-page {
+  min-height: 100vh;
+  color: #ffffff;
+  font-family: var(--font-main);
+  background: linear-gradient(
+    180deg,
+    rgba(69, 39, 105, 0.6) 8%,
+    #190f26 35%,
+    rgba(69, 39, 105, 0.7) 64%,
+    #1b1029 89%
+  );
+}
+
+.qr-main {
+  width: 100%;
+  max-width: 1104px;
+  margin: 0 auto;
+  padding: 145px 20px 80px;
+  box-sizing: border-box;
+}
+
+.qr-main h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 20px;
+}
+
+.qr-panel {
+  background: linear-gradient(
+    180deg,
+    #643b96 10%,
+    #29183d 90%
+  );
+  border-radius: 6px;
+  padding: 35px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.qr-panel h2 {
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 18px;
+}
+
+/* ============================
+   CỘT TRÁI
+============================ */
+
+.qr-left {
+  text-align: center;
+}
+
+.qr-placeholder {
+  width: 260px;
+  min-height: 260px;
+  max-width: 100%;
+  margin: 20px auto 12px;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 7px solid #4e2b7a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-placeholder.vnpay {
+  border-color: #7d51ad;
+}
+
+.qr-placeholder.paypal {
+  border-color: #412562;
+}
+
+.qr-image {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.qr-error {
+  color: #bd2424;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 20px;
+}
+
+.qr-method {
+  display: block;
+  font-size: 19px;
+  font-weight: 800;
+  margin-top: 12px;
+}
+
+.qr-order-code {
+  font-size: 13px;
+  color: #e5d8f1;
+  overflow-wrap: anywhere;
+}
+
+.qr-warning {
+  font-size: 12px;
+  color: #dbd6e0;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+/* ============================
+   CỘT PHẢI: BIÊN LAI
+============================ */
+
+.qr-receipt {
+  min-width: 0;
+}
+
+.receipt-games {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0 20px;
+}
+
+.receipt-game-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  background: rgba(24, 14, 36, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+}
+
+.receipt-game-image {
+  width: 105px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.receipt-game-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.receipt-game-name {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.receipt-game-type {
+  font-size: 12px;
+  color: #d4c2e3;
+}
+
+.receipt-game-price {
+  font-size: 15px;
+  color: #bc9ada;
+  font-weight: 700;
+}
+
+.receipt-empty {
+  font-size: 13px;
+  color: #ffd7a3;
+  line-height: 1.6;
+}
+
+.receipt-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 20px 0;
+}
+
+.receipt-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.receipt-line strong {
+  font-weight: 700;
+  text-align: right;
+}
+
+.receipt-total {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.receipt-total strong {
+  white-space: nowrap;
+}
+
+.qr-confirm {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  margin-top: 28px;
+  border: 0;
+  border-radius: 4px;
+  background: #32964d;
+  color: white;
+  font: 700 15px 'Commissioner', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.qr-confirm:hover {
+  background: #3bad59;
+}
+
+.qr-confirm:active {
+  transform: translateY(1px);
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 768px) {
+
+  .qr-main {
+    padding: 120px 15px 50px;
+  }
+
+  .qr-main h1 {
+    font-size: 22px;
+  }
+
+  .qr-panel {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 25px 20px;
+  }
+
+  .qr-panel h2 {
+    font-size: 19px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .qr-main {
+    padding-top: 105px;
+  }
+
+  .qr-main h1 {
+    font-size: 20px;
+  }
+
+  .qr-panel {
+    padding: 20px 14px;
+  }
+
+  .receipt-game-card {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .receipt-game-image {
+    width: 85px;
+    height: 65px;
+  }
+
+  .receipt-game-name {
+    font-size: 13px;
+  }
+
+  .receipt-game-price {
+    font-size: 13px;
+  }
+
+  .receipt-total {
+    font-size: 15px;
+  }
+
+  .qr-placeholder {
+    width: 240px;
+    min-height: 240px;
+  }
+
+}

@@ -1,0 +1,43 @@
+/* Toast nằm ngoài <header> nên không bị chat dock hay modal che. */
+.toast-stack {
+  position: fixed;
+  top: 120px;
+  right: 24px;
+  z-index: 21000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(420px, calc(100vw - 32px));
+  pointer-events: none;
+  font-family: var(--font-main);
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  animation: slideInToast 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast.success { background-color: #1e4620; border: 1px solid #4caf50; }
+.toast.warning { background-color: #5c1d1d; border: 1px solid #ef5350; }
+.toast-icon { font-size: 16px; flex-shrink: 0; }
+
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .toast-stack { top: 72px; right: 16px; left: 16px; max-width: none; }
+}
+.toast-text { word-break: break-word; }

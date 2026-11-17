@@ -1,0 +1,383 @@
+
+<div class="search-page-bg">
+<!-- ========================================
+       NỘI DUNG CHÍNH
+  ======================================== -->
+  <section class="search-container">
+
+    <h1 class="page-title">
+      TẤT CẢ GAME
+    </h1>
+
+    <div class="search-main-layout">
+
+      <!-- ========================================
+           CỘT TRÁI - DANH SÁCH GAME
+      ======================================== -->
+      <section class="search-content-left">
+
+        <!-- THANH TÌM KIẾM -->
+        <div class="search-filter-top-bar">
+
+          <div class="search-input-wrapper">
+
+            <input
+              type="search"
+              class="search-input"
+              [(ngModel)]="tuKhoa"
+              (ngModelChange)="onFilterChange()"
+              placeholder="Nhập tên game hoặc thể loại..."
+              aria-label="Tìm kiếm trò chơi"
+            />
+
+            <button
+              type="button"
+              class="search-btn"
+              aria-label="Tìm kiếm"
+              (click)="onFilterChange()">
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#e9e2f0"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <circle cx="11" cy="11" r="8"></circle>
+
+                <line
+                  x1="21"
+                  y1="21"
+                  x2="16.65"
+                  y2="16.65">
+                </line>
+
+              </svg>
+
+            </button>
+
+          </div>
+
+          <span class="result-count">
+            {{ danhSachGameHienThi.length }} trò chơi
+          </span>
+
+        </div>
+
+        <!-- ========================================
+             LƯỚI GAME - 3 THẺ / HÀNG
+        ======================================== -->
+        <div class="game-grid">
+
+          <div
+            class="game-item-card"
+            *ngFor="
+              let game of danhSachGamePhanTrang;
+              trackBy: trackByGame
+            ">
+
+            <!-- ========================================
+                 PHẦN TRÊN - HÌNH ẢNH GAME
+                 ẢNH GIỮ NGUYÊN TỶ LỆ
+            ======================================== -->
+            <a class="game-thumbnail" [routerLink]="['/game', game.id]" [attr.aria-label]="game.name"><img [src]="game.imageUrl" [alt]="game.name" [title]="game.name" loading="lazy" appImgFallback /></a>
+
+            <!-- ========================================
+                 PHẦN DƯỚI - GIÁ GAME
+                 KHÔNG CHỒNG LÊN ẢNH
+            ======================================== -->
+            <div class="sq-actions search-sq-actions">
+  <button type="button" class="sq-btn" [class.active]="cart.isInCart(game.id) || cart.isOwned(game.id)" (click)="themVaoGio(game, $event)"
+          [title]="cart.isOwned(game.id) ? 'Đã sở hữu' : cart.isInCart(game.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">{{ (cart.isInCart(game.id) || cart.isOwned(game.id)) ? '✓' : '+' }}</button>
+  <button type="button" class="sq-btn wish" [class.active]="cart.isInWishlist(game.id)" (click)="doiDanhSachUoc(game, $event)"
+          [title]="cart.isInWishlist(game.id) ? 'Bỏ khỏi danh sách ước' : 'Thêm vào danh sách ước'">★</button>
+</div>
+
+            <div class="game-price-area">
+
+              <div class="game-price-wrapper">
+
+                <!-- GAME MIỄN PHÍ -->
+                <ng-container *ngIf="game.isFree">
+
+                  <div class="free-badge">
+                    Chơi miễn phí
+                  </div>
+
+                </ng-container>
+
+                <!-- GAME ĐANG GIẢM GIÁ -->
+                <ng-container
+                  *ngIf="
+                    !game.isFree &&
+                    game.discountPercent > 0
+                  ">
+
+                  <div class="discount-badge">
+                    -{{ game.discountPercent }}%
+                  </div>
+
+                  <div class="price-stack">
+
+                    <span class="original-price">
+                      {{ dinhDangGia(game.originalPrice) }}
+                    </span>
+
+                    <span class="final-price">
+                      {{ dinhDangGia(game.price) }}
+                    </span>
+
+                  </div>
+
+                </ng-container>
+
+                <!-- GAME KHÔNG GIẢM GIÁ -->
+                <ng-container
+                  *ngIf="
+                    !game.isFree &&
+                    game.discountPercent === 0
+                  ">
+
+                  <div class="single-price-box">
+
+                    <span class="normal-price-tag">
+                      {{ dinhDangGia(game.price) }}
+                    </span>
+
+                  </div>
+
+                </ng-container>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ========================================
+             KHÔNG TÌM THẤY GAME
+        ======================================== -->
+        <div
+          class="no-games-found"
+          *ngIf="danhSachGameHienThi.length === 0">
+
+          <h3>
+            Không tìm thấy trò chơi phù hợp
+          </h3>
+
+          <p>
+            Không có game nào đáp ứng các điều kiện
+            tìm kiếm hoặc bộ lọc hiện tại.
+          </p>
+
+          <button
+            type="button"
+            class="reset-filter-btn"
+            (click)="xoaTatCaBoLoc()">
+
+            XÓA BỘ LỌC
+
+          </button>
+
+        </div>
+
+        <!-- ========================================
+             HIỆN THÊM GAME
+        ======================================== -->
+        <div
+          class="load-more-wrapper"
+          *ngIf="conGameDeHienThi">
+
+          <button
+            type="button"
+            class="btn-load-more"
+            (click)="hienThemGame()">
+
+            HIỆN THÊM GAME
+
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================
+           CỘT PHẢI - SIDEBAR BỘ LỌC
+      ======================================== -->
+      <aside
+        class="search-sidebar"
+        aria-label="Bộ lọc trò chơi">
+
+        <div class="sidebar-secondary-filters">
+
+          <!-- ========================================
+               LỌC THEO GIÁ
+          ======================================== -->
+          <div class="filter-group">
+
+            <div class="filter-header">
+              Lọc theo giá
+            </div>
+
+            <div class="filter-body">
+
+              <div class="price-slider-wrapper">
+
+                <input
+                  type="range"
+                  [min]="0"
+                  [max]="giaToiDa"
+                  [step]="50000"
+                  [(ngModel)]="mucGiaChon"
+                  (ngModelChange)="onFilterChange()"
+                  class="real-price-slider"
+                  aria-label="Giá tối đa"
+                />
+
+              </div>
+
+              <div class="price-slider-text">
+                Dưới {{ dinhDangGia(mucGiaChon) }}
+              </div>
+
+              <div class="filter-divider"></div>
+
+              <div class="checkbox-list">
+
+                <label class="checkbox-item">
+
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="locDangGiamGia"
+                    (ngModelChange)="onFilterChange()"
+                  />
+
+                  <span class="custom-checkbox"></span>
+
+                  <span class="checkbox-label">
+                    Đang giảm giá
+                  </span>
+
+                </label>
+
+                <label class="checkbox-item">
+
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="locAnMienPhi"
+                    (ngModelChange)="onFilterChange()"
+                  />
+
+                  <span class="custom-checkbox"></span>
+
+                  <span class="checkbox-label">
+                    Ẩn sản phẩm miễn phí
+                  </span>
+
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ========================================
+               LỌC THEO DUNG LƯỢNG
+          ======================================== -->
+          <div class="filter-group storage-filter">
+
+            <div class="filter-header">
+              Lọc theo dung lượng ổ cứng
+            </div>
+
+            <div class="filter-body">
+
+              <div class="checkbox-list">
+
+                <label
+                  class="checkbox-item"
+                  *ngFor="let item of danhSachDungLuong">
+
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="dungLuongChon[item.key]"
+                    (ngModelChange)="onFilterChange()"
+                  />
+
+                  <span class="custom-checkbox"></span>
+
+                  <span class="checkbox-label">
+                    {{ item.name }}
+                  </span>
+
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ========================================
+             LỌC THEO THỂ LOẠI
+        ======================================== -->
+        <div class="filter-group genre-filter">
+
+          <div class="filter-header">
+            Lọc theo thể loại
+          </div>
+
+          <div class="filter-body">
+
+            <div class="checkbox-list">
+
+              <label
+                class="checkbox-item"
+                *ngFor="let g of danhSachTheLoai">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="theLoaiChon[g.slug]"
+                  (ngModelChange)="onFilterChange()"
+                />
+
+                <span class="custom-checkbox"></span>
+
+                <span class="checkbox-label">
+                  {{ g.name }}
+                </span>
+
+              </label>
+
+            </div>
+
+            <div class="filter-divider"></div>
+
+            <!-- NÚT XÓA BỘ LỌC KHÔNG CÓ VIỀN -->
+            <button
+              type="button"
+              class="clear-sidebar-btn"
+              (click)="xoaTatCaBoLoc()">
+
+              Xóa bộ lọc
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </section>
+</div>

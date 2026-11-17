@@ -1,0 +1,262 @@
+<div class="game-detail-page">
+  <div class="detail-container not-found-box" *ngIf="!game">
+    <h1>Không tìm thấy trò chơi</h1>
+    <p>Trò chơi bạn tìm không tồn tại hoặc đã bị gỡ khỏi cửa hàng.</p>
+    <a class="btn-go-library" [routerLink]="['/']">Về trang cửa hàng</a>
+  </div>
+
+  <div class="detail-container" *ngIf="game">
+    <div class="filter-notice" *ngIf="hiddenByFilter">
+      ⚠️ Game này thuộc nhóm nội dung bạn đã chọn ẩn trong
+      <a [routerLink]="['/cai-dat-tai-khoan']">Cài đặt tài khoản</a>. Bạn đang xem vì truy cập trực tiếp.
+    </div>
+
+    <!-- TIÊU ĐỀ GAME -->
+    <div class="game-header-title">
+      <h1>{{ game.title }}</h1>
+      <span class="age-rating-badge" *ngIf="game.ageRating" title="Độ tuổi khuyến nghị">{{ game.ageRating }}+</span>
+    </div>
+
+    <!-- KHUNG MEDIA CHÍNH + CỘT TÓM TẮT THÔNG TIN -->
+    <div class="media-summary-grid">
+      <!-- BÊN TRÁI: VIDEO/ẢNH XEM TRƯỚC + DANH SÁCH THUMBNAIL -->
+      <div class="left-media-section">
+        <div class="main-preview-viewport">
+          <ng-container *ngIf="activeMedia">
+            <video 
+              *ngIf="activeMedia.type === 'video'" 
+              [src]="activeMedia.url" 
+              [poster]="game.screenshots[0]"
+              controls 
+              autoplay 
+              muted 
+              playsinline
+              class="preview-player"
+            ></video>
+
+            <img 
+              *ngIf="activeMedia.type === 'image'" 
+              [src]="activeMedia.url" 
+              [alt]="game.title" 
+              class="preview-img"
+              appImgFallback
+            />
+          </ng-container>
+        </div>
+
+        <!-- Hàng Thumbnail cuộn (1 Video + 2 Ảnh mô tả lặp 4 lần) -->
+        <div class="thumbnails-carousel">
+          <div 
+            *ngFor="let item of mediaList" 
+            class="thumb-card" 
+            [class.active]="activeMedia?.id === item.id"
+            role="button" tabindex="0"
+            (click)="selectMedia(item)"
+            (keydown.enter)="selectMedia(item)"
+          >
+            <img [src]="item.thumbUrl" [alt]="game.title" class="thumb-img" appImgFallback />
+            <span class="play-icon-overlay" *ngIf="item.type === 'video'">▶</span>
+          </div>
+        </div>
+
+        <!-- NÚT THÊM VÀO DANH SÁCH ƯỚC BÊN DƯỚI ẢNH MÔ TẢ (ĐÃ BỎ NÚT THEO DÕI/PHỚT LỜ) -->
+        <div class="wishlist-action-bar">
+          <button 
+            class="btn-wishlist-large" 
+            [class.in-wishlist]="cartWishlistService.isInWishlist(game.id)"
+            (click)="onAddToWishlist()"
+          >
+            ★ {{ cartWishlistService.isInWishlist(game.id) ? 'Đã trong Danh sách ước' : 'Thêm vào danh sách ước' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- BÊN PHẢI: ẢNH BÌA + MÔ TẢ NGẮN + METADATA -->
+      <div class="right-summary-sidebar">
+        <div class="cover-image-box">
+          <img [src]="game.coverImage" [alt]="game.title" class="game-cover-img" appImgFallback />
+        </div>
+
+        <p class="short-description">{{ game.description }}</p>
+
+        <div class="meta-info-table">
+          <div class="meta-row">
+            <span class="meta-label">ĐÁNH GIÁ CHUNG:</span>
+            <span class="meta-val text-blue">{{ game.reviewsSummary }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">NGÀY PHÁT HÀNH:</span>
+            <span class="meta-val">{{ game.releaseDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">NHÀ PHÁT TRIỂN:</span>
+            <span class="meta-val text-link">{{ game.developer }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">NHÀ PHÁT HÀNH:</span>
+            <span class="meta-val text-link">{{ game.publisher }}</span>
+          </div>
+        </div>
+
+        <!-- TAG THỂ LOẠI -->
+        <div class="genre-tags-wrapper">
+          <span class="tags-heading">Nhãn phổ biến cho sản phẩm này:</span>
+          <div class="tags-list">
+            <a *ngFor="let tag of tags" class="tag-chip" [routerLink]="tag.route">{{ tag.label }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHUNG MUA GAME (THIẾT KẾ GIẢM GIÁ HIỂN THỊ NỔI BẬT) -->
+    <div class="purchase-banner-card">
+      <div class="purchase-info">
+        <h2>Mua {{ game.title }}</h2>
+        <p class="sale-event-tag" *ngIf="game.discountPercent > 0">⚡ ƯU ĐÃI ĐẶC BIỆT: Giảm ngay {{ game.discountPercent }}%!</p>
+        <p class="free-notice" *ngIf="game.isFree">Trò chơi này hoàn toàn miễn phí để trải nghiệm!</p>
+      </div>
+
+      <div class="purchase-actions-box">
+        <!-- ĐÃ SỞ HỮU -->
+        <div *ngIf="cartWishlistService.isOwned(game.id)" class="owned-status-box">
+          <span class="owned-label">✓ Trò chơi này đã có trong Thư viện của bạn</span>
+          <a [routerLink]="['/thu-vien', game.id]" class="btn-go-library">Đến Thư Viện</a>
+        </div>
+
+        <!-- CHƯA SỞ HỮU -->
+        <ng-container *ngIf="!cartWishlistService.isOwned(game.id)">
+          <!-- CỤM GIÁ CÓ GIẢM GIÁ (SALE UI) -->
+          <div class="price-display-tag" *ngIf="!game.isFree">
+            <!-- Nhãn % Giảm giá màu xanh lá nổi bật -->
+            <span class="discount-badge" *ngIf="game.discountPercent > 0">-{{ game.discountPercent }}%</span>
+            
+            <div class="price-numbers">
+              <!-- Giá gốc gạch ngang -->
+              <span class="original-price" *ngIf="game.discountPercent > 0">{{ game.originalPrice | number }}đ</span>
+              <!-- Giá sau giảm lớn nổi bật -->
+              <span class="final-price" [class.highlight-sale]="game.discountPercent > 0">{{ game.finalPrice | number }}đ</span>
+            </div>
+          </div>
+
+          <!-- GAME MIỄN PHÍ -->
+          <div class="price-display-tag free" *ngIf="game.isFree">
+            <span class="free-label">Miễn phí</span>
+          </div>
+
+          <!-- NÚT MUA / THÊM GIỎ -->
+          <div class="btn-buy-group">
+            <button 
+              *ngIf="!game.isFree" 
+              class="btn-add-cart" 
+              (click)="onAddToCart()"
+            >
+              {{ cartWishlistService.isInCart(game.id) ? '✓ Đã trong giỏ' : 'Thêm vào giỏ' }}
+            </button>
+            <button class="btn-buy-now" (click)="onBuyNow()">
+              {{ game.isFree ? 'Nhận miễn phí' : 'Mua ngay' }}
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- MÔ TẢ CHI TIẾT -->
+    <div class="detail-block-card">
+      <h3 class="section-title">VỀ TRÒ CHƠI NÀY</h3>
+      <div class="rich-text-content">
+        <p>{{ game.longDescription }}</p>
+      </div>
+    </div>
+
+    <!-- YÊU CẦU CẤU HÌNH HỆ THỐNG -->
+    <div class="detail-block-card">
+      <h3 class="section-title">CẤU HÌNH HỆ THỐNG</h3>
+      
+      <div class="sys-reqs-grid">
+        <div class="reqs-column">
+          <h4 class="reqs-title">TỐI THIỂU:</h4>
+          <ul class="reqs-list">
+            <li><strong>HĐH:</strong> {{ game.minSpec.os }}</li>
+            <li><strong>Bộ xử lý:</strong> {{ game.minSpec.cpu }}</li>
+            <li><strong>Bộ nhớ:</strong> {{ game.minSpec.ram }}</li>
+            <li><strong>Đồ họa:</strong> {{ game.minSpec.gpu }}</li>
+            <li><strong>Lưu trữ:</strong> {{ game.minSpec.disk }} dung lượng trống</li>
+          </ul>
+        </div>
+
+        <div class="reqs-column">
+          <h4 class="reqs-title">ĐỀ NGHỊ:</h4>
+          <ul class="reqs-list">
+            <li><strong>HĐH:</strong> {{ game.recSpec.os }}</li>
+            <li><strong>Bộ xử lý:</strong> {{ game.recSpec.cpu }}</li>
+            <li><strong>Bộ nhớ:</strong> {{ game.recSpec.ram }}</li>
+            <li><strong>Đồ họa:</strong> {{ game.recSpec.gpu }}</li>
+            <li><strong>Lưu trữ:</strong> {{ game.recSpec.disk }} dung lượng trống</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <app-game-reviews
+      [gameId]="game.id"
+      [mongoGameId]="game.mongoId || ''"
+      [canWrite]="false">
+    </app-game-reviews>
+    <!-- ================= KHUNG ĐỀ XUẤT 20 GAME Ở CHÂN TRANG ================= -->
+    <section class="detail-recommendations-section">
+      <div class="recommend-header-row">
+        <div class="header-left">
+          <h2>🔥 ĐỀ XUẤT TRÒ CHƠI KHÁC DÀNH CHO BẠN</h2>
+          <p>Khám phá những tựa game hấp dẫn đang có mặt trên cửa hàng STEAL</p>
+        </div>
+        <button class="btn-refresh-recommend" (click)="refreshRecommendations()">
+          🔄 Làm mới đề xuất
+        </button>
+      </div>
+
+      <div class="recommend-games-grid">
+        <div 
+          *ngFor="let recGame of recommendedGames; let i = index" 
+          class="recommend-card"
+          role="link" tabindex="0"
+          (click)="goToGameDetail(recGame)"
+          (keydown.enter)="goToGameDetail(recGame)"
+        >
+          <div class="card-thumb-wrapper">
+            <img [src]="recGame.coverImage" appImgFallback [alt]="recGame.title" class="recommend-thumb" />
+            <span *ngIf="isGameOwned(recGame.id)" class="owned-badge">Đã sở hữu</span>
+
+            <div class="sq-actions rec-sq-actions">
+              <button type="button" (keydown.enter)="$event.stopPropagation()" class="sq-btn" [class.active]="cartWishlistService.isInCart(recGame.id) || cartWishlistService.isOwned(recGame.id)" (click)="onRecCart($event, recGame)"
+                      [title]="cartWishlistService.isOwned(recGame.id) ? 'Đã sở hữu' : cartWishlistService.isInCart(recGame.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">{{ (cartWishlistService.isInCart(recGame.id) || cartWishlistService.isOwned(recGame.id)) ? '✓' : '+' }}</button>
+              <button type="button" (keydown.enter)="$event.stopPropagation()" class="sq-btn wish" [class.active]="cartWishlistService.isInWishlist(recGame.id)" (click)="onRecWish($event, recGame)"
+                      [title]="cartWishlistService.isInWishlist(recGame.id) ? 'Bỏ khỏi danh sách ước' : 'Thêm vào danh sách ước'">★</button>
+            </div>
+
+            <div class="price-overlay-tag">
+              <span *ngIf="recGame.discountPercent > 0" class="discount-pill">-{{ recGame.discountPercent }}%</span>
+              <span class="price-text" *ngIf="!recGame.isFree">{{ recGame.finalPrice | number }}đ</span>
+              <span class="price-text free" *ngIf="recGame.isFree">Miễn phí</span>
+            </div>
+          </div>
+
+          <div class="recommend-card-info">
+            <div class="recommend-game-title">{{ recGame.title }}</div>
+            <div class="recommend-game-genres">
+              <span *ngFor="let g of recGame.genres.slice(0, 2)" class="mini-genre">
+                {{ catalogService.genreLabel(g) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- POPUP HOVER CARD: Cột 3 và 4 (ngoài cùng bên phải) sẽ mở sang bên trái -->
+          <app-game-hover-card 
+            class="hover-card-container" 
+            [game]="recGame" 
+            [position]="(i % 4 >= 2) ? 'left' : 'right'">
+          </app-game-hover-card>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

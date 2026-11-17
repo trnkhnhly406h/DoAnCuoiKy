@@ -1,0 +1,34 @@
+.auth-required-box {
+  display: flex;
+  justify-content: center;
+  padding: 60px 16px;
+  font-family: var(--font-main);
+}
+
+.auth-required-card {
+  background-color: #3d235c;
+  border: 1px solid #7246a4;
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.lock-icon { font-size: 54px; margin-bottom: 16px; }
+.auth-required-card h2 { font-size: 20px; color: #ffffff; margin: 0 0 8px; font-weight: 800; }
+.auth-required-card p { font-size: 13px; color: #9589a2; margin: 0 0 24px; line-height: 1.5; }
+
+.btn-login-now {
+  background-color: #7b55a5;
+  color: #ffffff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-login-now:hover { background-color: #9468c1; }

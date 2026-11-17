@@ -1,0 +1,558 @@
+/* ===== TOÀN CỤC CONTAINER ===== */
+.admin-auth-container {
+  width: 100vw;
+  height: 100vh;
+  background: #0B0E1B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Commissioner', sans-serif;
+  color: #EAE4EE;
+  box-sizing: border-box;
+  padding: 16px;
+}
+
+/* KHUNG CARD BOX VỪA VẶN FLEXIBLE */
+.auth-card-box {
+  width: 520px;
+  max-width: 95vw;
+  background: #1B2240;
+  border-radius: 6px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* BANNER HEADER CĂN GIỮA LOGO STEAL */
+.auth-card-header {
+  height: 68px;
+  background: #EAE4EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.logo-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logo-text {
+  font-size: 28px;
+  font-weight: 700;
+  color: #50407A;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* CONTAINER NỘI DUNG */
+.auth-card-body {
+  padding: 24px 36px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.auth-card-body.body-center {
+  align-items: center;
+  text-align: center;
+}
+
+/* NÚT QUAY LẠI VÙNG XANH ĐẬM */
+.btn-back-inside {
+  background: transparent;
+  border: none;
+  color: #EAE4EE;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 0;
+  margin-bottom: 2px;
+  transition: opacity 0.2s ease;
+}
+
+.btn-back-inside:hover {
+  opacity: 0.8;
+}
+
+/* TIÊU ĐỀ TRANG */
+.auth-title {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  color: #EAE4EE;
+  margin: 0 0 4px 0;
+}
+
+.title-red-gate {
+  color: #FF2626;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-yellow-key {
+  color: #EAE4EE;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.icon-yellow { color: #EBC849; }
+.icon-red { color: #FF2626; }
+
+.auth-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #EAE4EE;
+  margin: 0 0 6px 0;
+  opacity: 0.9;
+}
+
+/* FORM GROUP & LABELS */
+.auth-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.form-label-bold {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #EAE4EE;
+}
+
+.star-red {
+  color: #FF2626;
+  margin-left: 2px;
+}
+
+/* INPUTS STYLING */
+.auth-input {
+  width: 100%;
+  height: 44px;
+  background: #EAE4EE;
+  border: 3px solid #6C57A3;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 0 14px;
+  font-size: 15px;
+  color: #1B2240;
+  outline: none;
+  font-weight: 500;
+}
+
+.auth-input.input-error {
+  border-color: #FF2626 !important;
+}
+
+/* CỤM OTP THEO FIGMA IMAGE 8 */
+.otp-row-layout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.input-otp-code, .input-rsa-code {
+  width: 220px !important;
+  max-width: 100%;
+  letter-spacing: 4px;
+  font-weight: 700;
+}
+
+.btn-resend-otp-figma {
+  height: 44px;
+  padding: 0 14px;
+  background: #EAE4EE;
+  border: none;
+  border-radius: 4px;
+  color: #1B2240;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-resend-otp-figma:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ACTION BUTTONS CĂN GIỮA */
+.form-action-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.margin-top-12 {
+  margin-top: 12px;
+}
+
+.btn-auth-primary {
+  width: 260px;
+  max-width: 100%;
+  height: 44px;
+  background: #EAE4EE;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.btn-auth-primary.btn-wide {
+  width: 280px;
+  max-width: 100%;
+}
+
+.btn-auth-primary:hover:not(:disabled) {
+  background: #FFFFFF;
+}
+
+.btn-auth-primary:disabled, .btn-disabled {
+  background: #8C869E !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.btn-auth-primary:disabled .btn-label-text, 
+.btn-disabled .btn-label-text {
+  color: #4A4458 !important;
+}
+
+.btn-label-text {
+  font-size: 16.5px;
+  font-weight: 600;
+  color: #1B2240;
+}
+
+.btn-forgot-password {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 300;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.btn-forgot-password:hover {
+  text-decoration: underline;
+}
+
+.error-msg-red {
+  color: #FF2626;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  margin: 4px 0 0 0;
+}
+
+/* TRẠNG THÁI KHÓA 5 PHÚT (FIGMA IMAGE 9) */
+.locked-desc-text {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: #EAE4EE;
+  max-width: 420px;
+  margin: 8px 0;
+}
+
+.lock-timer-box {
+  font-size: 32px;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.timer-icon {
+  font-size: 26px;
+}
+
+.locked-sub-text {
+  font-size: 13.5px;
+  color: #EAE4EE;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+/* GATEWAY STYLES */
+.gate-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gate-lock-icon {
+  font-size: 24px;
+  color: #EAE4EE;
+}
+
+.gate-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  margin: 12px 0;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-orange { background: #FF9D60; }
+.dot-green { background: #A4D007; }
+.dot-red { background: #FF2626; }
+
+/* 2FA STYLES */
+.token-inputs-row {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+  justify-content: center;
+}
+
+.token-box {
+  width: 42px;
+  height: 50px;
+  background: #EAE4EE;
+  border: 3px solid #6C57A3;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1B2240;
+  outline: none;
+}
+
+.refresh-token-text {
+  font-size: 13px;
+  color: #EAE4EE;
+  opacity: 0.8;
+}
+/* ===== POPUP MODAL TỪ CHỐI KHÔI PHỤC STAFF / EDITOR ===== */
+.steal-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(11, 14, 27, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+  animation: modalFadeIn 0.25s ease;
+}
+
+.steal-modal-box {
+  background: #1B2240;
+  border: 1px solid #ff4757;
+  border-radius: 8px;
+  width: 440px;
+  max-width: 92vw;
+  padding: 28px 24px 24px 24px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.75), 0 0 25px rgba(255, 71, 87, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #EAE4EE;
+  animation: modalScaleUp 0.25s ease;
+  box-sizing: border-box;
+}
+
+.steal-modal-icon-header {
+  margin-bottom: 12px;
+}
+
+.icon-danger-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 71, 87, 0.15);
+  border: 2px solid #ff4757;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #ff4757;
+}
+
+.steal-modal-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #ff4757;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.role-badge-row {
+  font-size: 13.5px;
+  color: #cbd5e1;
+  margin-bottom: 12px;
+}
+
+.badge-role-tag {
+  background: #ff4757;
+  color: #ffffff;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 12px;
+  margin-left: 6px;
+  display: inline-block;
+}
+
+.modal-desc-main {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #EAE4EE;
+  margin-bottom: 14px;
+}
+
+.alert-notice-box {
+  background: rgba(43, 84, 126, 0.35);
+  border-left: 4px solid #38bdf8;
+  padding: 12px 14px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  color: #bae6fd;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.notice-icon {
+  font-size: 20px;
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.steal-modal-actions {
+  width: 100%;
+}
+
+.btn-modal-close {
+  width: 100% !important;
+  background: #ff4757 !important;
+  border-color: #ff4757 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  padding: 11px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-modal-close:hover {
+  background: #e84118 !important;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Nút hiện / ẩn mật khẩu đăng nhập Admin */
+
+.admin-password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.admin-password-wrapper .auth-input {
+  width: 100%;
+  padding-right: 52px;
+}
+
+.admin-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #50407a;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 2;
+}
+
+.admin-password-toggle:hover {
+  color: #24123f;
+  background: rgba(108, 87, 163, 0.1);
+}
+
+.admin-password-toggle:focus-visible {
+  outline: 2px solid #6c57a3;
+  outline-offset: 2px;
+}

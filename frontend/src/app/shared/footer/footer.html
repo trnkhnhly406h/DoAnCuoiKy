@@ -1,0 +1,43 @@
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <a class="brand-logo" [routerLink]="['/']" aria-label="STEAL - Trang chủ">
+        <img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556158/logo.png" alt="STEAL" class="logo-img">
+        <span class="logo-text">STEAL</span>
+      </a>
+      <p class="copyright">
+        © {{ currentYear }} STEAL. Đề tài thiết kế website của sinh viên. Được thực hiện với mục đích học tập và nghiên cứu.
+      </p>
+      <div class="social-icons">
+        <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556463/youtube.png" class="social-img" alt="YouTube"></a>
+        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook"><img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556460/facebook.png" class="social-img" alt="Facebook"></a>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556458/instagram.png" class="social-img" alt="Instagram"></a>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <div class="link-column">
+        <h4>STEAL</h4>
+        <a [routerLink]="['/cau-chuyen-steal']">Câu chuyện STEAL</a>
+        <a [routerLink]="['/']">Cửa hàng</a>
+        <a [routerLink]="['/uu-dai']">Ưu đãi</a>
+        <a [routerLink]="['/mien-phi']">Game miễn phí</a>
+      </div>
+
+      <div class="link-column">
+        <h4>Pháp lý</h4>
+        <a [routerLink]="['/quyen-rieng-tu']">Quyền riêng tư</a>
+        <a [routerLink]="['/thoa-thuan-dang-ky']">Thỏa thuận đăng ký</a>
+        <a [routerLink]="['/chinh-sach-hoan-tien']">Hoàn tiền</a>
+        <a [routerLink]="['/cookie']">Cookie</a>
+      </div>
+
+      <div class="link-column">
+        <h4>Khác</h4>
+        <a [routerLink]="['/ho-tro']">Nhận hỗ trợ</a>
+        <a [routerLink]="['/ho-tro']" fragment="lien-he">Liên hệ</a>
+        <a [routerLink]="['/admin']">Quản trị viên</a>
+      </div>
+    </div>
+  </div>
+</footer>

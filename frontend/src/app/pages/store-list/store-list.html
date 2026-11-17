@@ -1,0 +1,80 @@
+<div class="store-page-layout">
+  <!-- Sidebar danh mục bên trái -->
+  <aside class="store-sidebar">
+    <ul class="sidebar-menu">
+      <li *ngFor="let link of sidebarLinks"
+          [class.active]="router.url.startsWith(link.route)"
+          [routerLink]="link.route">
+        {{ link.label }}
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Khung hiển thị danh sách game bên phải -->
+  <section class="store-main-area">
+    <div class="category-title-card">
+      <h2>{{ title }}</h2>
+      <p>{{ description }}</p>
+    </div>
+
+    <!-- Danh sách rỗng -->
+    <div *ngIf="games.length === 0" class="empty-state">
+      <p>{{ emptyMessage }}</p>
+      <button class="btn-back-store" [routerLink]="['/']">Về trang cửa hàng</button>
+    </div>
+
+    <!-- Danh sách game dạng hàng dọc -->
+    <div *ngIf="games.length > 0" class="games-vertical-container">
+      <div *ngFor="let game of games; let i = index; trackBy: trackByGame"
+           class="store-game-item"
+           (click)="goToDetail(game)">
+
+        <!-- Số thứ tự 1-10 nếu có -->
+        <div *ngIf="showRank" class="rank-number-box">
+          {{ i + 1 }}
+        </div>
+
+        <!-- Ảnh bìa -->
+        <div class="game-thumb">
+          <img [src]="game.coverImage" [alt]="game.title" appImgFallback />
+        </div>
+
+        <!-- Chi tiết thông tin -->
+        <div class="game-details">
+          <h3>{{ game.title }}</h3>
+          <div class="release-date">Ngày phát hành: {{ game.releaseDate | date: 'dd/MM/yyyy' }}</div>
+          <div class="review-box">
+            <span class="review-title">Tổng thể đánh giá:</span>
+            <span class="review-text">{{ game.reviewsSummary }}</span>
+          </div>
+          <div class="tags-wrapper">
+            <span class="tag-label">Thể loại:</span>
+            <a *ngFor="let tag of catalog.tagLinks(game)" class="tag-badge" [routerLink]="tag.route" (click)="$event.stopPropagation()">{{ tag.label }}</a>
+          </div>
+        </div>
+
+        <!-- Giá & Hành động nút bấm -->
+        <div class="game-actions-price">
+          <div class="sq-actions">
+            <button type="button" class="sq-btn" [class.active]="cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)" (click)="onAddCart($event, game)"
+                    [title]="cartWishlistService.isOwned(game.id) ? 'Đã sở hữu' : cartWishlistService.isInCart(game.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">{{ (cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)) ? '✓' : '+' }}</button>
+            <button type="button" class="sq-btn wish" [class.active]="cartWishlistService.isInWishlist(game.id)" (click)="onAddWishlist($event, game)"
+                    [title]="cartWishlistService.isInWishlist(game.id) ? 'Bỏ khỏi danh sách ước' : 'Thêm vào danh sách ước'">★</button>
+          </div>
+
+          <div class="bottom-price">
+            <span *ngIf="cartWishlistService.isOwned(game.id)" class="owned-badge">✓ Trong thư viện</span>
+            <span *ngIf="!cartWishlistService.isOwned(game.id) && game.isFree" class="free-badge">Chơi miễn phí</span>
+
+            <div *ngIf="!cartWishlistService.isOwned(game.id) && !game.isFree" class="price-box">
+              <span *ngIf="game.discountPercent > 0" class="discount-badge">-{{ game.discountPercent }}%</span>
+              <span *ngIf="game.discountPercent > 0" class="original-price">{{ game.originalPrice | number }}đ</span>
+              <span class="price-val">{{ game.finalPrice | number }}đ</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>

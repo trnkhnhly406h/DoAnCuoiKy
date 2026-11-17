@@ -1,0 +1,122 @@
+<div class="products-page container-fluid">
+  <header class="products-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div>
+      <h1>DANH SÁCH SẢN PHẨM</h1>
+      <span class="current-tab">Tất cả sản phẩm</span>
+    </div>
+    <div class="heading-actions d-flex flex-wrap gap-3">
+      <button type="button" class="btn btn-export" (click)="xuatCsv()"><i class="bi bi-file-earmark-excel me-2"></i>Xuất file Excel</button>
+      <button type="button" class="btn btn-create" (click)="moTrangTaoSanPham()"><i class="bi bi-plus-circle me-2"></i>Tạo sản phẩm</button>
+    </div>
+  </header>
+
+  <section class="filter-section" aria-label="Tìm kiếm và lọc sản phẩm">
+    <div class="filters-row">
+      <label class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="search" class="form-control" placeholder="Tên Game, ID Game,..." aria-label="Tìm theo tên hoặc ID game"
+          [(ngModel)]="tuKhoa" (keyup.enter)="apDungBoLoc()" />
+        <button *ngIf="tuKhoa" type="button" class="clear-search" aria-label="Xóa từ khóa" (click)="tuKhoa = ''">×</button>
+      </label>
+
+      <div class="filter-dropdown">
+        <button type="button" class="btn filter-button" (click)="moDropdownTheLoai = !moDropdownTheLoai" [attr.aria-expanded]="moDropdownTheLoai">
+          <i class="bi bi-filter-left me-2"></i><span>Thể loại</span>
+          <span class="selected-count" *ngIf="theLoaiDangChon.length">{{ theLoaiDangChon.length }}</span>
+          <i class="bi bi-chevron-down ms-auto"></i>
+        </button>
+        <div class="filter-menu category-menu" *ngIf="moDropdownTheLoai">
+          <div class="filter-menu-head"><strong>Chọn thể loại</strong><button type="button" class="text-button" (click)="xoaTheLoai()">Xóa chọn</button></div>
+          <label class="category-option" *ngFor="let theLoai of danhSachTheLoai">
+            <input type="checkbox" class="form-check-input" [checked]="theLoaiDangChon.includes(theLoai)" (change)="doiTheLoai(theLoai)" />
+            <span>{{ theLoai }}</span>
+          </label>
+          <p class="filter-hint">Có thể chọn nhiều thể loại. Bấm lại để bỏ chọn.</p>
+        </div>
+      </div>
+
+      <div class="filter-dropdown discount-dropdown">
+        <button type="button" class="btn filter-button" (click)="moDropdownGiamGia = !moDropdownGiamGia" [attr.aria-expanded]="moDropdownGiamGia">
+          <span>{{ nhanMucGiamGiaDangChon }}</span><i class="bi bi-chevron-down ms-auto"></i>
+        </button>
+        <div class="filter-menu discount-menu" *ngIf="moDropdownGiamGia">
+          <button type="button" class="discount-option" *ngFor="let muc of danhSachMucGiamGia"
+            [class.chosen]="muc.value === mucGiamGiaDangChon" (click)="chonMucGiamGia(muc.value)">
+            <span>{{ muc.label }}</span><i *ngIf="muc.value === mucGiamGiaDangChon" class="bi bi-check2"></i>
+          </button>
+          <p class="filter-hint">Bấm lại mức đang chọn để bỏ lọc.</p>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-apply" (click)="apDungBoLoc()">Áp dụng</button>
+      <button type="button" class="btn btn-reset" (click)="datLaiBoLoc()">Đặt lại</button>
+    </div>
+  </section>
+
+  <div class="table-toolbar d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <p class="product-count mb-0">Có <strong>{{ tongSanPhamSauLoc }}</strong> sản phẩm</p>
+    <button type="button" class="btn btn-delete-selected" [disabled]="sanPhamDuocChon.size === 0" (click)="xacNhanXoaSanPham()">
+      <i class="bi bi-trash3 me-2"></i>Xóa đã chọn <span *ngIf="sanPhamDuocChon.size">({{ sanPhamDuocChon.size }})</span>
+    </button>
+  </div>
+
+  <div class="table-responsive products-table-wrap">
+    <table class="table products-table align-middle">
+      <thead><tr>
+        <th class="checkbox-col"><input type="checkbox" class="form-check-input" aria-label="Chọn tất cả sản phẩm trang này"
+          [checked]="trangDaChonHet" [indeterminate]="trangChonMotPhan" (change)="doiChonTatCaTrang($event)" /></th>
+        <th>Sản phẩm</th>
+        <th>Thể loại</th>
+        <th>Giá hiện tại</th>
+        <th class="text-center">Lượt bán</th>
+        <th class="text-center">Tùy chọn</th>
+      </tr></thead>
+      <tbody>
+        <tr *ngFor="let game of sanPhamHienThi; trackBy: trackById" class="product-row" (click)="moChiTiet(game)" tabindex="0" (keydown.enter)="moChiTiet(game)">
+          <td class="checkbox-col" (click)="$event.stopPropagation()"><input type="checkbox" class="form-check-input" [checked]="sanPhamDuocChon.has(game.id)"
+            [attr.aria-label]="'Chọn ' + game.tenGame" (change)="doiChonSanPham(game.id, $event)" /></td>
+          <td><div class="product-cell">
+            <img class="game-cover" [src]="game.hinhAnh || anhMacDinh" [alt]="game.tenGame" (error)="dungAnhMacDinh($event)" />
+            <div class="product-name-wrap"><span class="game-name">{{ game.tenGame }}</span><span class="game-id">{{ game.maGame || game.id }}</span>
+              <span class="discount-note" *ngIf="game.phanTramGiamGia > 0">-{{ game.phanTramGiamGia }}%</span></div>
+          </div></td>
+          <td><div class="genre-list">
+            <span class="genre-badge" *ngFor="let genre of game.theLoai | slice:0:3" [ngClass]="classTheLoai(genre)">{{ genre }}</span>
+            <span class="genre-more" *ngIf="game.theLoai.length > 3" [title]="game.theLoai.slice(3).join(', ')">+{{ game.theLoai.length - 3 }}</span>
+            <span class="genre-empty" *ngIf="!game.theLoai.length">Chưa phân loại</span>
+          </div></td>
+          <td class="price-cell">
+            <span class="current-price">
+                {{ dinhDangTien(giaSauGiam(game)) }} 
+            </span>
+        </td>
+          <td class="text-center sales-cell">{{ game.luotBan | number:'1.0-0' }}</td>
+          <td class="text-center action-cell" (click)="$event.stopPropagation()">
+            <button type="button" class="icon-action edit-action" title="Sửa sản phẩm" aria-label="Sửa sản phẩm" (click)="moChiTiet(game)"><i class="bi bi-pencil-fill"></i></button>
+            <button type="button" class="icon-action delete-action" title="Xóa sản phẩm" aria-label="Xóa sản phẩm" (click)="xacNhanXoaMotSanPham(game)"><i class="bi bi-trash3-fill"></i></button>
+          </td>
+        </tr>
+        <tr *ngIf="!sanPhamHienThi.length"><td colspan="6" class="empty-state"><i class="bi bi-search"></i><strong>Không tìm thấy sản phẩm</strong><span>Thử đổi từ khóa hoặc bộ lọc rồi bấm Áp dụng.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="pagination-footer" *ngIf="tongTrang > 1">
+    <span>Trang {{ trangHienTai }} / {{ tongTrang }}</span>
+    <nav aria-label="Phân trang sản phẩm"><ul class="pagination mb-0">
+      <li class="page-item" [class.disabled]="trangHienTai === 1"><button class="page-link" type="button" aria-label="Trang trước" [disabled]="trangHienTai === 1" (click)="doiTrang(trangHienTai - 1)"><i class="bi bi-chevron-left"></i></button></li>
+      <li class="page-item" *ngFor="let trang of danhSachTrang" [class.active]="trang === trangHienTai"><button class="page-link" type="button" (click)="doiTrang(trang)">{{ trang }}</button></li>
+      <li class="page-item" [class.disabled]="trangHienTai === tongTrang"><button class="page-link" type="button" aria-label="Trang sau" [disabled]="trangHienTai === tongTrang" (click)="doiTrang(trangHienTai + 1)"><i class="bi bi-chevron-right"></i></button></li>
+    </ul></nav>
+  </footer>
+
+  <div class="modal-backdrop-custom" *ngIf="hienXacNhanXoa" (click)="huyXoa()">
+    <section class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteTitle" (click)="$event.stopPropagation()">
+      <div class="confirm-icon"><i class="bi bi-trash3"></i></div><h2 id="confirmDeleteTitle">Xác nhận xóa sản phẩm</h2>
+      <p>Bạn có chắc chắn muốn xóa <strong>{{ idsChoXoa.length }}</strong> sản phẩm đã chọn không?</p>
+      <p class="confirm-warning">Thao tác này sẽ xóa sản phẩm khỏi danh sách hiện tại.</p>
+      <div class="confirm-actions"><button type="button" class="btn btn-cancel" (click)="huyXoa()">Hủy</button><button type="button" class="btn btn-confirm-delete" (click)="xacNhanThucHienXoa()">Xác nhận xóa</button></div>
+    </section>
+  </div>
+  <div class="toast-message" *ngIf="thongBao" role="status"><i class="bi bi-check-circle-fill me-2"></i>{{ thongBao }}</div>
+</div>

@@ -1,0 +1,118 @@
+<div class="group-detail-page">
+  <header class="page-top">
+    <div class="page-identity">
+      <span class="group-code" *ngIf="!dangThemMoi">{{ maNhom }}</span>
+      <h1>{{ dangThemMoi ? 'Tạo nhóm sản phẩm mới' : tenNhom }}</h1>
+    </div>
+    <button class="back-button" type="button" aria-label="Quay về danh sách nhóm" (click)="quayVe()"><i class="bi bi-arrow-left"></i> <span>Quay về</span></button>
+  </header>
+
+  <section class="panel general-panel">
+    <h2>Thông tin chung</h2>
+    <div class="panel-rule"></div>
+    <div class="general-grid">
+      <label class="field-group">
+        <span>Tên nhóm <b class="required">*</b></span>
+        <input type="text" [(ngModel)]="tenNhom" maxlength="100" placeholder="Nhập tên nhóm sản phẩm" />
+      </label>
+
+      <!-- Ô NHẬP % GIẢM GIÁ CHO TOÀN NHÓM SẢN PHẨM -->
+      <label class="field-group">
+        <span>% Giảm giá toàn nhóm (Tùy chọn)</span>
+        <input 
+          type="number" 
+          [(ngModel)]="phanTramGiamGiaNhom" 
+          min="0" 
+          max="100" 
+          placeholder="Ví dụ: 20 (%)" 
+        />
+        <small class="text-secondary" style="font-size: 11px; margin-top: 4px; display: block;">
+          * Nếu game đã có % giảm giá riêng trong trang chi tiết game thì % riêng của game sẽ được ưu tiên hơn.
+        </small>
+      </label>
+
+      <label class="field-group full-width">
+        <span>Mô tả chi tiết <b class="required">*</b></span>
+        <textarea [(ngModel)]="moTa" rows="3" maxlength="1000" placeholder="Nhập mô tả chi tiết cho nhóm sản phẩm"></textarea>
+      </label>
+    </div>
+    <p class="generated-code" *ngIf="dangThemMoi && tenNhom.trim()">Mã nhóm dự kiến: <strong>{{ taoMaNhom(tenNhom) }}</strong> <small>(hệ thống tự tạo khi lưu)</small></p>
+  </section>
+
+  <section class="panel games-panel">
+    <h2>Sản phẩm</h2>
+    <div class="panel-rule"></div>
+    <div class="game-toolbar">
+      <label class="search-box"><i class="bi bi-search"></i><input type="search" [(ngModel)]="timKiemGame" (ngModelChange)="trangGame=1" placeholder="Tìm kiếm theo tên game hoặc mã game" /></label>
+      <select class="filter-control sort-control" [(ngModel)]="sapXepTheo" aria-label="Sắp xếp theo">
+        <option value="">Sắp xếp theo</option><option value="az">Tên game A-Z</option><option value="za">Tên game Z-A</option>
+      </select>
+      <button class="btn-apply" type="button" (click)="apDungBoLoc()">Áp dụng</button>
+      <button class="btn-create" type="button" (click)="moPopupThemGame()"><i class="bi bi-plus-circle"></i> Thêm sản phẩm</button>
+    </div>
+    <div class="game-list" *ngIf="gameHienThi.length; else emptyGames">
+      <div class="game-row" *ngFor="let game of gameTrangHienTai">
+        <img class="game-cover" [src]="game.hinhAnh" [alt]="game.tenGame" (error)="$any($event.target).style.visibility='hidden'" />
+        <div class="game-info"><span class="game-name">{{ game.tenGame }}</span><small>{{ game.id }}</small></div>
+        <button class="remove-game" type="button" [attr.aria-label]="'Xóa ' + game.tenGame" (click)="yeuCauXoaGame(game)"><i class="bi bi-x-lg"></i></button>
+      </div>
+    </div>
+    <ng-template #emptyGames><div class="empty-games">Chưa có sản phẩm trong nhóm hoặc không tìm thấy game phù hợp.</div></ng-template>
+    <div class="game-list-footer">
+      <span>Tổng game: {{ gameHienThi.length }}</span>
+      <div class="pagination" *ngIf="tongTrangChinh > 1">
+        <button type="button" [disabled]="trangGame===1" (click)="trangGame=trangGame-1"><i class="bi bi-chevron-left"></i></button>
+        <span>{{ trangGame }} / {{ tongTrangChinh }}</span>
+        <button type="button" [disabled]="trangGame===tongTrangChinh" (click)="trangGame=trangGame+1"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-actions"><button class="btn-cancel" type="button" (click)="huy()">Hủy</button><button class="btn-save" type="button" (click)="luuNhom()">Lưu</button></div>
+</div>
+
+<!-- Popup thêm nhiều game -->
+<div class="modal-backdrop-custom add-games-backdrop" *ngIf="showPopupThemGame" (click)="dongPopupThemGame()">
+  <section class="add-games-modal" role="dialog" aria-modal="true" aria-labelledby="addGamesTitle" (click)="$event.stopPropagation()">
+    <button class="modal-close" type="button" aria-label="Đóng" (click)="dongPopupThemGame()"><i class="bi bi-x-lg"></i></button>
+    <h2 id="addGamesTitle">Thêm game mới</h2>
+    <div class="popup-filters">
+      <label class="search-box popup-search"><i class="bi bi-search"></i><input type="search" [(ngModel)]="timKiemPopup" (ngModelChange)="trangPopupHienTai=1" placeholder="Tìm kiếm theo tên game hoặc mã game" /></label>
+      <select class="filter-control" [(ngModel)]="theLoaiPopup" (ngModelChange)="trangPopupHienTai=1"><option value="">Tất cả thể loại</option><option *ngFor="let genre of theLoaiCoSan" [value]="genre">{{ genre }}</option></select>
+      <button class="btn-apply" type="button" (click)="trangPopupHienTai=1">Áp dụng</button>
+    </div>
+    <div class="available-games-table-wrap">
+      <table class="available-games-table">
+        <thead><tr><th class="check-col"><input type="checkbox" [checked]="tatCaGameTrangDaChon" (change)="chonTatCaTrang($any($event.target).checked)" /></th><th>Sản phẩm</th><th>Thể loại</th><th>Nhà phát hành</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let game of gamePopupTrangHienTai">
+            <td class="check-col"><input type="checkbox" [checked]="gameDuocChon.has(game.id)" (change)="doiChonGame(game.id, $any($event.target).checked)" /></td>
+            <td><div class="popup-game-cell"><img [src]="game.hinhAnh" [alt]="game.tenGame" (error)="$any($event.target).style.visibility='hidden'" /><div><strong>{{ game.tenGame }}</strong><small>{{ game.id }}</small></div></div></td>
+            <td>{{ game.theLoai.join(', ') }}</td><td>{{ game.nhaPhatHanh }}</td>
+          </tr>
+          <tr *ngIf="!gamePopupTrangHienTai.length"><td colspan="4" class="no-results">Không còn game phù hợp để thêm.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="popup-footer"><span>Đã chọn thêm: <strong>{{ gameDuocChon.size }}</strong> game mới</span><div class="pagination"><button type="button" [disabled]="trangPopupHienTai===1" (click)="trangPopupTruoc()"><i class="bi bi-chevron-left"></i></button><span>{{ trangPopupHienTai }} / {{ tongTrangPopup }}</span><button type="button" [disabled]="trangPopupHienTai===tongTrangPopup" (click)="trangPopupSau()"><i class="bi bi-chevron-right"></i></button></div></div>
+    <div class="modal-actions"><button class="btn-cancel" type="button" (click)="dongPopupThemGame()">Hủy</button><button class="btn-save" type="button" (click)="themGameDaChon()">Lưu</button></div>
+  </section>
+</div>
+
+<!-- Popup xác nhận xóa game -->
+<div class="modal-backdrop-custom" *ngIf="showPopupXoa">
+  <section class="confirm-modal" role="alertdialog" aria-modal="true">
+    <div class="confirm-icon"><i class="bi bi-trash3-fill"></i></div><h2>{{ tieuDeXoa }}</h2><p>{{ noiDungXoa }}</p><p class="confirm-warning">Thao tác này sẽ loại game khỏi nhóm sản phẩm.</p>
+    <div class="confirm-actions"><button class="btn-cancel" type="button" (click)="dongXoa()">Hủy</button><button class="btn-confirm-delete" type="button" (click)="xacNhanXoaGame()">Xác nhận xóa</button></div>
+  </section>
+</div>
+
+<!-- Popup thông báo thành công -->
+<div class="modal-backdrop-custom" *ngIf="showPopupThongBao">
+  <section class="confirm-modal notice-modal" role="alertdialog" aria-modal="true"><div class="success-icon"><i class="bi bi-check-lg"></i></div><h2>Thành công</h2><p>{{ thongBao }}</p><div class="confirm-actions"><button class="btn-save" type="button" (click)="dongThongBao()">Đóng</button></div></section>
+</div>
+
+<!-- Popup thông báo lỗi form -->
+<div class="modal-backdrop-custom" *ngIf="showPopupLoi">
+  <section class="confirm-modal notice-modal" role="alertdialog" aria-modal="true"><div class="confirm-icon"><i class="bi bi-exclamation-triangle-fill"></i></div><h2>Chưa thể lưu nhóm</h2><p>{{ loi }}</p><div class="confirm-actions"><button class="btn-save" type="button" (click)="dongLoi()">Đã hiểu</button></div></section>
+</div>

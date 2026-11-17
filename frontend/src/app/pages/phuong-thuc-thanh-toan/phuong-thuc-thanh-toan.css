@@ -1,0 +1,804 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700;800&display=swap');
+
+/* ========================================
+   HOST
+======================================== */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ========================================
+   NỀN TRANG THANH TOÁN
+======================================== */
+
+.pm-page-bg {
+  width: 100%;
+  min-height: 100vh;
+
+  background: linear-gradient(
+    180deg,
+    rgba(69, 39, 105, 0.6) 8.17%,
+    #190f26 35.1%,
+    rgba(69, 39, 105, 0.7) 63.94%,
+    #1b1029 88.94%
+  );
+
+  color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: var(--font-main);
+}
+
+/* ========================================
+   MAIN WRAPPER
+======================================== */
+
+/* ĐẨY NỘI DUNG XUỐNG DƯỚI HEADER */
+
+.pm-main-wrapper {
+  width: 100%;
+  max-width: 1104px;
+
+  margin-top: 130px;
+  padding: 10px 15px 40px 15px;
+
+  box-sizing: border-box;
+}
+
+/* ========================================
+   HEADER TRANG THANH TOÁN
+======================================== */
+
+.pm-top-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+
+  margin: 0;
+  line-height: 130%;
+}
+
+.badge-blue-tab {
+  background: #7d51ad;
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  padding: 6px 20px;
+  border-radius: 3px;
+
+  display: inline-block;
+}
+
+/* ========================================
+   MAIN CARD
+======================================== */
+
+.pm-main-card {
+  width: 100%;
+
+  background: linear-gradient(
+    180deg,
+    #643b96 10.1%,
+    #29183d 88.46%
+  );
+
+  border-radius: 4px;
+
+  display: flex;
+  padding: 30px;
+  gap: 40px;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   CỘT TRÁI
+======================================== */
+
+.pm-left-col {
+  flex: 1.3;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  min-width: 0;
+}
+
+/* ========================================
+   FIELD WRAPPER
+======================================== */
+
+.field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  position: relative;
+}
+
+.field-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  line-height: 130%;
+}
+
+/* ========================================
+   DROPDOWN PHƯƠNG THỨC THANH TOÁN
+======================================== */
+
+.dropdown-select-box {
+  width: 220px;
+  height: 32px;
+
+  background: #343434;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 12px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  position: relative;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.arrow-icon {
+  transition: transform 0.2s ease;
+}
+
+.arrow-icon.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu-list {
+  position: absolute;
+
+  top: 34px;
+  left: -1px;
+
+  width: calc(100% + 2px);
+
+  background: #464646;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dropdown-menu-item {
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 12px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+.dropdown-menu-item:hover,
+.dropdown-menu-item.active {
+  background: #7d51ad;
+}
+
+/* ========================================
+   TIÊU ĐỀ THÔNG TIN THANH TOÁN
+======================================== */
+
+.pm-sub-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+
+  margin: 12px 0 0 0;
+  line-height: 130%;
+}
+
+/* ========================================
+   HÀNG INPUT
+======================================== */
+
+.inputs-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.phone-group {
+  flex: 1.5;
+  position: relative;
+}
+
+/* ========================================
+   INPUT MẶC ĐỊNH
+======================================== */
+
+.custom-input-dark {
+  width: 100%;
+  height: 28px;
+
+  background: #343434;
+
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+
+  color: #ffffff;
+
+  padding: 0 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  outline: none;
+  box-sizing: border-box;
+
+  font-family: var(--font-main);
+}
+
+.custom-input-dark::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.custom-input-dark:focus {
+  border-color: #af84d6;
+}
+
+/* ========================================
+   VALIDATION HỌ, TÊN VÀ SỐ ĐIỆN THOẠI
+   ÁP DỤNG CHO MỌI KÍCH THƯỚC MÀN HÌNH
+======================================== */
+
+/* VIỀN ĐỎ KHI THÔNG TIN KHÔNG HỢP LỆ */
+
+.input-group .custom-input-dark.input-invalid {
+  border: 1px solid #ff4d4f;
+  background: #343434;
+}
+
+/* VIỀN ĐỎ KHI FOCUS VÀ NHẬP SAI */
+
+.input-group .custom-input-dark.input-invalid:focus {
+  border-color: #ff4d4f;
+  outline: none;
+
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.15);
+}
+
+/* THÔNG BÁO LỖI HỌ, TÊN VÀ SĐT */
+
+.input-group .field-error-message,
+.input-group .phone-error-message {
+  display: block;
+
+  color: #ff5c5c;
+
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  margin-top: 1px;
+}
+
+/* ========================================
+   QUỐC GIA VÀ MÃ VÙNG ĐIỆN THOẠI
+   HIỂN THỊ NHƯ CHÚ THÍCH NHỎ
+======================================== */
+
+.phone-country-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 4px;
+
+  width: 100%;
+  min-height: auto;
+
+  margin: -2px 0 0 0;
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+/* TÊN QUỐC GIA */
+
+.phone-country-name {
+  font-family: var(--font-main);
+
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+
+  color: #b7a4c7;
+  letter-spacing: 0;
+}
+
+/* MÃ VÙNG ĐIỆN THOẠI */
+
+.phone-country-code {
+  font-family: var(--font-main);
+
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+
+  color: #b7a4c7;
+  letter-spacing: 0;
+}
+
+/* ĐẢM BẢO INPUT KHÔNG BỊ TRÀN */
+
+.phone-group .custom-input-dark {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* THÔNG BÁO LỖI SỐ ĐIỆN THOẠI */
+
+.phone-group .phone-error-message {
+  color: #ff5c5c;
+
+  font-family: var(--font-main);
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  margin-top: 2px;
+}
+
+/* ========================================
+   CHECKBOX LƯU THÔNG TIN
+======================================== */
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  cursor: pointer;
+  margin-top: 6px;
+
+  user-select: none;
+}
+
+.square-checkbox {
+  width: 14px;
+  height: 14px;
+
+  border: 1px solid #7d51ad;
+  background: #7d51ad;
+  border-radius: 2px;
+
+  flex-shrink: 0;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square-checkbox.checked::after {
+  content: '';
+
+  position: absolute;
+
+  left: 4px;
+  top: 1px;
+
+  width: 4px;
+  height: 8px;
+
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg);
+}
+
+.square-checkbox:not(.checked) {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.checkbox-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+
+  font-weight: 600;
+  line-height: 130%;
+}
+
+/* ========================================
+   NÚT TIẾP TỤC
+======================================== */
+
+.btn-action-row {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 12px;
+}
+
+.btn-green-submit {
+  min-width: 108px;
+  height: 34px;
+
+  background: linear-gradient(
+    90deg,
+    #8ca872 0%,
+    #37422d 100%
+  ) !important;
+
+  border: none !important;
+  border-radius: 2px;
+
+  color: #ffffff !important;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  padding: 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-green-submit:hover {
+  opacity: 0.9;
+}
+
+/* ========================================
+   CỘT PHẢI
+======================================== */
+
+.pm-right-col {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pm-section-title-right {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+
+  margin: 0;
+  opacity: 0.8;
+
+  line-height: 130%;
+}
+
+.sub-desc-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+
+  margin: 0;
+
+  font-weight: 600;
+  line-height: 130%;
+}
+
+/* ========================================
+   DANH SÁCH PHƯƠNG THỨC THANH TOÁN
+======================================== */
+
+.payment-badges-list {
+  display: flex;
+  gap: 12px;
+
+  margin-top: 8px;
+}
+
+.badge-icon {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+/* ========================================
+   LOGO MOMO
+======================================== */
+
+.momo-bg {
+  background: #4e2b7a;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  line-height: 12px;
+  text-align: center;
+}
+
+/* ========================================
+   LOGO VNPAY
+======================================== */
+
+.vnpay-bg {
+  background: #ffffff;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.vnpay-v {
+  color: #e31837;
+  font-weight: 900;
+}
+
+.vnpay-npay {
+  color: #502c7e;
+  font-weight: 800;
+}
+
+/* ========================================
+   LOGO PAYPAL
+======================================== */
+
+.paypal-bg {
+  background: #ffffff;
+
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.paypal-p1 {
+  color: #412562;
+}
+
+.paypal-p2 {
+  color: #5c348d;
+  margin-left: -3px;
+}
+
+/* ========================================
+   RESPONSIVE TABLET
+======================================== */
+
+@media (max-width: 768px) {
+
+  .pm-main-wrapper {
+    margin-top: 110px;
+    padding: 10px 15px 35px;
+  }
+
+  .pm-top-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .badge-blue-tab {
+    font-size: 15px;
+  }
+
+  .pm-main-card {
+    flex-direction: column;
+    gap: 25px;
+    padding: 20px;
+  }
+
+  .pm-left-col,
+  .pm-right-col {
+    width: 100%;
+  }
+
+  .inputs-row {
+    flex-wrap: wrap;
+  }
+
+  .input-group {
+    flex: 1 1 45%;
+  }
+
+  .phone-group {
+    flex: 1 1 100%;
+  }
+
+  .field-error-message,
+  .phone-error-message {
+    font-size: 11px;
+  }
+
+}
+
+/* ========================================
+   RESPONSIVE MOBILE
+======================================== */
+
+@media (max-width: 480px) {
+
+  .pm-main-wrapper {
+    margin-top: 100px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .pm-sub-title,
+  .pm-section-title-right {
+    font-size: 19px;
+  }
+
+  .inputs-row {
+    flex-direction: column;
+  }
+
+  .input-group,
+  .phone-group {
+    width: 100%;
+  }
+
+  .dropdown-select-box {
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .btn-green-submit {
+    min-width: 120px;
+  }
+
+  /* CHÚ THÍCH QUỐC GIA TRÊN MOBILE */
+
+  .phone-country-info {
+    gap: 4px;
+  }
+
+  .phone-country-name,
+  .phone-country-code {
+    font-size: 10px;
+    font-weight: 400;
+  }
+
+  .phone-group .custom-input-dark {
+    width: 100%;
+  }
+
+  .phone-group .phone-error-message {
+    font-size: 11px;
+  }
+
+}
+/* Hiệu ứng bấm vào icon thanh toán bên phải */
+.clickable-badge {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.clickable-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.25);
+}
+
+.clickable-badge.selected-badge {
+  outline: 3px solid #00d26a;
+  outline-offset: 2px;
+  transform: scale(1.08);
+  box-shadow: 0 0 14px rgba(0, 210, 106, 0.6);
+}
+/* Danh sách phương thức thanh toán */
+.payment-badges-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Khung chứa logo */
+.badge-icon {
+  width: 85px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 8px;
+  transition: all 0.25s ease;
+}
+
+/* Hình ảnh logo */
+.payment-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Hiệu ứng khi rê chuột */
+.clickable-badge {
+  cursor: pointer;
+}
+
+.clickable-badge:hover {
+  transform: translateY(-3px);
+  border-color: #35c46a;
+  box-shadow: 0 4px 12px rgba(53, 196, 106, 0.2);
+}
+
+/* Phương thức đang được chọn */
+.selected-badge {
+  border: 2px solid #35c46a !important;
+  box-shadow: 0 0 0 3px rgba(53, 196, 106, 0.15);
+  background: #ffffff;
+}
+
+/* Kích thước riêng từng logo nếu cần */
+.momo-logo {
+  object-fit: contain;
+}
+
+.vnpay-logo {
+  object-fit: contain;
+}
+
+.paypal-logo {
+  object-fit: contain;
+}

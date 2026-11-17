@@ -1,0 +1,9 @@
+<div class="otp-row" [class.underline]="variant === 'underline'" role="group" aria-label="Mã OTP">
+  <input *ngFor="let d of digits; let i = index; trackBy: trackByIndex" #box
+         type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6"
+         class="otp-cell" [class.filled]="!!digits[i]"
+         [attr.aria-label]="'Chữ số ' + (i + 1)"
+         [value]="digits[i]" [disabled]="disabled"
+         (focus)="onFocus($event)" (input)="onInput($event, i)"
+         (keydown)="onKeydown($event, i)" (paste)="onPaste($event, i)">
+</div>

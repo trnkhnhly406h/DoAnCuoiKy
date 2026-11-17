@@ -1,0 +1,854 @@
+<div class="auth-modal-overlay" (click)="close()">
+
+  <div
+    class="auth-modal-container"
+    (click)="$event.stopPropagation()">
+
+    <!-- ======================================== -->
+    <!-- NÚT ĐÓNG MODAL -->
+    <!-- ======================================== -->
+
+    <button
+      type="button"
+      class="btn-close-x"
+      (click)="close()">
+      ✕
+    </button>
+
+
+    <!-- ======================================== -->
+    <!-- BƯỚC 1: THÔNG TIN ĐĂNG KÝ -->
+    <!-- ======================================== -->
+
+    <div *ngIf="step === 1">
+
+      <!-- LOGO -->
+
+      <div class="auth-logo-header">
+
+        <div class="logo-circle">
+
+          <img
+            src="https://res.cloudinary.com/dhbnmxe6t/image/upload/v1791604871/4140074_jmxewt.png"
+            alt="STEAL Logo"
+            appImgFallback>
+
+        </div>
+
+        <span class="steal-title">
+          STEAL
+        </span>
+
+      </div>
+
+
+      <!-- TIÊU ĐỀ -->
+
+      <h3 class="step-title">
+        TẠO TÀI KHOẢN CỦA BẠN
+      </h3>
+
+
+      <!-- ======================================== -->
+      <!-- EMAIL -->
+      <!-- ======================================== -->
+
+      <div class="auth-form-group">
+
+        <label
+          class="auth-label"
+          for="regEmail">
+
+          Địa chỉ email
+
+        </label>
+
+        <input
+          id="regEmail"
+          type="email"
+          class="auth-input"
+          [(ngModel)]="regEmail"
+          (ngModelChange)="onEmailChange()"
+          [class.input-error]="!!emailError"
+          [attr.aria-invalid]="!!emailError"
+          [attr.aria-describedby]="emailError ? 'email-error' : null"
+          autocomplete="email"
+          placeholder="Nhập email...">
+
+        <!-- LỖI EMAIL -->
+
+        <div
+          id="email-error"
+          class="email-error-message"
+          *ngIf="emailError"
+          role="alert">
+
+          {{ emailError }}
+
+        </div>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- XÁC NHẬN EMAIL -->
+      <!-- ======================================== -->
+
+      <div class="auth-form-group">
+
+        <label
+          class="auth-label"
+          for="regEmailConfirm">
+
+          Xác nhận địa chỉ email của bạn
+
+        </label>
+
+        <input
+          id="regEmailConfirm"
+          type="email"
+          class="auth-input"
+          [(ngModel)]="regEmailConfirm"
+          (ngModelChange)="onEmailConfirmChange()"
+          [class.input-error]="!!emailConfirmError"
+          autocomplete="email"
+          placeholder="Nhập lại email...">
+
+        <div
+          class="email-error-message"
+          *ngIf="emailConfirmError"
+          role="alert">
+
+          {{ emailConfirmError }}
+
+        </div>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- QUỐC GIA -->
+      <!-- ======================================== -->
+
+      <div class="auth-form-group">
+
+        <label
+          class="auth-label"
+          for="regCountry">
+
+          Quốc gia cư trú
+
+        </label>
+
+        <select
+          id="regCountry"
+          class="auth-input select-input"
+          [(ngModel)]="regCountry"
+          (ngModelChange)="clearStep1Error()">
+
+          <option value="Việt Nam">
+            Việt Nam
+          </option>
+
+          <option value="Anh">
+            Anh (Vương quốc Anh)
+          </option>
+
+          <option value="Hàn Quốc">
+            Hàn Quốc
+          </option>
+
+          <option value="Hoa Kỳ">
+            Hoa Kỳ
+          </option>
+
+          <option value="Nhật Bản">
+            Nhật Bản
+          </option>
+
+          <option value="Trung Quốc">
+            Trung Quốc
+          </option>
+
+          <option value="Singapore">
+            Singapore
+          </option>
+
+          <option value="Thái Lan">
+            Thái Lan
+          </option>
+
+          <option value="Úc">
+            Úc
+          </option>
+
+          <option value="Đức">
+            Đức
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- CAPTCHA -->
+      <!-- ======================================== -->
+
+      <div class="captcha-box">
+
+        <div class="captcha-left">
+
+          <input
+            type="checkbox"
+            [(ngModel)]="isHuman"
+            (ngModelChange)="clearStep1Error()"
+            id="human"
+            class="custom-checkbox">
+
+          <label
+            for="human"
+            class="captcha-txt">
+
+            Tôi là con người
+
+          </label>
+
+        </div>
+
+        <div class="captcha-icon-wrapper">
+
+          <span class="recap-brand">
+            reCAPTCHA
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- ĐIỀU KHOẢN -->
+      <!-- ======================================== -->
+
+      <div class="terms-row">
+
+        <input
+          type="checkbox"
+          [(ngModel)]="acceptTerms"
+          (ngModelChange)="clearStep1Error()"
+          id="terms"
+          class="custom-checkbox">
+
+        <label
+          for="terms"
+          class="terms-label">
+
+          Tôi xác nhận mình từ 13 tuổi trở lên
+          và đồng ý với
+
+          <a
+            [routerLink]="['/thoa-thuan-dang-ky']"
+            (click)="openTerms($event)"
+            class="terms-link">
+
+            Thỏa thuận đăng ký
+
+          </a>.
+
+        </label>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- LỖI BƯỚC 1 -->
+      <!-- ======================================== -->
+
+      <div
+        class="error-msg-red"
+        *ngIf="step1Error"
+        role="alert">
+
+        {{ step1Error }}
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- NÚT TIẾP TỤC -->
+      <!-- ======================================== -->
+
+      <button
+        type="button"
+        class="btn-submit-auth"
+        (click)="submitStep1()">
+
+        Tiếp tục
+
+      </button>
+
+
+      <!-- ======================================== -->
+      <!-- ĐĂNG NHẬP -->
+      <!-- ======================================== -->
+
+      <div class="otp-resend-row">
+
+        <span>
+          Đã có tài khoản?
+        </span>
+
+        <span
+          class="span-resend-link"
+          role="button"
+          tabindex="0"
+          (click)="switchToLogin()"
+          (keydown.enter)="switchToLogin()">
+
+          Đăng nhập
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ======================================== -->
+    <!-- BƯỚC 2: OTP -->
+    <!-- ======================================== -->
+
+    <div
+      *ngIf="step === 2"
+      class="otp-step-container">
+
+      <!-- LOGO -->
+
+      <div class="auth-logo-header">
+
+        <div class="logo-circle">
+
+          <img
+            src="https://res.cloudinary.com/dhbnmxe6t/image/upload/v1791604871/4140074_jmxewt.png"
+            alt="STEAL Logo"
+            appImgFallback>
+
+        </div>
+
+        <span class="steal-title">
+          STEAL
+        </span>
+
+      </div>
+
+
+      <!-- TIÊU ĐỀ -->
+
+      <h3 class="step-title">
+        XÁC NHẬN QUA EMAIL CỦA BẠN
+      </h3>
+
+
+      <!-- HƯỚNG DẪN -->
+
+      <p class="otp-hint">
+
+        Mã xác minh đã được gửi đến email của bạn.
+        Nhập mã bên dưới để tiếp tục.
+
+      </p>
+
+
+      <!-- OTP -->
+
+      <div class="otp-box-wrapper">
+
+        <app-otp-input
+          variant="underline"
+          (codeChange)="onOtpChange($event)"
+          (submitted)="submitOtp()">
+        </app-otp-input>
+
+      </div>
+
+
+      <!-- GỬI LẠI OTP -->
+
+      <div class="otp-resend-row">
+
+        <span>
+          Chưa nhận được mã?
+        </span>
+
+        <span
+          class="span-resend-link"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="resendOtp($event)"
+          (click)="resendOtp($event)">
+
+          {{ resendLabel }}
+
+        </span>
+
+        <span
+          class="span-resend-link"
+          role="button"
+          tabindex="0"
+          (click)="backToStep1()"
+          (keydown.enter)="backToStep1()">
+
+          · Đổi email
+
+        </span>
+
+      </div>
+
+
+      <!-- LỖI OTP -->
+
+      <div
+        class="error-msg-red"
+        *ngIf="otpErrorMsg"
+        role="alert">
+
+        {{ otpErrorMsg }}
+
+      </div>
+
+
+      <!-- NÚT TIẾP TỤC -->
+
+      <button
+        type="button"
+        class="btn-submit-auth"
+        (click)="submitOtp()">
+
+        Tiếp tục
+
+      </button>
+
+
+      <!-- OTP DEMO -->
+
+      <div
+        class="otp-tiny-footer"
+        *ngIf="showTestOtp">
+
+        <span>
+
+          Giả lập OTP (random):
+
+          <strong>
+            {{ currentOtp }}
+          </strong>
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ======================================== -->
+    <!-- BƯỚC 3 -->
+    <!-- ======================================== -->
+
+    <div *ngIf="step === 3">
+
+      <!-- LOGO -->
+
+      <div class="auth-logo-header">
+
+        <div class="logo-circle">
+
+          <img
+            src="https://res.cloudinary.com/dhbnmxe6t/image/upload/v1791604871/4140074_jmxewt.png"
+            alt="STEAL Logo"
+            appImgFallback>
+
+        </div>
+
+        <span class="steal-title">
+          STEAL
+        </span>
+
+      </div>
+
+
+      <!-- TIÊU ĐỀ -->
+
+      <h3 class="step-title">
+        TẠO TÀI KHOẢN CỦA BẠN
+      </h3>
+
+
+      <!-- ======================================== -->
+      <!-- USERNAME -->
+      <!-- ======================================== -->
+
+      <div class="auth-form-group">
+
+        <label
+          class="auth-label"
+          for="regUsername">
+
+          Tên tài khoản STEAL
+
+        </label>
+
+        <input
+          id="regUsername"
+          type="text"
+          class="auth-input"
+          [(ngModel)]="regUsername"
+          (ngModelChange)="onUsernameChange()"
+          [class.input-error]="!!usernameError"
+          [attr.aria-invalid]="!!usernameError"
+          [attr.aria-describedby]="usernameError ? 'username-error' : null"
+          autocomplete="username"
+          placeholder="Chọn tên tài khoản...">
+
+        <div
+          id="username-error"
+          class="email-error-message"
+          *ngIf="usernameError"
+          role="alert">
+
+          {{ usernameError }}
+
+        </div>
+
+<div
+  *ngIf="isCheckingUsername && !usernameError"
+  style="font-size: 12px; color: #c9a8ee; margin-top: 6px;">
+  Đang kiểm tra tên tài khoản...
+</div>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- PASSWORD -->
+      <!-- ======================================== -->
+
+      <div class="auth-form-group">
+
+        <label
+          class="auth-label"
+          for="regPass">
+
+          Chọn mật khẩu
+
+        </label>
+
+        <div class="input-with-eye">
+
+          <input
+            id="regPass"
+            [type]="showPass ? 'text' : 'password'"
+            class="auth-input"
+            [(ngModel)]="regPass"
+            (ngModelChange)="clearStep3Error()"
+            autocomplete="off"
+            placeholder="Nhập mật khẩu...">
+
+          <span
+            class="eye-icon"
+            role="button"
+            tabindex="0"
+            aria-label="Hiện hoặc ẩn mật khẩu"
+            (keydown.enter)="showPass = !showPass"
+            (click)="showPass = !showPass">
+
+            <!-- MẮT MỞ -->
+
+            <svg
+              *ngIf="showPass"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#583684"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path
+                d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+              </path>
+
+              <circle
+                cx="12"
+                cy="12"
+                r="3">
+              </circle>
+
+            </svg>
+
+
+            <!-- MẮT ĐÓNG -->
+
+            <svg
+              *ngIf="!showPass"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#583684"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path
+                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+              </path>
+
+              <line
+                x1="1"
+                y1="1"
+                x2="23"
+                y2="23">
+              </line>
+
+            </svg>
+
+          </span>
+
+        </div>
+
+
+        <!-- ĐIỀU KIỆN PASSWORD -->
+
+        <div class="password-conditions-list">
+
+          <div
+            [style.color]="hasMinLength ? '#2ecc71' : '#e74c3c'">
+
+            {{ hasMinLength ? '✔' : '✖' }}
+            Ít nhất 8 ký tự
+
+          </div>
+
+          <div
+            [style.color]="hasLetterAndNumber ? '#2ecc71' : '#e74c3c'">
+
+            {{ hasLetterAndNumber ? '✔' : '✖' }}
+            Bao gồm chữ cái và số
+
+          </div>
+
+<div
+  [style.color]="hasUppercase ? '#2ecc71' : '#e74c3c'"
+>
+  {{ hasUppercase ? '✔' : '✖' }}
+  Có ít nhất 1 chữ cái viết hoa (A-Z)
+</div>
+
+          <div
+            [style.color]="hasSpecialChar ? '#2ecc71' : '#e74c3c'">
+
+            {{ hasSpecialChar ? '✔' : '✖' }}
+            Có chứa ký tự đặc biệt
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- XÁC NHẬN PASSWORD -->
+      <!-- ======================================== -->
+
+      <div class="auth-form-group">
+
+        <label
+          class="auth-label"
+          for="regConfirmPass">
+
+          Xác nhận mật khẩu
+
+        </label>
+
+        <div class="input-with-eye">
+
+          <input
+            id="regConfirmPass"
+            [type]="showConfirmPass ? 'text' : 'password'"
+            class="auth-input"
+            [(ngModel)]="regConfirmPass"
+            (ngModelChange)="clearStep3Error()"
+            autocomplete="new-password"
+            placeholder="Nhập lại mật khẩu...">
+
+          <span
+            class="eye-icon"
+            role="button"
+            tabindex="0"
+            aria-label="Hiện hoặc ẩn mật khẩu xác nhận"
+            (keydown.enter)="showConfirmPass = !showConfirmPass"
+            (click)="showConfirmPass = !showConfirmPass">
+
+            <!-- MẮT MỞ -->
+
+            <svg
+              *ngIf="showConfirmPass"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#583684"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path
+                d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
+              </path>
+
+              <circle
+                cx="12"
+                cy="12"
+                r="3">
+              </circle>
+
+            </svg>
+
+
+            <!-- MẮT ĐÓNG -->
+
+            <svg
+              *ngIf="!showConfirmPass"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#583684"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path
+                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+              </path>
+
+              <line
+                x1="1"
+                y1="1"
+                x2="23"
+                y2="23">
+              </line>
+
+            </svg>
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- LỖI PASSWORD -->
+      <!-- ======================================== -->
+
+      <div
+        class="error-msg-red"
+        *ngIf="passMismatchMsg"
+        role="alert">
+
+        {{ passMismatchMsg }}
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- LỖI BƯỚC 3 -->
+      <!-- ======================================== -->
+
+      <div
+        class="error-msg-red"
+        *ngIf="step3Error"
+        role="alert">
+
+        {{ step3Error }}
+
+      </div>
+
+
+      <!-- ======================================== -->
+      <!-- HOÀN TẤT -->
+      <!-- ======================================== -->
+
+      
+<button
+  type="button"
+  class="btn-submit-auth"
+  [disabled]="isSubmittingRegistration || isCheckingUsername"
+  (click)="finish()">
+
+  {{
+    isSubmittingRegistration
+      ? 'Đang tạo tài khoản...'
+      : 'Hoàn tất'
+  }}
+
+</button>
+
+
+    </div>
+
+<!-- BƯỚC 4: ĐĂNG KÝ THÀNH CÔNG -->
+<div
+  *ngIf="step === 4"
+  style="
+    min-height: 590px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+  ">
+
+  <div style="
+    font-size: 64px;
+    color: #4ade80;
+    line-height: 1;
+  ">
+    ✓
+  </div>
+
+  <h3 class="step-title" style="margin-bottom: 0;">
+    ĐĂNG KÝ THÀNH CÔNG!
+  </h3>
+
+  <p style="
+    font-size: 16px;
+    color: #e9e2f0;
+    line-height: 1.8;
+  ">
+    Tài khoản
+    <strong>{{ registeredUsername }}</strong>
+    đã được tạo thành công trên STEAL!
+    <br>
+    Bạn có thể đăng nhập để bắt đầu trải nghiệm.
+  </p>
+
+  <button
+    type="button"
+    class="btn-submit-auth"
+    (click)="switchToLogin()">
+
+    Đăng nhập ngay
+
+  </button>
+
+</div>
+
+  </div>
+
+</div>

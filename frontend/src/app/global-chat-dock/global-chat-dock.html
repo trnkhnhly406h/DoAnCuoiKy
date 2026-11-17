@@ -1,0 +1,248 @@
+<button type="button" class="global-chat-dock-trigger" (click)="toggleDock()" aria-label="Mở danh sách bạn bè và trò chuyện">
+  <span class="dock-icon">💬</span>
+  <span class="dock-text">BẠN BÈ & TRÒ CHUYỆN</span>
+  <span class="dock-unread-badge" *ngIf="isLoggedIn && chatService.totalUnread > 0">{{ chatService.totalUnread }}</span>
+</button>
+
+<!-- OVERLAY DANH SÁCH BẠN BÈ -->
+<div class="steam-friends-overlay-window" *ngIf="isDockOpen && !isFullChatOpen">
+  
+  <div class="dock-auth-required" *ngIf="!isLoggedIn">
+    <div class="overlay-header-bar">
+      <span class="user-name-title">YÊU CẦU ĐĂNG NHẬP</span>
+      <button type="button" class="btn-win-action" (click)="toggleDock()" aria-label="Đóng">✕</button>
+    </div>
+    <div class="dock-auth-body">
+      <div class="lock-icon">🔒</div>
+      <p>Bạn cần đăng nhập để xem bạn bè & trò chuyện.</p>
+      <button class="btn-login-now-sm" (click)="loginNow()">Đăng nhập ngay</button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="isLoggedIn">
+    <div class="overlay-header-bar">
+      <div class="user-profile-summary">
+        <img [src]="chatService.currentUser.avatar" alt="Avatar" class="user-avatar-mini" appImgFallback>
+        <div class="user-text-col">
+          <span class="user-name-title">{{ chatService.currentUser.name }} ▾</span>
+          <span class="status-green">Online</span>
+        </div>
+      </div>
+      <div class="window-actions">
+        <button type="button" class="btn-win-action" (click)="toggleDock()" title="Đóng danh sách" aria-label="Đóng danh sách">✕</button>
+      </div>
+    </div>
+
+    <div class="overlay-friends-body">
+      <div class="section-title-bar">
+        <span>TRÒ CHUYỆN GẦN ĐÂY ({{ chatService.activeSessions.length }})</span>
+        <div class="bar-icons">
+          <a [routerLink]="['/tro-chuyen']" [queryParams]="{ tab: 'ban-be' }" (click)="toggleDock()" title="Tìm bạn bè" aria-label="Tìm bạn bè">🔍</a>
+          <a [routerLink]="['/tro-chuyen']" [queryParams]="{ tab: 'them-ban' }" (click)="toggleDock()" title="Thêm bạn" aria-label="Thêm bạn">⊕</a>
+        </div>
+      </div>
+
+      <div class="category-block">
+        <p class="dock-empty-text" *ngIf="chatService.activeSessions.length === 0">
+          Chưa có cuộc trò chuyện nào. Hãy kết bạn rồi bắt đầu nhắn tin nhé!
+        </p>
+        <div class="friend-row-item" *ngFor="let s of chatService.activeSessions; trackBy: trackById"
+             tabindex="0" role="button" (click)="openChatSession(s)" (keydown.enter)="openChatSession(s)">
+          <img [src]="s.avatar" alt="Avatar" class="friend-thumb" appImgFallback>
+          <div class="friend-info">
+            <span class="friend-name">{{ s.name }}</span>
+            <span class="status-muted" *ngIf="chatService.isMuted(s)">🔇 Đã tắt thông báo</span>
+            <span class="status-green" *ngIf="!s.isGroup && s.isOnline && !chatService.isMuted(s)">Online</span>
+          </div>
+          <span class="unread-badge" *ngIf="s.unreadCount > 0">{{ s.unreadCount }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
+
+<!-- CỬA SỔ CHAT TỰ ĐỘNG PHÓNG TO / THU NHỎ / BÁNH RĂNG ⚙ (HÌNH 4 & 5) -->
+<div class="full-chat-modal-window" *ngIf="isFullChatOpen && isLoggedIn" [class.maximized]="isMaximized" (click)="closeHeaderMenu()">
+  <div class="full-chat-header-bar">
+    <span class="steam-brand-title">STEAL TRÒ CHUYỆN - {{ chatService.currentUser.name }}</span>
+    <div class="win-controls">
+      <button type="button" class="btn-win-action" (click)="minimizeChat()" title="Thu nhỏ về danh sách" aria-label="Thu nhỏ">—</button>
+      <button type="button" class="btn-win-action" (click)="toggleMaximize()" title="Phóng to / Khôi phục" aria-label="Phóng to hoặc khôi phục">{{ isMaximized ? '🗗' : '🗖' }}</button>
+      <button type="button" class="btn-win-action" (click)="closeChat()" title="Đóng cửa sổ chat" aria-label="Đóng">✕</button>
+    </div>
+  </div>
+
+  <div class="full-chat-body-flex">
+    
+    <!-- SIDEBAR DÒNG CHAT TRÁI -->
+    <div class="chat-left-sidebar">
+      <div class="user-banner-mini">
+        <img [src]="chatService.currentUser.avatar" alt="Avatar" class="user-avatar-mini" appImgFallback>
+        <div class="user-text-col">
+          <span class="user-name-title">{{ chatService.currentUser.name }} ▾</span>
+          <span class="status-green">Trên mạng</span>
+        </div>
+      </div>
+
+      <div class="side-friends-list">
+        <span class="side-label">PHIÊN TRÒ CHUYỆN ({{ chatService.activeSessions.length }})</span>
+        <div class="side-user-item" 
+             *ngFor="let s of chatService.activeSessions; trackBy: trackById" 
+             [class.active]="chatService.selectedSessionId === s.id"
+             tabindex="0" role="button" (click)="selectTab(s.id)" (keydown.enter)="selectTab(s.id)">
+          <img [src]="s.avatar" alt="Avatar" class="friend-thumb" appImgFallback>
+          <span class="side-name">{{ s.name }}</span>
+          <span *ngIf="chatService.isMuted(s)" title="Đã tắt thông báo">🔇</span>
+          <span class="unread-badge" *ngIf="s.unreadCount > 0">{{ s.unreadCount }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KHUNG CHAT PHẢI -->
+    <div class="chat-right-panel chat-empty-panel" *ngIf="!currentSession">
+      <p>Chọn một cuộc trò chuyện ở danh sách bên trái để bắt đầu.</p>
+    </div>
+
+    <div class="chat-right-panel" *ngIf="currentSession">
+      
+      <!-- THANH TABS VÀ NÚT BÁNH RĂNG ⚙ -->
+      <div class="chat-tabs-bar">
+        <div class="tabs-scroll-area">
+          <div class="chat-tab-item" 
+               *ngFor="let s of chatService.openTabs; trackBy: trackById" 
+               [class.active]="chatService.selectedSessionId === s.id"
+               tabindex="0" role="tab" (click)="selectTab(s.id)" (keydown.enter)="selectTab(s.id)">
+            <span class="tab-title">{{ s.name }}</span>
+            <button type="button" class="btn-close-tab" (click)="chatService.closeTab(s.id, $event)" aria-label="Đóng tab">✕</button>
+          </div>
+        </div>
+
+        <!-- NÚT BÁNH RĂNG THIẾT LẬP DÙNG CHUNG CHO CẢ 2 LOẠI CHAT -->
+        <div class="header-gear-wrapper">
+          <button type="button" class="btn-header-gear" (click)="toggleHeaderMenu($event)" aria-label="Thiết lập cuộc trò chuyện">⚙</button>
+          
+          <div class="gear-header-dropdown" *ngIf="showChatHeaderMenu" (click)="$event.stopPropagation()">
+            <ng-container *ngIf="!currentSession.isGroup">
+              <button class="drop-item" (click)="toggleBlockCurrentPartner()">
+                {{ isCurrentPartnerBlocked ? 'Bỏ chặn' : 'Chặn' }}
+              </button>
+            </ng-container>
+
+            <!-- TẮT THÔNG BÁO SUB-MENU -->
+            <div class="drop-item has-sub" tabindex="0" role="button" (mouseenter)="showMuteSubMenu = true" (click)="showMuteSubMenu = !showMuteSubMenu">
+              <span>{{ chatService.isMuted(currentSession) ? 'Đã tắt: ' + chatService.muteLabel(currentSession) : 'Tắt thông báo' }}</span>
+              <span class="arrow-r">▶</span>
+
+              <div class="mute-sub-menu" *ngIf="showMuteSubMenu">
+                <button (click)="muteCurrentSession('15m')">Tắt 15 phút</button>
+                <button (click)="muteCurrentSession('1h')">Tắt 1 giờ</button>
+                <button (click)="muteCurrentSession('forever')">Cho đến khi bật lại</button>
+                <button *ngIf="chatService.isMuted(currentSession)" class="text-green" (click)="unmuteCurrentSession()">Bật lại thông báo</button>
+              </div>
+            </div>
+
+            <ng-container *ngIf="!currentSession.isGroup">
+              <button class="drop-item text-danger" (click)="deleteCurrentSession()">Xóa cuộc trò chuyện</button>
+            </ng-container>
+            <ng-container *ngIf="currentSession.isGroup">
+              <button class="drop-item text-danger" (click)="leaveCurrentGroup()">Rời nhóm trò chuyện</button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIN NHẮN GHIM PINS -->
+      <div class="pinned-messages-bar" *ngIf="pinnedMessages.length > 0">
+        <div class="pinned-header">📌 TIN NHẮN ĐÃ GHIM ({{ pinnedMessages.length }})</div>
+        <div class="pinned-list-scroll">
+          <div class="pinned-item-row" *ngFor="let pm of pinnedMessages">
+            <span class="pinned-sender">{{ pm.sender }}:</span>
+            <span class="pinned-text">{{ pm.text ? chatService.displayText(pm.text) : '[Tệp đính kèm]' }}</span>
+            <button type="button" class="btn-unpin-mini" (click)="togglePin(pm.id)" aria-label="Bỏ ghim">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KỊCH BẢN 1: BANNER BỊ CHẶN Ở CHAT CÁ NHÂN (1-ON-1) -->
+      <div class="blocked-private-banner" *ngIf="isCurrentPartnerBlocked">
+        🚫 <span>Bạn đã chặn người dùng này. Bạn không thể gửi tin nhắn trừ khi bỏ chặn.</span>
+        <button class="btn-unblock-direct" (click)="toggleBlockCurrentPartner()">Bỏ chặn ngay</button>
+      </div>
+
+      <!-- KỊCH BẢN 2: BANNER BỊ CHẶN Ở CHAT NHÓM -->
+      <div class="blocked-user-warning-banner" *ngIf="hasBlockedUserInCurrentSession">
+        <span>⚠️ Có tin nhắn từ người dùng trong danh sách đã chặn.</span>
+        <button class="btn-toggle-blocked" (click)="toggleShowBlockedMessages()">
+          {{ isShowBlockedMessages ? 'Ẩn lại' : 'Hiển thị tin nhắn' }}
+        </button>
+      </div>
+
+      <!-- VÙNG LỊCH SỬ TIN NHẮN -->
+      <div class="messages-history-box" #scrollContainer>
+        <ng-container *ngFor="let msg of currentSession.messages; trackBy: trackById">
+
+        <!-- Tin nhắn hệ thống (thêm/mời ra/bổ nhiệm/đề nghị...) -->
+        <div class="msg-system" *ngIf="msg.isSystem" role="status">
+          <span class="msg-system-tag">Hệ thống</span>
+          <span class="msg-system-text">{{ msg.text }}</span>
+          <span class="msg-system-time">{{ msg.time }}</span>
+        </div>
+
+        <div class="msg-row" *ngIf="!msg.isSystem" [class.self]="msg.isSelf">
+          <img [src]="msg.avatar" alt="Avatar" class="msg-avatar" [class.clickable]="!msg.isSelf" (click)="openProfile(msg)" appImgFallback>
+          <div class="msg-content-col">
+            <div class="msg-header">
+              <span class="sender-name" [class.clickable]="!msg.isSelf" (click)="openProfile(msg)">{{ msg.sender }}</span>
+              <span class="msg-time">{{ msg.time }}</span>
+              <button type="button" class="btn-pin-action" (click)="togglePin(msg.id)" title="Ghim/Bỏ ghim" aria-label="Ghim hoặc bỏ ghim tin nhắn">📌</button>
+            </div>
+
+            <ng-container *ngIf="isMasked(msg); else normalMsgContent">
+              <p class="msg-text masked-blocked">🔒 <i>Tin nhắn từ người dùng bị chặn đã bị ẩn.</i></p>
+            </ng-container>
+
+            <ng-template #normalMsgContent>
+              <p class="msg-text" *ngIf="msg.text">{{ chatService.displayText(msg.text) }}</p>
+              
+              <div class="attachment-preview-box" *ngIf="msg.attachment">
+                <img [src]="msg.attachment.url" [alt]="msg.attachment.name" *ngIf="msg.attachment.type === 'image'" class="attached-img-preview">
+                <a class="file-download-chip" *ngIf="msg.attachment.type === 'file'" [href]="msg.attachment.url" [download]="msg.attachment.name" rel="noopener">
+                  📄 <span>{{ msg.attachment.name }} ({{ msg.attachment.size }}) ⬇</span>
+                </a>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+        </ng-container>
+      </div>
+
+      <!-- POPUP EMOJI -->
+      <div class="emoji-picker-popup" *ngIf="showEmojiPicker" (click)="$event.stopPropagation()">
+        <div class="emoji-grid-30">
+          <button type="button" class="emoji-btn-item" *ngFor="let em of textEmojis" (click)="insertEmoji(em)">{{ em }}</button>
+        </div>
+      </div>
+
+      <!-- Ô NHẬP TIN NHẮN (KHÓA KHI ĐANG CHẶN CHAT 1-1) -->
+      <div class="chat-input-bar" [class.disabled-bar]="isCurrentPartnerBlocked">
+        <input type="file" #dockFileInput (change)="onFileSelected($event)" style="display: none;">
+        <input type="text" 
+               [(ngModel)]="newMessageInput" 
+               [maxLength]="maxMessageLength"
+               aria-label="Nhập tin nhắn"
+               (keydown.enter)="sendMessage()" 
+               [disabled]="isCurrentPartnerBlocked"
+               [placeholder]="isCurrentPartnerBlocked ? 'Không thể gửi tin nhắn do đã chặn...' : 'Nhập tin nhắn...'" 
+               class="input-msg-text">
+        <div class="chat-input-actions">
+          <button type="button" (click)="sendMessage()" [disabled]="isCurrentPartnerBlocked" aria-label="Gửi tin nhắn">➤</button>
+          <button type="button" class="btn-emoji-trigger" (click)="toggleEmojiPicker($event)" [disabled]="isCurrentPartnerBlocked" aria-label="Chọn emoji">😊</button>
+          <button type="button" (click)="triggerFileInput()" [disabled]="isCurrentPartnerBlocked" aria-label="Đính kèm tệp">📎</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

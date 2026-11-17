@@ -1,0 +1,493 @@
+
+<div class="steal-page-container">
+<section class="steal-main-content">
+    <!-- BANNER THỂ LOẠI -->
+    <section class="hero-slider-section">
+      <div class="hero-banner-wrapper">
+        <div
+          class="banner-main-media"
+          [style.background-image]="'url(' + bannerImageUrl + ')'">
+        </div>
+
+        <div class="banner-side-box">
+          <h1 class="banner-genre-title">{{ genreName }}</h1>
+          <span class="banner-title-line"></span>
+          <p class="side-desc-text">{{ genreDesc }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- THANH THỂ LOẠI -->
+    <nav class="genre-category-nav" aria-label="Thể loại game">
+      <a
+        *ngFor="let g of listGenres"
+        class="cat-nav-item"
+        [class.active]="isGenreHighlighted(g.slug)"
+        [routerLink]="['/the-loai', g.slug]"
+        [attr.aria-current]="g.slug === genreSlug ? 'page' : null">
+
+        {{ g.name }}
+
+        <span
+          class="active-underline"
+          *ngIf="isGenreHighlighted(g.slug)">
+        </span>
+      </a>
+    </nav>
+
+    <div class="genre-main-layout">
+      <!-- CỘT TRÁI -->
+      <div class="genre-content-left">
+        <!-- DANH SÁCH GAME THEO THỂ LOẠI -->
+        <section class="wishlist-cards-section">
+          <div class="section-toggle-heading">
+            <div class="section-heading-text">
+              <h2>TRÒ CHƠI THEO THỂ LOẠI</h2>
+              <span>
+                {{ filteredGenreGames.length }} trò chơi phù hợp
+              </span>
+            </div>
+
+            <button
+              type="button"
+              class="section-toggle-btn"
+              (click)="toggleFeaturedGames()"
+              [attr.aria-expanded]="!featuredCollapsed">
+
+              {{ featuredCollapsed ? 'Mở rộng' : 'Thu gọn' }}
+
+              <span
+                class="toggle-chevron"
+                [class.chevron-up]="!featuredCollapsed">
+                ▼
+              </span>
+            </button>
+          </div>
+
+          <ng-container *ngIf="!featuredCollapsed">
+            <div class="wishlist-stack">
+              <div
+                class="game-item-card-small"
+                *ngFor="let game of displayedFeaturedGames; trackBy: trackById">
+
+                <div
+                  class="game-thumb-left"
+                  role="link" tabindex="0"
+                  [routerLink]="['/game', game.id]"
+                  [style.background-image]="'url(' + game.imageUrl + ')'">
+                </div>
+
+                <div class="game-info-center">
+                  <h3 class="game-title-txt"><a [routerLink]="['/game', game.id]">{{ game.name }}</a></h3>
+
+                  <p class="game-short-desc">
+                    {{ game.description }}
+                  </p>
+
+                  <div class="game-meta-row">
+                    <span class="meta-item">
+                      Ngày phát hành: {{ game.releaseDate }}
+                    </span>
+                  </div>
+
+                  <div class="game-tags-row">
+                    <span class="meta-item">THẺ TAGS</span>
+
+                    <a class="tag-badge-gray" *ngFor="let tag of game.tags" [routerLink]="tag.route">{{ tag.label }}</a>
+                  </div>
+                </div>
+
+                <!-- GIÁ -->
+                <div class="game-price-wrapper">
+                  <ng-container *ngIf="game.price === 0">
+                    <div class="free-badge">Chơi miễn phí</div>
+                  </ng-container>
+
+                  <ng-container
+                    *ngIf="game.price > 0 && game.discountPercent > 0">
+
+                    <div class="discount-badge">
+                      -{{ game.discountPercent }}%
+                    </div>
+
+                    <div class="price-stack">
+                      <span class="original-price">
+                        {{ game.originalPrice | number }} đ
+                      </span>
+
+                      <span class="final-price">
+                        {{ game.price | number }} đ
+                      </span>
+                    </div>
+                  </ng-container>
+
+                  <ng-container
+                    *ngIf="game.price > 0 && game.discountPercent === 0">
+
+                    <div class="single-price-box">
+                      {{ game.price | number }} đ
+                    </div>
+                  </ng-container>
+                </div>
+
+                <!-- NÚT THAO TÁC -->
+                <div class="card-action-buttons">
+                  <button
+                    type="button"
+                    class="action-btn-sq add-cart-btn-sq"
+                    (click)="addToCart(game, $event)"
+                    [attr.aria-label]="'Thêm ' + game.name + ' vào giỏ hàng'">
+                    +
+                  </button>
+
+                  <button
+                    type="button"
+                    class="action-btn-sq wishlist-btn-sq"
+                    [class.active]="isInWishlist(game)"
+                    (click)="toggleWishlist(game, $event)"
+                    [attr.aria-pressed]="isInWishlist(game)"
+                    [attr.aria-label]="'Danh sách ước: ' + game.name">
+                    ★
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- KHÔNG CÓ GAME -->
+            <div
+              class="no-games-found"
+              *ngIf="filteredGenreGames.length === 0">
+
+              <h3>Không tìm thấy trò chơi phù hợp</h3>
+
+              <p>
+                Không có game nào thuộc đồng thời tất cả thể loại đã chọn.
+              </p>
+
+              <button
+                type="button"
+                class="reset-filter-btn"
+                (click)="resetSidebarFilters()">
+                XÓA BỘ LỌC
+              </button>
+            </div>
+
+            <!-- HIỆN THÊM -->
+            <div
+              class="load-more-wrapper"
+              *ngIf="hasMoreFeaturedGames">
+
+              <button
+                type="button"
+                class="btn-load-more"
+                (click)="loadMoreFeaturedGames()">
+                HIỆN THÊM TRÒ CHƠI
+              </button>
+            </div>
+          </ng-container>
+
+          <!-- THU GỌN / MỞ RỘNG -->
+          <button
+            type="button"
+            class="featured-collapse-bar"
+            (click)="toggleFeaturedGames()"
+            [attr.aria-expanded]="!featuredCollapsed">
+
+            {{
+              featuredCollapsed
+                ? 'Hiển thị danh sách trò chơi theo thể loại'
+                : 'Thu gọn danh sách trò chơi'
+            }}
+
+            <span
+              class="toggle-chevron"
+              [class.chevron-up]="!featuredCollapsed">
+              ▼
+            </span>
+          </button>
+        </section>
+
+        <!-- THANH PHÂN NHÓM GAME -->
+        <nav class="sub-filter-nav-bar" aria-label="Bộ lọc game">
+          <div class="sub-filter-tabs">
+            <button
+              type="button"
+              class="sub-tab-item"
+              *ngFor="let group of listGameGroups"
+              [class.active]="activeSubFilter === group.slug"
+              (click)="setSubFilter(group.slug)">
+
+              {{ group.name }}
+
+              <span
+                class="sub-underline"
+                *ngIf="activeSubFilter === group.slug">
+              </span>
+            </button>
+          </div>
+
+          <div class="search-input-box">
+            <input
+              type="search"
+              placeholder="Tìm theo tên..."
+              aria-label="Tìm game theo tên"
+              [(ngModel)]="searchQuery"
+              (input)="onSearchChange()" />
+          </div>
+        </nav>
+
+        <!-- DANH SÁCH GAME ĐÃ LỌC -->
+        <section class="large-cards-list-section">
+          <div
+            class="game-item-card-large"
+            *ngFor="let game of displayedFilterGames; trackBy: trackById">
+
+            <div
+              class="large-thumb-media"
+              role="link" tabindex="0"
+              [routerLink]="['/game', game.id]"
+              [style.background-image]="'url(' + game.imageUrl + ')'">
+            </div>
+
+            <div class="large-info-center">
+              <h3 class="game-title-txt"><a [routerLink]="['/game', game.id]">{{ game.name }}</a></h3>
+
+              <p class="large-desc-txt">
+                {{ game.description }}
+              </p>
+
+              <div class="game-tags-row">
+                <span class="meta-item">THẺ TAGS:</span>
+
+                <a class="tag-badge-gray" *ngFor="let tag of game.tags" [routerLink]="tag.route">{{ tag.label }}</a>
+              </div>
+
+              <div class="large-meta-row-inline">
+                <span>
+                  <strong>Ngày phát hành:</strong>
+                  {{ game.releaseDate }}
+                </span>
+
+                <span>
+                  <strong>Phát triển:</strong>
+                  {{ game.developer }}
+                </span>
+
+                <span>
+                  <strong>Phát hành:</strong>
+                  {{ game.publisher }}
+                </span>
+              </div>
+            </div>
+
+            <!-- GIÁ -->
+            <div class="game-price-wrapper">
+              <ng-container *ngIf="game.price === 0">
+                <div class="free-badge">Chơi miễn phí</div>
+              </ng-container>
+
+              <ng-container
+                *ngIf="game.price > 0 && game.discountPercent > 0">
+
+                <div class="discount-badge">
+                  -{{ game.discountPercent }}%
+                </div>
+
+                <div class="price-stack">
+                  <span class="original-price">
+                    {{ game.originalPrice | number }} đ
+                  </span>
+
+                  <span class="final-price">
+                    {{ game.price | number }} đ
+                  </span>
+                </div>
+              </ng-container>
+
+              <ng-container
+                *ngIf="game.price > 0 && game.discountPercent === 0">
+
+                <div class="single-price-box">
+                  {{ game.price | number }} đ
+                </div>
+              </ng-container>
+            </div>
+
+            <!-- NÚT THAO TÁC -->
+            <div class="card-action-buttons">
+              <button
+                type="button"
+                class="action-btn-sq add-cart-btn-sq"
+                (click)="addToCart(game, $event)"
+                [attr.aria-label]="'Thêm ' + game.name + ' vào giỏ hàng'">
+                +
+              </button>
+
+              <button
+                type="button"
+                class="action-btn-sq wishlist-btn-sq"
+                [class.active]="isInWishlist(game)"
+                (click)="toggleWishlist(game, $event)"
+                [attr.aria-pressed]="isInWishlist(game)"
+                [attr.aria-label]="'Danh sách ước: ' + game.name">
+                ★
+              </button>
+            </div>
+          </div>
+
+          <!-- KHÔNG CÓ KẾT QUẢ -->
+          <div
+            class="no-games-found"
+            *ngIf="filteredGames.length === 0">
+
+            <h3>Không tìm thấy trò chơi phù hợp</h3>
+
+            <p>
+              Không có game nào đáp ứng đồng thời tất cả điều kiện đã chọn.
+            </p>
+
+            <button
+              type="button"
+              class="reset-filter-btn"
+              (click)="resetFilters()">
+              XÓA BỘ LỌC
+            </button>
+          </div>
+
+          <!-- HIỆN THÊM GAME -->
+          <div
+            class="load-more-wrapper"
+            *ngIf="hasMoreGames">
+
+            <button
+              type="button"
+              class="btn-load-more"
+              (click)="loadMoreGames()">
+              HIỆN THÊM GAME
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- SIDEBAR BÊN PHẢI -->
+      <aside class="genre-sidebar" aria-label="Bộ lọc trò chơi">
+
+        <!-- NHÓM GIÁ + DUNG LƯỢNG -->
+        <div class="sidebar-secondary-filters">
+          <!-- LỌC THEO GIÁ -->
+          <div class="filter-group">
+            <div class="filter-header">Lọc theo giá</div>
+
+            <div class="filter-body">
+              <div class="price-slider-wrapper">
+                <input
+                  type="range"
+                  min="0"
+                  max="2000000"
+                  step="50000"
+                  [(ngModel)]="mucGiaChon"
+                  (ngModelChange)="onSidebarFilterChange()"
+                  class="real-price-slider"
+                  aria-label="Mức giá tối đa" />
+              </div>
+
+              <div class="price-slider-text">
+                Dưới {{ mucGiaChon | number }} đ
+              </div>
+
+              <div class="filter-divider"></div>
+
+              <div class="checkbox-list">
+                <label class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="locDangGiamGia"
+                    (ngModelChange)="onSidebarFilterChange()" />
+
+                  <span class="custom-checkbox"></span>
+                  <span class="checkbox-label">
+                    Đang giảm giá
+                  </span>
+                </label>
+
+                <label class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="locAnMienPhi"
+                    (ngModelChange)="onSidebarFilterChange()" />
+
+                  <span class="custom-checkbox"></span>
+                  <span class="checkbox-label">
+                    Ẩn sản phẩm miễn phí
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- LỌC THEO DUNG LƯỢNG -->
+          <div class="filter-group storage-filter">
+            <div class="filter-header">
+              Lọc theo dung lượng ổ cứng
+            </div>
+
+            <div class="filter-body checkbox-list">
+              <label
+                class="checkbox-item"
+                *ngFor="let item of danhSachDungLuong">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="dungLuongChon[item.key]"
+                  (ngModelChange)="onSidebarFilterChange()" />
+
+                <span class="custom-checkbox"></span>
+
+                <span class="checkbox-label">
+                  {{ item.name }}
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- LỌC THEO THỂ LOẠI -->
+        <div class="filter-group genre-filter">
+          <div class="filter-header">
+            Lọc theo thể loại
+          </div>
+
+          <div class="filter-body">
+            <div class="checkbox-list">
+              <label
+                class="checkbox-item"
+                *ngFor="let g of listGenres">
+
+                <input
+                  type="checkbox"
+                  [checked]="isGenreSelected(g.slug)"
+                  (change)="onGenreCheckboxChange(g.slug, $event)" />
+
+                <span class="custom-checkbox"></span>
+
+                <span class="checkbox-label">
+                  {{ g.name }}
+                </span>
+              </label>
+            </div>
+
+            <div class="filter-divider"></div>
+
+            <button
+              type="button"
+              class="clear-sidebar-btn"
+              (click)="resetSidebarFilters()">
+              XÓA BỘ LỌC
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+<!-- POPUP THÔNG BÁO -->
+</div>

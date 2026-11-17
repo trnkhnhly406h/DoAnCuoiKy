@@ -1,0 +1,119 @@
+<div class="checkout-page-bg">
+
+  <section class="checkout-main-wrapper">
+    
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb-row">
+      <span (click)="continueShopping()" class="clickable-link">Trang chủ</span>
+      <span class="sep">&gt;</span>
+      <span (click)="editCart()" class="clickable-link">Giỏ hàng của bạn ({{ cart.cartItems.length }} sản phẩm)</span>
+    </div>
+
+    <h1 class="page-title-main">Giỏ hàng của bạn ({{ cart.cartItems.length }} sản phẩm)</h1>
+
+    <!-- CONTAINER CHÍNH -->
+    <div class="checkout-container-panel">
+      
+      <!-- CỘT BÊN TRÁI -->
+      <div class="checkout-content-left">
+        
+        <!-- CÁC GAME TRONG ĐƠN HÀNG -->
+        <div class="game-item-card" *ngFor="let item of cart.cartItems; trackBy: trackById">
+          <img [src]="item.thumb" [alt]="item.title" class="game-thumbnail" appImgFallback>
+
+          <div class="game-info-center">
+            <h2 class="game-title">{{ item.title }}</h2>
+            <div class="gift-badge-tag">
+              <span>{{ item.forGift ? 'Món quà cho ' + giftRecipient : 'Cho tài khoản của tôi' }}</span>
+            </div>
+          </div>
+
+          <div class="game-price-right">
+            <div class="discount-box" *ngIf="item.discountPercent > 0">-{{ item.discountPercent }}%</div>
+            <div class="price-stack">
+              <span class="old-price" *ngIf="item.discountPercent > 0">{{ formatMoney(item.originalPrice) }}đ</span>
+              <span class="current-price">{{ formatMoney(item.price) }}đ</span>
+            </div>
+          </div>
+
+          <div class="card-action-links">
+            <span class="action-link" (click)="editCart()">Chỉnh sửa</span>
+          </div>
+        </div>
+
+        <!-- MÃ GIẢM GIÁ -->
+        <div class="section-box discount-code-section">
+          <label class="section-label">Nhập mã giảm giá (nếu có)</label>
+          <div class="discount-input-row">
+            <input 
+              type="text" 
+              class="input-dark" 
+              placeholder="Nhập mã voucher (Thử mã: STEAL20)" 
+              [(ngModel)]="couponInput"
+            />
+            <button class="btn-apply-code" (click)="applyCoupon()">Áp dụng</button>
+          </div>
+          
+          <div class="error-text" *ngIf="couponError">{{ couponError }}</div>
+          <div class="success-text" *ngIf="checkout.summary.couponOk">{{ checkout.summary.couponMessage }}</div>
+          
+          <div class="discount-result-row" *ngIf="checkout.summary.discount > 0">
+            <span class="discount-label-text">Giảm giá:</span>
+            <span class="discount-price-value">-{{ formatMoney(checkout.summary.discount) }}đ</span>
+          </div>
+        </div>
+
+        <!-- KHỐI GIAO HÀNG (CHỈ HIỂN THỊ KHI LÀ MÓN QUÀ) -->
+        <div class="section-box delivery-section" *ngIf="cart.hasGiftItems">
+          <div class="section-sub-label">Giao hàng</div>
+          
+          <label class="radio-option-row">
+            <span class="custom-radio checked"></span>
+            <span>Sớm nhất có thể (qua email và qua phần mềm Steal) tới {{ giftRecipient }}</span>
+          </label>
+        </div>
+
+        <!-- NÚT DƯỚI CÙNG -->
+        <div class="bottom-navigation-actions">
+          <button class="btn-gray-action" (click)="backToCart()">Quay lại</button>
+          
+          <!-- GẮN SỰ KIỆN CLICK CHUYỂN SANG TRANG PHƯƠNG THỨC THANH TOÁN -->
+          <button class="btn-blue-checkout" (click)="next()">
+            Tiếp tục tới bước thanh toán
+          </button>
+          
+          <span class="remove-all-link" (click)="editCart()">Chỉnh sửa giỏ hàng</span>
+        </div>
+
+      </div>
+
+      <!-- CỘT BÊN PHẢI (SIDEBAR) -->
+      <div class="checkout-sidebar-right">
+        <div class="sidebar-box total-summary-box">
+          <div class="summary-row-top">
+            <span class="summary-label">Tổng ước tính</span>
+            <span class="summary-price">{{ formatMoney(checkout.summary.total) }}đ</span>
+          </div>
+          <div class="tax-note">Thuế tiêu thụ sẽ được tính trong quá trình thanh toán nếu có</div>
+          
+          <!-- GẮN SỰ KIỆN CLICK CHUYỂN SANG TRANG PHƯƠNG THỨC THANH TOÁN -->
+          <button class="btn-sidebar-next" (click)="next()">
+            Tiếp tục tới bước thanh toán
+          </button>
+        </div>
+
+        <div class="sidebar-box info-terms-box">
+          <p class="terms-desc">
+            Đơn hàng sản phẩm kỹ thuật số sẽ trao giấy phép sử dụng sản phẩm trên Steal.
+          </p>
+          <p class="terms-link-desc">
+            Để biết đầy đủ điều khoản và điều kiện, vui lòng đọc <a [routerLink]="['/thoa-thuan-dang-ky']" class="blue-link">Thoả thuận đăng ký Steal</a>.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

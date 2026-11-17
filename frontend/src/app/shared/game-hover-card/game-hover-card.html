@@ -1,0 +1,48 @@
+<div class="game-hover-popup" [class.align-left]="position === 'left'" (click)="goToDetail($event)">
+  <div class="popup-arrow"></div>
+  <div class="popup-header">
+    <h4 class="game-title">{{ game.title }}</h4>
+    <div class="popup-actions">
+      <!-- Nút danh sách ước (chỉ hiện khi xem của chính mình hoặc trên cửa hàng) -->
+      <button class="icon-btn star-icon"
+        *ngIf="!isFriendWishlist"
+        [class.active]="cartWishlistService.isInWishlist(game.id)"
+        (click)="onAddWishlist($event)"
+        [title]="cartWishlistService.isInWishlist(game.id) ? 'Đã trong danh sách ước' : 'Thêm vào danh sách ước'">
+        <img class="card-ico" [src]="cartWishlistService.isInWishlist(game.id) ? 'assets/danhsachuoc-da-them.svg' : 'assets/danhsachuoc.svg'" alt="" />
+      </button>
+
+      <!-- KHI HOVER TRONG DANH SÁCH ƯỚC CỦA BẠN BÈ: Nút hộp quà mua tặng -->
+      <button class="icon-btn cart-icon"
+        *ngIf="isFriendWishlist"
+        [class.active]="cartWishlistService.isInCart(game.id)"
+        (click)="onAddGiftToFriend($event)"
+        [title]="cartWishlistService.isInCart(game.id) ? 'Đã trong giỏ hàng quà tặng' : 'Mua tặng ' + (friendRecipient || 'bạn bè')">
+        <span class="card-check" *ngIf="cartWishlistService.isInCart(game.id)">✓</span>
+        <span *ngIf="!cartWishlistService.isInCart(game.id)" style="font-size: 15px; line-height: 1;">🎁</span>
+      </button>
+
+      <!-- BÌNH THƯỜNG TRÊN STORE: Nút thêm giỏ hàng cá nhân -->
+      <button class="icon-btn cart-icon"
+        *ngIf="!isFriendWishlist"
+        [class.active]="cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)"
+        (click)="onAddCart($event)"
+        [title]="cartWishlistService.isOwned(game.id) ? 'Đã sở hữu' : cartWishlistService.isInCart(game.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">
+        <span class="card-check" *ngIf="cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)">✓</span>
+        <img class="card-ico" *ngIf="!(cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id))" src="assets/themvaogiohang.svg" alt="" />
+      </button>
+    </div>
+  </div>
+  <div class="release-date">Ngày phát hành: {{ game.releaseDate | date: 'dd/MM/yyyy' }}</div>
+  <div class="game-description">{{ game.description || 'Chưa có mô tả cho trò chơi này.' }}</div>
+  <div class="review-box">
+    <span class="review-title">Tổng thể đánh giá người dùng:</span>
+    <span class="review-status">{{ game.reviewsSummary }}</span>
+  </div>
+  <div class="tags-section">
+    <span class="tags-label">Thể loại:</span>
+    <div class="tags-list">
+      <a class="tag-badge" *ngFor="let tag of catalog.tagLinks(game)" [routerLink]="tag.route">{{ tag.label }}</a>
+    </div>
+  </div>
+</div>

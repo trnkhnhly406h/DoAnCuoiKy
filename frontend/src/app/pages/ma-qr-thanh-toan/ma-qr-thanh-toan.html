@@ -1,0 +1,184 @@
+
+<div class="qr-page">
+
+  <section class="qr-main">
+
+    <h1>
+      THANH TOÁN {{ method | uppercase }}
+    </h1>
+
+    <section class="qr-panel">
+
+      <!-- ============================
+           CỘT TRÁI: MÃ QR
+      ============================= -->
+
+      <div class="qr-left">
+
+        <h2>
+          Quét mã QR {{ method }}
+        </h2>
+
+        <div
+          class="qr-placeholder"
+          [ngClass]="{
+            'momo': method === 'Momo',
+            'vnpay': method === 'VNPay',
+            'paypal': method === 'PayPal'
+          }">
+
+          <!-- MÃ QR QUÉT ĐƯỢC -->
+          <img
+            *ngIf="!qrError"
+            [src]="qrImageUrl"
+            (error)="onQrError()"
+            class="qr-image"
+            alt="Mã QR demo của đơn hàng">
+
+          <div
+            *ngIf="qrError"
+            class="qr-error">
+
+            Không tải được mã QR.
+            Vui lòng kiểm tra kết nối mạng.
+
+          </div>
+
+        </div>
+
+        <strong class="qr-method">
+          {{ method }}
+        </strong>
+
+        <p class="qr-order-code">
+          Mã đơn: {{ maDonHang }}
+        </p>
+
+        <p class="qr-warning">
+          Mã QR này chỉ chứa thông tin đơn hàng demo.
+          Không dùng để chuyển tiền thật.
+        </p>
+
+      </div>
+
+      <!-- ============================
+           CỘT PHẢI: BIÊN LAI
+      ============================= -->
+
+      <div class="qr-receipt">
+
+        <h2>
+          BIÊN LAI THANH TOÁN
+        </h2>
+
+        <!-- DANH SÁCH GAME ĐÃ MUA -->
+        <div
+          class="receipt-games"
+          *ngIf="games.length > 0">
+
+          <div
+            class="receipt-game-card"
+            *ngFor="let game of games; trackBy: trackById">
+
+            <!-- ẢNH GAME -->
+            <img
+              class="receipt-game-image"
+              [src]="game.thumb"
+              [alt]="game.title"
+              appImgFallback>
+
+            <!-- THÔNG TIN GAME -->
+            <div class="receipt-game-info">
+
+              <strong class="receipt-game-name">
+                {{ game.title }}
+              </strong>
+
+              <span class="receipt-game-type">
+                {{ game.forGift ? 'Món quà - sản phẩm kỹ thuật số' : 'Sản phẩm kỹ thuật số' }}
+              </span>
+
+              <span class="receipt-game-price">
+                {{ game.price | number:'1.0-0' }} đ
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- TRƯỜNG HỢP CHƯA CÓ GAME -->
+        <p
+          class="receipt-empty"
+          *ngIf="games.length === 0">
+
+          Chưa nhận được thông tin game từ đơn hàng.
+          Vui lòng kiểm tra bước mua hàng trước đó.
+
+        </p>
+
+        <div class="receipt-divider"></div>
+
+        <!-- TỔNG TIỀN -->
+        <div class="receipt-line receipt-total">
+
+          <span>
+            Tổng thanh toán
+          </span>
+
+          <strong>
+            {{ total | number:'1.0-0' }} đ
+          </strong>
+
+        </div>
+
+        <!-- PHƯƠNG THỨC -->
+        <div class="receipt-line">
+
+          <span>
+            Phương thức
+          </span>
+
+          <strong>
+            {{ method }}
+          </strong>
+
+        </div>
+
+        <!-- MÃ ĐƠN HÀNG -->
+        <div class="receipt-line">
+
+          <span>
+            Mã đơn hàng
+          </span>
+
+          <span>
+            {{ maDonHang }}
+          </span>
+
+        </div>
+
+        <!-- XÁC NHẬN -->
+        <button
+          type="button"
+          class="qr-confirm"
+          [disabled]="processing"
+          (click)="xacNhan()">
+
+          Tôi đã thanh toán thành công
+
+        </button>
+
+        <p class="qr-warning">
+          Nút xác nhận chỉ dành cho bản demo,
+          không xác minh giao dịch thực tế.
+        </p>
+
+      </div>
+
+    </section>
+
+  </section>
+
+</div>

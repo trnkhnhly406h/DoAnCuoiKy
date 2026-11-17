@@ -1,0 +1,440 @@
+<div class="chat-page-container" (click)="closeGearMenu()">
+
+  <app-login-required *ngIf="!isLoggedIn" message="Bạn cần đăng nhập tài khoản STEAL để truy cập tính năng Bạn bè & Trò chuyện."></app-login-required>
+
+  <div class="chat-layout-wrapper" *ngIf="isLoggedIn">
+    <div class="chat-main-flex">
+
+      <!-- SIDEBAR -->
+      <div class="chat-sidebar">
+        <div class="sidebar-group">
+          <h3 class="group-title">BẠN BÈ</h3>
+          <button type="button" class="sidebar-btn" [class.active]="activeTab === 'ban-be'" (click)="setTab('ban-be')">
+            Bạn bè của bạn ({{ chatService.friendsList.length }})
+          </button>
+          <button type="button" class="sidebar-btn" [class.active]="activeTab === 'them-ban'" (click)="setTab('them-ban')">Thêm bạn</button>
+          <button type="button" class="sidebar-btn" [class.active]="activeTab === 'loi-moi'" (click)="setTab('loi-moi')">
+            Lời mời đang chờ
+            <span class="badge-count" *ngIf="chatService.pendingFriendRequests.length > 0">{{ chatService.pendingFriendRequests.length }}</span>
+          </button>
+          <button type="button" class="sidebar-btn" [class.active]="activeTab === 'da-chan'" (click)="setTab('da-chan')">
+            Đã chặn ({{ chatService.blockedUsers.length }})
+          </button>
+        </div>
+
+        <div class="sidebar-group">
+          <h3 class="group-title">NHÓM</h3>
+          <button type="button" class="sidebar-btn" [class.active]="activeTab === 'nhom-cua-ban'" (click)="setTab('nhom-cua-ban')">
+            Nhóm của bạn ({{ chatService.groups.length }})
+          </button>
+          <button type="button" class="sidebar-btn" [class.active]="activeTab === 'loi-moi-nhom'" (click)="setTab('loi-moi-nhom')">
+            Lời mời nhóm đang chờ
+            <span class="badge-count" *ngIf="chatService.groupInvitations.length > 0">{{ chatService.groupInvitations.length }}</span>
+          </button>
+          <button type="button" class="sidebar-btn" [class.active]="showCreateGroupModal" (click)="openCreateGroupModal()">Tạo nhóm</button>
+        </div>
+      </div>
+
+      <div class="chat-main-content">
+
+        <!-- TAB: BẠN BÈ CỦA BẠN -->
+        <div class="content-pane" *ngIf="activeTab === 'ban-be'">
+          <ng-container *ngIf="chatService.friendsList.length === 0; else hasFriends">
+            <div class="pane-header-row"><h2 class="pane-title">BẠN BÈ CỦA BẠN 0/{{ maxFriends }}</h2></div>
+            <div class="empty-friends-card">
+              <p class="empty-msg">Không có bạn bè nào, hãy bấm thêm bạn</p>
+              <button type="button" class="btn-action-light" (click)="setTab('them-ban')">Thêm bạn</button>
+            </div>
+          </ng-container>
+
+          <ng-template #hasFriends>
+            <div class="pane-header-row">
+              <h2 class="pane-title">BẠN BÈ CỦA BẠN {{ chatService.friendsList.length }}/{{ maxFriends }}</h2>
+              <button type="button" class="btn-action-light" (click)="setTab('them-ban')">Thêm bạn</button>
+            </div>
+
+            <div class="search-pill-wrapper">
+              <input type="text" [(ngModel)]="filterFriendsQuery" placeholder="Tìm kiếm ID hoặc tên bạn bè" class="search-pill-input" aria-label="Tìm bạn bè">
+              <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="empty-sub-card mt-12" *ngIf="onlineFriends.length === 0 && offlineFriends.length === 0">
+              <p>Không tìm thấy bạn bè nào khớp "{{ filterFriendsQuery }}".</p>
+            </div>
+
+            <div class="friends-category-section" *ngIf="onlineFriends.length > 0">
+              <h3 class="category-heading">TRÊN MẠNG ({{ onlineFriends.length }})</h3>
+              <div class="friends-list-grid">
+                <div class="friend-card-row online" *ngFor="let friend of onlineFriends; trackBy: trackById">
+                  <img [src]="friend.avatar" alt="Avatar" class="friend-avatar" appImgFallback>
+                  <div class="friend-details">
+                    <span class="friend-display-name online-text member-link" [routerLink]="['/nguoi-dung', friend.id]">{{ friend.username }}</span>
+                  </div>
+                  <div class="gear-menu-wrapper">
+                    <button type="button" class="btn-gear-icon" (click)="toggleGearMenu(friend.id, $event)" aria-label="Tùy chọn bạn bè">⚙</button>
+
+<div
+  class="gear-dropdown-menu"
+  *ngIf="activeGearFriendId === friend.id"
+  (click)="$event.stopPropagation()">
+                      <button type="button" class="dropdown-option" [routerLink]="['/nguoi-dung', friend.id]">Xem hồ sơ</button>
+                      <button type="button" class="dropdown-option" (click)="startChat(friend)">Trò chuyện</button>
+                      <button type="button" class="dropdown-option" (click)="unfriend(friend)">Hủy kết bạn</button>
+                      <button type="button" class="dropdown-option" (click)="blockFriend(friend)">Chặn</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="friends-category-section mt-20" *ngIf="offlineFriends.length > 0">
+              <h3 class="category-heading">RỜI MẠNG ({{ offlineFriends.length }})</h3>
+              <div class="friends-list-grid">
+                <div class="friend-card-row offline" *ngFor="let friend of offlineFriends; trackBy: trackById">
+                  <img [src]="friend.avatar" alt="Avatar" class="friend-avatar" appImgFallback>
+                  <div class="friend-details">
+                    <span class="friend-display-name member-link" [routerLink]="['/nguoi-dung', friend.id]">{{ friend.username }}</span>
+                    <span class="last-online-sub">{{ friend.lastOnlineText || 'Lần cuối trên mạng vài ngày trước' }}</span>
+                  </div>
+                  <div class="gear-menu-wrapper">
+                    <button type="button" class="btn-gear-icon" (click)="toggleGearMenu(friend.id, $event)" aria-label="Tùy chọn bạn bè">⚙</button>
+
+<div
+  class="gear-dropdown-menu"
+  *ngIf="activeGearFriendId === friend.id"
+  (click)="$event.stopPropagation()">
+                      <button type="button" class="dropdown-option" [routerLink]="['/nguoi-dung', friend.id]">Xem hồ sơ</button>
+                      <button type="button" class="dropdown-option" (click)="startChat(friend)">Trò chuyện</button>
+                      <button type="button" class="dropdown-option" (click)="unfriend(friend)">Hủy kết bạn</button>
+                      <button type="button" class="dropdown-option" (click)="blockFriend(friend)">Chặn</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- TAB: THÊM BẠN -->
+        <div class="content-pane" *ngIf="activeTab === 'them-ban'">
+          <h2 class="pane-title">THÊM BẠN BÈ</h2>
+
+          <div class="add-section-block">
+            <label class="section-label" for="my-account-code">MÃ TÀI KHOẢN CỦA BẠN</label>
+            <div class="code-box-row">
+              <input id="my-account-code" type="text" [value]="userAccountCode" readonly class="input-code-readonly">
+              <button type="button" class="btn-action-light" (click)="copyAccountCode()">Sao chép</button>
+            </div>
+          </div>
+
+          <ng-template #userRowTpl let-user>
+            <div class="search-user-card">
+              <img [src]="user.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <a class="user-name member-link" [routerLink]="['/nguoi-dung', user.id]">{{ user.username }}</a>
+                <span class="user-handle">{{ user.handle }} ({{ user.accountCode }})</span>
+              </div>
+              <button type="button" class="btn-action-light" [disabled]="isRelationActionDisabled(user.id)" (click)="onAddFriend(user)">
+                {{ relationLabel(user.id) }}
+              </button>
+            </div>
+          </ng-template>
+
+          <div class="add-section-block mt-20">
+            <label class="section-label" for="search-code">NHẬP MÃ TÀI KHOẢN NGƯỜI BẠN MUỐN THÊM (Thử gõ CUS-328 hoặc CUS-3285)</label>
+            <div class="search-pill-wrapper">
+              <input id="search-code" type="text" [(ngModel)]="searchByCodeQuery" placeholder="Gõ mã ví dụ CUS-328..." class="search-pill-input">
+              <span class="search-icon">🔍</span>
+            </div>
+            <div class="search-results-list mt-12" *ngIf="filteredByCodeResults.length > 0">
+              <ng-container *ngFor="let user of filteredByCodeResults; trackBy: trackById">
+                <ng-container *ngTemplateOutlet="userRowTpl; context: { $implicit: user }"></ng-container>
+              </ng-container>
+            </div>
+            <p class="search-hint-text" *ngIf="searchByCodeQuery.trim().length >= 3 && filteredByCodeResults.length === 0">Không tìm thấy mã tài khoản nào khớp.</p>
+          </div>
+
+          <div class="add-section-block mt-20">
+            <label class="section-label" for="search-name">TÌM BẠN BÈ BẰNG TÊN HIỂN THỊ HOẶC URL (Thử gõ "mèo" hoặc "mèo mướp")</label>
+            <div class="search-pill-wrapper">
+              <input id="search-name" type="text" [(ngModel)]="searchByNameQuery" placeholder="Gõ tên hiển thị để tìm..." class="search-pill-input">
+              <span class="search-icon">🔍</span>
+            </div>
+            <div class="search-results-list mt-12" *ngIf="filteredByNameResults.length > 0">
+              <ng-container *ngFor="let user of filteredByNameResults; trackBy: trackById">
+                <ng-container *ngTemplateOutlet="userRowTpl; context: { $implicit: user }"></ng-container>
+              </ng-container>
+            </div>
+            <p class="search-hint-text" *ngIf="searchByNameQuery.trim().length >= minSearchLength && filteredByNameResults.length === 0">Không tìm thấy người dùng nào khớp.</p>
+          </div>
+        </div>
+
+        <!-- TAB: LỜI MỜI ĐANG CHỜ -->
+        <div class="content-pane" *ngIf="activeTab === 'loi-moi'">
+          <h2 class="pane-title">LỜI MỜI ĐẾN ({{ chatService.pendingFriendRequests.length }})</h2>
+          <div class="invites-list mt-12" *ngIf="chatService.pendingFriendRequests.length > 0; else noRequests">
+            <div class="invite-user-card" *ngFor="let req of chatService.pendingFriendRequests; trackBy: trackById">
+              <img [src]="req.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <a class="user-name member-link" [routerLink]="['/nguoi-dung', req.id]">{{ req.username }}</a>
+                <span class="user-handle">Đã gửi lời mời kết bạn cho bạn</span>
+              </div>
+              <div class="invite-actions-btn-group">
+                <button type="button" class="btn-accept" (click)="acceptFriendRequest(req)">Chấp nhận</button>
+                <button type="button" class="btn-decline" (click)="declineFriendRequest(req)">Từ chối</button>
+              </div>
+            </div>
+          </div>
+          <ng-template #noRequests>
+            <div class="empty-sub-card mt-12"><p>Không có lời mời kết bạn nào đang chờ.</p></div>
+          </ng-template>
+
+          <h2 class="pane-title mt-20">LỜI MỜI ĐÃ GỬI ({{ chatService.sentFriendRequests.length }})</h2>
+          <div class="invites-list mt-12" *ngIf="chatService.sentFriendRequests.length > 0; else noSent">
+            <div class="invite-user-card" *ngFor="let req of chatService.sentFriendRequests; trackBy: trackById">
+              <img [src]="req.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <a class="user-name member-link" [routerLink]="['/nguoi-dung', req.id]">{{ req.username }}</a>
+                <span class="user-handle">Đang chờ phản hồi...</span>
+              </div>
+              <div class="invite-actions-btn-group">
+                <button type="button" class="btn-decline" (click)="cancelSentRequest(req)">Hủy lời mời</button>
+              </div>
+            </div>
+          </div>
+          <ng-template #noSent>
+            <div class="empty-sub-card mt-12"><p>Bạn chưa gửi lời mời kết bạn nào.</p></div>
+          </ng-template>
+        </div>
+
+        <!-- TAB: ĐÃ CHẶN -->
+        <div class="content-pane" *ngIf="activeTab === 'da-chan'">
+          <h2 class="pane-title">DANH SÁCH ĐÃ CHẶN ({{ chatService.blockedUsers.length }})</h2>
+          <div class="search-results-list mt-12" *ngIf="chatService.blockedUsers.length > 0; else noBlocked">
+            <div class="search-user-card" *ngFor="let user of chatService.blockedUsers; trackBy: trackById">
+              <img [src]="user.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <a class="user-name member-link" [routerLink]="['/nguoi-dung', user.id]">{{ user.username }}</a>
+                <span class="user-handle">Đã bị chặn</span>
+              </div>
+              <button type="button" class="btn-action-light" (click)="unblockUser(user)">Bỏ chặn</button>
+            </div>
+          </div>
+          <ng-template #noBlocked>
+            <div class="empty-sub-card mt-12"><p>Bạn chưa chặn người dùng nào.</p></div>
+          </ng-template>
+        </div>
+
+        <!-- TAB: NHÓM CỦA BẠN -->
+        <div class="content-pane" *ngIf="activeTab === 'nhom-cua-ban'">
+          <div class="pane-header-row">
+            <h2 class="pane-title">NHÓM CỦA BẠN ({{ chatService.groups.length }})</h2>
+            <button type="button" class="btn-action-light" (click)="openCreateGroupModal()">Tạo nhóm mới</button>
+          </div>
+          <div class="search-results-list mt-12" *ngIf="chatService.groups.length > 0; else noGroups">
+            <div class="search-user-card" *ngFor="let group of chatService.groups; trackBy: trackById">
+              <img [src]="group.avatar" alt="Ảnh nhóm" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <span class="user-name">{{ group.name }}</span>
+                <span class="user-handle">{{ group.slogan }} · {{ group.members.length + 1 }} thành viên · Trưởng nhóm: {{ chatService.isGroupOwner(group) ? 'Bạn' : group.ownerName }}<ng-container *ngIf="chatService.isGroupOwner(group) && pendingCount(group) > 0"> · <b class="pending-badge">{{ pendingCount(group) }} đề nghị chờ duyệt</b></ng-container></span>
+              </div>
+              <button type="button" class="btn-action-light" (click)="chatService.openFullChat(group.id)">💬 Chat</button>
+              <button type="button" class="btn-action-light" (click)="openGroupSettings(group)">⚙ Thiết lập</button>
+            </div>
+          </div>
+          <ng-template #noGroups>
+            <div class="empty-friends-card"><p class="empty-msg">Bạn chưa tham gia nhóm nào.</p></div>
+          </ng-template>
+        </div>
+
+        <!-- TAB: LỜI MỜI NHÓM -->
+        <div class="content-pane" *ngIf="activeTab === 'loi-moi-nhom'">
+          <h2 class="pane-title">LỜI MỜI NHÓM ĐANG CHỜ ({{ chatService.groupInvitations.length }})</h2>
+          <div class="invites-list mt-12" *ngIf="chatService.groupInvitations.length > 0; else noGroupInvites">
+            <div class="invite-user-card" *ngFor="let inv of chatService.groupInvitations; trackBy: trackById">
+              <img [src]="inv.avatar" alt="Ảnh nhóm" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <span class="user-name">{{ inv.groupName }}</span>
+                <span class="user-handle">Mời bởi {{ inv.inviterName }} ({{ inv.members.length + 1 }} thành viên)</span>
+              </div>
+              <div class="invite-actions-btn-group">
+                <button type="button" class="btn-accept" (click)="acceptGroupInvite(inv)">Gia nhập nhóm</button>
+                <button type="button" class="btn-decline" (click)="declineGroupInvite(inv.id)">Từ chối</button>
+              </div>
+            </div>
+          </div>
+          <ng-template #noGroupInvites>
+            <div class="empty-sub-card mt-12"><p>Không có lời mời tham gia nhóm nào.</p></div>
+          </ng-template>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP TẠO NHÓM MỚI -->
+  <div class="modal-backdrop" *ngIf="showCreateGroupModal" (click)="closeCreateGroupModal()">
+    <div class="steam-modal-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="modal-header-line">
+        <h3 class="modal-title-text">TẠO PHÒNG TRÒ CHUYỆN MỚI</h3>
+        <button type="button" class="btn-close-modal" (click)="closeCreateGroupModal()" aria-label="Đóng">✕</button>
+      </div>
+
+      <div class="modal-body-content">
+        <div class="form-group-custom">
+          <label for="new-group-name">TÊN TRÒ CHUYỆN</label>
+          <input id="new-group-name" type="text" [(ngModel)]="newGroupNameInput" [maxLength]="maxGroupNameLength"
+                 (keydown.enter)="submitCreateGroup()" placeholder="Nhập tên trò chuyện nhóm..." class="input-steam-style">
+        </div>
+
+        <div class="form-group-custom mt-16">
+          <label>MỜI VÀO NHÓM TRÒ CHUYỆN</label>
+          <div class="invite-tags-box" *ngIf="selectedFriendsForGroup.length > 0">
+            <span class="tag-friend-chip" *ngFor="let f of selectedFriendsForGroup">
+              {{ f.username }}
+              <button type="button" class="btn-remove-chip" (click)="removeSelectedFriendTag(f)" aria-label="Bỏ chọn">✕</button>
+            </span>
+          </div>
+
+          <p class="search-hint-text" *ngIf="chatService.friendsList.length === 0">Bạn chưa có bạn bè để mời. Bạn vẫn có thể tạo nhóm trống và mời sau.</p>
+          <div class="friends-invite-picker-list mt-12">
+            <div class="picker-friend-item" *ngFor="let friend of chatService.friendsList; trackBy: trackById"
+                 tabindex="0" role="checkbox" [attr.aria-checked]="isFriendSelectedForGroup(friend)"
+                 (click)="toggleSelectFriendForGroup(friend)" (keydown.enter)="toggleSelectFriendForGroup(friend)">
+              <img [src]="friend.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <span class="user-name">{{ friend.username }}</span>
+                <span class="user-handle" [class.online-status]="friend.isOnline">{{ friend.isOnline ? 'Online' : 'Offline' }}</span>
+              </div>
+              <input type="checkbox" [checked]="isFriendSelectedForGroup(friend)" tabindex="-1">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer-actions mt-20">
+          <button type="button" class="btn-steam-cancel" (click)="closeCreateGroupModal()">Hủy bỏ</button>
+          <button type="button" class="btn-steam-primary" (click)="submitCreateGroup()">Tạo trò chuyện</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP THIẾT LẬP NHÓM -->
+  <div class="modal-backdrop" *ngIf="showGroupSettingsModal && currentManagingGroup as group" (click)="closeGroupSettings()">
+    <div class="group-settings-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="modal-header-line">
+        <h3 class="modal-title-text">Thiết lập nhóm</h3>
+        <button type="button" class="btn-close-modal" (click)="closeGroupSettings()" aria-label="Đóng">✕</button>
+      </div>
+
+      <div class="group-settings-body">
+        <div class="settings-nav-sidebar">
+          <button type="button" class="nav-item-btn" [class.active]="activeGroupSettingsTab === 'tong-quat'" (click)="activeGroupSettingsTab = 'tong-quat'">Tổng quát</button>
+          <button type="button" class="nav-item-btn" [class.active]="activeGroupSettingsTab === 'thanh-vien'" (click)="activeGroupSettingsTab = 'thanh-vien'">Các thành viên ({{ group.members.length + 1 }})</button>
+          <button type="button" class="btn-leave-group-red" (click)="askLeaveGroup()">➔ Rời nhóm trò chuyện</button>
+        </div>
+
+        <div class="settings-pane-content" *ngIf="activeGroupSettingsTab === 'tong-quat'">
+          <h2 class="pane-heading-title">TỔNG QUÁT</h2>
+          <p class="search-hint-text" *ngIf="!isManagingGroupOwner">Chỉ trưởng nhóm ({{ group.ownerName }}) mới được chỉnh sửa thiết lập nhóm.</p>
+
+          <div class="avatar-upload-section">
+            <span class="sub-label">Ảnh nhóm</span>
+            <div class="group-avatar-preview-box">
+              <img [src]="groupDraft.avatar" alt="Ảnh nhóm" class="group-big-avatar" appImgFallback>
+            </div>
+            <input #groupAvatarInput type="file" accept="image/*" hidden (change)="onGroupAvatarSelected($event)">
+            <button type="button" class="btn-upload-thumb" [disabled]="!isManagingGroupOwner" (click)="groupAvatarInput.click()">Đổi ảnh nhóm</button>
+          </div>
+
+          <div class="form-group-custom mt-16">
+            <label for="group-name">TÊN NHÓM TRÒ CHUYỆN</label>
+            <input id="group-name" type="text" [(ngModel)]="groupDraft.name" [maxLength]="maxGroupNameLength" [disabled]="!isManagingGroupOwner" class="input-steam-style">
+          </div>
+
+          <div class="form-group-custom mt-16">
+            <label for="group-slogan">GIỚI THIỆU NGẮN</label>
+            <input id="group-slogan" type="text" [(ngModel)]="groupDraft.slogan" maxlength="80" [disabled]="!isManagingGroupOwner" class="input-steam-style">
+          </div>
+
+          <div class="save-settings-bar mt-20" *ngIf="isManagingGroupOwner">
+            <button type="button" class="btn-steam-primary" (click)="saveGroupSettings()">Lưu thiết lập</button>
+          </div>
+        </div>
+
+        <div class="settings-pane-content" *ngIf="activeGroupSettingsTab === 'thanh-vien'">
+          <div class="members-head-row">
+            <h2 class="pane-heading-title">CÁC THÀNH VIÊN NHÓM ({{ group.members.length + 1 }}/{{ maxGroupMembers }})</h2>
+            <button type="button" class="btn-action-light" [disabled]="isGroupFull" (click)="toggleAddMembers()">
+              {{ showAddMembers ? '✕ Đóng' : (isManagingGroupOwner ? '＋ Thêm người' : '＋ Đề nghị thêm người') }}
+            </button>
+          </div>
+
+          <!-- Chọn bạn bè để thêm -->
+          <div class="add-members-panel" *ngIf="showAddMembers">
+            <p class="search-hint-text" *ngIf="!isManagingGroupOwner">Đề nghị của bạn sẽ được gửi tới nhóm trưởng {{ group.ownerName }} để duyệt.</p>
+            <input type="text" class="input-steam-style" [(ngModel)]="addMemberQuery" placeholder="Tìm bạn bè..." aria-label="Tìm bạn bè để thêm vào nhóm">
+            <div class="add-members-list">
+              <div class="picker-friend-item" *ngFor="let f of addableFriends; trackBy: trackById"
+                   tabindex="0" role="checkbox" [attr.aria-checked]="isAddSelected(f)"
+                   (click)="toggleAddSelected(f)" (keydown.enter)="toggleAddSelected(f)">
+                <img [src]="f.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+                <div class="user-info-col">
+                  <span class="user-name">{{ f.username }}</span>
+                  <span class="user-handle" [class.online-status]="f.isOnline">{{ f.isOnline ? 'Online' : 'Offline' }}</span>
+                </div>
+                <input type="checkbox" [checked]="isAddSelected(f)" tabindex="-1">
+              </div>
+              <p class="search-hint-text" *ngIf="addableFriends.length === 0">Không còn bạn bè nào có thể thêm vào nhóm.</p>
+            </div>
+            <button type="button" class="btn-steam-primary" [disabled]="addMemberSelection.length === 0" (click)="submitAddMembers()">
+              {{ isManagingGroupOwner ? 'Thêm vào nhóm' : 'Gửi đề nghị' }} ({{ addMemberSelection.length }})
+            </button>
+          </div>
+
+          <!-- Đề nghị chờ duyệt -->
+          <div class="join-requests-box" *ngIf="group.joinRequests.length > 0">
+            <h3 class="category-heading">ĐỀ NGHỊ CHỜ DUYỆT ({{ group.joinRequests.length }})</h3>
+            <div class="member-item-row" *ngFor="let req of group.joinRequests; trackBy: trackById">
+              <img [src]="req.user.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <span class="user-name">{{ req.user.username }}</span>
+                <span class="user-handle">Do {{ req.requestedByName }} đề nghị</span>
+              </div>
+              <div class="member-actions" *ngIf="isManagingGroupOwner; else waitingOwner">
+                <button type="button" class="btn-accept" (click)="approveRequest(req)">Duyệt</button>
+                <button type="button" class="btn-decline" (click)="declineRequest(req)">Từ chối</button>
+              </div>
+              <ng-template #waitingOwner><span class="user-handle">Chờ nhóm trưởng duyệt</span></ng-template>
+            </div>
+          </div>
+
+          <div class="members-list-settings mt-12">
+            <div class="member-item-row">
+              <img [src]="profileService.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <span class="user-name">{{ profileService.displayName }} (Bạn)</span>
+                <span class="user-handle">{{ isManagingGroupOwner ? 'Trưởng nhóm' : 'Thành viên' }}</span>
+              </div>
+            </div>
+            <div class="member-item-row" *ngFor="let m of group.members; trackBy: trackById">
+              <img [src]="m.avatar" alt="Avatar" class="user-avatar-sm" appImgFallback>
+              <div class="user-info-col">
+                <a class="user-name member-link" [routerLink]="['/nguoi-dung', m.id]" (click)="closeGroupSettings()">{{ m.username }}</a>
+                <span class="user-handle">{{ m.id === group.ownerId ? 'Trưởng nhóm · ' : '' }}{{ m.isOnline ? 'Online' : 'Offline' }}</span>
+              </div>
+              <div class="member-actions">
+                <button type="button" class="btn-action-light" [disabled]="isRelationActionDisabled(m.id)" (click)="onAddFriend(m)">{{ relationLabel(m.id) }}</button>
+                <ng-container *ngIf="isManagingGroupOwner && m.id !== group.ownerId">
+                  <button type="button" class="btn-action-light" (click)="makeOwner(m)">★ Bổ nhiệm</button>
+                  <button type="button" class="btn-action-light btn-danger-light" (click)="kickMember(m)">Mời ra</button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

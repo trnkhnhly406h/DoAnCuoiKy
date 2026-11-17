@@ -1,0 +1,295 @@
+
+<div class="auth-modal-overlay" (click)="close()">
+
+  <div
+    class="auth-modal-container"
+    (click)="$event.stopPropagation()">
+
+    <!-- ======================================== -->
+    <!-- NÚT X ĐÓNG POPUP -->
+    <!-- ======================================== -->
+
+    <button
+      type="button"
+      class="btn-close-x"
+      (click)="close()"
+      aria-label="Đóng đăng nhập">
+
+      ✕
+
+    </button>
+
+    <!-- ======================================== -->
+    <!-- HEADER LOGO & TÊN STEAL -->
+    <!-- ======================================== -->
+
+    <div class="auth-logo-header">
+
+      <div class="logo-circle">
+
+        <img
+          src="https://res.cloudinary.com/dhbnmxe6t/image/upload/v1791604871/4140074_jmxewt.png"
+          alt="Logo STEAL"
+          appImgFallback>
+
+      </div>
+
+      <span class="steal-title">
+        STEAL
+      </span>
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- FORM ĐĂNG NHẬP -->
+    <!-- ======================================== -->
+
+    <!-- ======================================== -->
+    <!-- BƯỚC 2: STEAL GUARD (OTP) -->
+    <!-- ======================================== -->
+    <div class="otp-step" *ngIf="step === 'otp'">
+      <h2 class="otp-step-title">XÁC MINH STEAL GUARD</h2>
+      <p class="otp-step-desc">Nhập mã gồm 6 chữ số đã gửi tới email của tài khoản để hoàn tất đăng nhập.</p>
+
+      <app-otp-input variant="box" (codeChange)="onOtpChange($event)" (submitted)="submitOtp()"></app-otp-input>
+
+      <div class="login-error-text" *ngIf="hasError" role="alert">{{ errorMessage }}</div>
+      <p class="demo-hint" *ngIf="showHint && currentOtp">(Mã OTP thử nghiệm: <strong>{{ currentOtp }}</strong>)</p>
+
+      <button type="button" class="btn-submit-login" (click)="submitOtp()">XÁC MINH</button>
+      <div class="otp-step-links">
+        <a role="button" tabindex="0" class="link-like" (click)="resendOtp()" (keydown.enter)="resendOtp()">{{ resendLabel }}</a>
+        <a role="button" tabindex="0" class="link-like" (click)="backToPassword()" (keydown.enter)="backToPassword()">← Quay lại</a>
+      </div>
+    </div>
+
+    <ng-container *ngIf="step === 'password'">
+    <!-- TÊN TÀI KHOẢN -->
+
+    <div class="auth-form-group">
+
+      <label
+        for="loginUsername"
+        class="auth-label">
+
+        ĐĂNG NHẬP BẰNG TÊN TÀI KHOẢN
+
+      </label>
+
+      <input
+        id="loginUsername"
+        type="text"
+        class="auth-input"
+        [class.error-border]="hasError"
+        [(ngModel)]="loginUser"
+        (ngModelChange)="clearError()"
+        (keyup.enter)="onLogin()"
+        autocomplete="username"
+        placeholder="">
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- MẬT KHẨU -->
+    <!-- ======================================== -->
+
+    <div class="auth-form-group">
+
+      <label
+        for="loginPassword"
+        class="auth-label">
+
+        MẬT KHẨU
+
+      </label>
+
+      <div class="input-with-eye">
+
+        <input
+          id="loginPassword"
+          [type]="showPass ? 'text' : 'password'"
+          class="auth-input"
+          [class.error-border]="hasError"
+          [(ngModel)]="loginPass"
+          (ngModelChange)="clearError()"
+          (keyup.enter)="onLogin()"
+          autocomplete="current-password"
+          placeholder="">
+
+        <!-- ======================================== -->
+        <!-- NÚT HIỆN / ẨN MẬT KHẨU -->
+        <!-- ======================================== -->
+
+        <button
+          type="button"
+          class="eye-icon"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="showPass ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'"
+          [attr.aria-pressed]="showPass">
+
+          <!-- ======================================== -->
+          <!-- ĐANG HIỆN MẬT KHẨU -->
+          <!-- ICON MẮT BÌNH THƯỜNG -->
+          <!-- ======================================== -->
+
+          <svg
+            *ngIf="showPass"
+            width="22"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#583684"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <path
+              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12">
+            </path>
+
+            <circle
+              cx="12"
+              cy="12"
+              r="3">
+            </circle>
+
+          </svg>
+
+          <!-- ======================================== -->
+          <!-- ĐANG ẨN MẬT KHẨU -->
+          <!-- ICON MẮT CÓ GẠCH CHÉO -->
+          <!-- ======================================== -->
+
+          <svg
+            *ngIf="!showPass"
+            width="22"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#583684"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <path
+              d="M10.6 5.1A10.5 10.5 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-3.1 3.8">
+            </path>
+
+            <path
+              d="M6.2 6.2C3.5 8.2 2 12 2 12s3.5 7 10 7a9.8 9.8 0 0 0 5.8-1.9">
+            </path>
+
+            <path
+              d="M10 10a3 3 0 0 0 4 4">
+            </path>
+
+            <path
+              d="M3 3l18 18">
+            </path>
+
+          </svg>
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- GHI NHỚ TÔI -->
+    <!-- ======================================== -->
+
+    <div class="remember-container">
+
+      <input
+        type="checkbox"
+        id="rememberMe"
+        class="custom-checkbox"
+        [(ngModel)]="rememberMe">
+
+      <label
+        for="rememberMe"
+        class="remember-label">
+
+        Ghi nhớ tôi
+
+      </label>
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- THÔNG BÁO LỖI -->
+    <!-- ======================================== -->
+
+    <div
+      class="error-msg-red"
+      *ngIf="hasError"
+      role="alert">
+
+      {{ errorMessage }}
+
+    </div>
+
+    <!-- ======================================== -->
+    <!-- NÚT ĐĂNG NHẬP -->
+    <!-- ======================================== -->
+
+    <button
+      type="button"
+      class="btn-submit-login"
+      (click)="onLogin()">
+
+      Đăng nhập
+
+    </button>
+
+    <p class="demo-hint" *ngIf="showHint">
+      Tài khoản thử: {{ auth.demoCredentialsHint }}
+    </p>
+
+    <!-- ======================================== -->
+    <!-- FOOTER LINKS -->
+    <!-- ======================================== -->
+
+    <div class="auth-footer-links">
+
+      <!-- KHÔI PHỤC TÀI KHOẢN -->
+
+      <a
+        [routerLink]="['/khoi-phuc-tai-khoan']"
+        (click)="close()"
+        class="forgot-pass-link">
+
+        Giúp tôi với, tôi không thể đăng nhập
+
+      </a>
+
+      <!-- ======================================== -->
+      <!-- CHUYỂN SANG ĐĂNG KÝ -->
+      <!-- ======================================== -->
+
+      <div class="register-row">
+
+        <span>
+          Chưa có tài khoản Steal?
+        </span>
+
+        <a
+          role="button"
+          tabindex="0"
+          class="link-like"
+          (click)="switchToRegister()"
+          (keydown.enter)="switchToRegister()">
+
+          Tạo tài khoản miễn phí
+
+        </a>
+
+      </div>
+
+    </div>
+
+    </ng-container>
+  </div>
+
+</div>

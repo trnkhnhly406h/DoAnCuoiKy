@@ -1,0 +1,274 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700;800&display=swap');
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ========================================
+   PAGE
+======================================== */
+
+.not-found-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #190f26;
+  color: #e9e2f0;
+  font-family: var(--font-main);
+}
+
+/* ========================================
+   MAIN CONTENT
+======================================== */
+
+.not-found-main {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 48px 24px;
+}
+
+.not-found-container {
+  width: 100%;
+  max-width: 1000px;
+}
+
+/* ========================================
+   ERROR PANEL
+======================================== */
+
+.error-info {
+  width: 100%;
+  background: #2c1a41;
+  border: none;
+  border-radius: 5px;
+  padding: 55px 65px;
+  box-shadow: none;
+}
+
+/* SMALL LABEL */
+
+.error-label {
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #bfaad1;
+}
+
+/* ========================================
+   404 NUMBER
+======================================== */
+
+.error-code {
+  display: block;
+  width: 100%;
+  margin: 18px 0 35px;
+
+  font-family: var(--font-main);
+  font-size: 160px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -5px;
+
+  color: #e9e2f0;
+  background: none;
+  text-shadow: none;
+  -webkit-text-fill-color: #e9e2f0;
+}
+
+/* SMALL BLUE LINE */
+
+.error-divider {
+  width: 60px;
+  height: 4px;
+  background: #7d51ad;
+  margin-bottom: 28px;
+}
+
+/* ========================================
+   TEXT
+======================================== */
+
+.error-title {
+  margin: 0 0 20px;
+
+  font-family: var(--font-main);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  color: #ffffff;
+}
+
+.error-description {
+  max-width: 650px;
+  margin: 0 0 12px;
+
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.8;
+
+  color: #ddd1e7;
+}
+
+.error-sub-description {
+  max-width: 650px;
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.8;
+
+  color: #bfaad1;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+.error-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  margin-top: 32px;
+}
+
+.btn-home,
+.btn-back {
+  min-height: 43px;
+  padding: 0 24px;
+
+  border: none;
+  border-radius: 3px;
+
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+/* HOME BUTTON */
+
+.btn-home {
+  background: #7d51ad;
+  color: #ffffff;
+}
+
+.btn-home:hover {
+  background: #683e99;
+}
+
+/* BACK BUTTON */
+
+.btn-back {
+  background: #472d67;
+  color: #e9e2f0;
+}
+
+.btn-back:hover {
+  background: #55377c;
+}
+
+/* ========================================
+   RESPONSIVE TABLET
+======================================== */
+
+@media (max-width: 768px) {
+
+  .not-found-main {
+    padding: 30px 20px;
+  }
+
+  .error-info {
+    padding: 45px 35px;
+  }
+
+  .error-code {
+    font-size: 130px;
+  }
+
+  .error-title {
+    font-size: 24px;
+  }
+
+  .error-description {
+    font-size: 14px;
+  }
+
+  .error-sub-description {
+    font-size: 13px;
+  }
+}
+
+/* ========================================
+   RESPONSIVE MOBILE
+======================================== */
+
+@media (max-width: 480px) {
+
+  .not-found-main {
+    padding: 20px 14px;
+  }
+
+  .error-info {
+    padding: 35px 24px;
+  }
+
+  .error-label {
+    font-size: 10px;
+    letter-spacing: 0.8px;
+  }
+
+  .error-code {
+    font-size: clamp(90px, 25vw, 115px);
+    letter-spacing: -3px;
+    margin: 20px 0;
+  }
+
+  .error-divider {
+    width: 45px;
+    margin-bottom: 24px;
+  }
+
+  .error-title {
+    font-size: 21px;
+  }
+
+  .error-description {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .error-sub-description {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .error-actions {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 28px;
+  }
+
+  .btn-home,
+  .btn-back {
+    width: 100%;
+    min-height: 44px;
+  }
+}

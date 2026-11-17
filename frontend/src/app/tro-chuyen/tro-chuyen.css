@@ -1,0 +1,537 @@
+.chat-page-container {
+  min-height: 85vh;
+  background-color: #271739;
+  padding: 24px 16px;
+  font-family: var(--font-main);
+  color: #e9e2f0;
+}
+
+.chat-layout-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* THANH ĐỔI GIAO DIỆN DEMO 2 MÀN HÌNH */
+.demo-toggle-bar {
+  text-align: right;
+}
+
+.demo-toggle-bar button {
+  background-color: #7246a4;
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: background 0.2s;
+}
+
+.demo-toggle-bar button:hover {
+  background-color: #7b55a5;
+}
+
+.chat-main-flex {
+  display: flex;
+  gap: 20px;
+}
+
+/* SIDEBAR CHUẨN CÁC HÌNH */
+.chat-sidebar {
+  width: 230px;
+  background-color: #36204e;
+  border-radius: 4px;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+  box-shadow: 0 4px 16px rgba(0, 0, 0,0.4);
+}
+
+.sidebar-group { display: flex; flex-direction: column; }
+
+.group-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  padding: 0 20px 8px;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-btn {
+  background: none;
+  border: none;
+  color: #c8b6d7;
+  padding: 10px 20px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-btn:hover { color: #ffffff; background-color: rgba(255, 255, 255, 0.05); }
+
+.sidebar-btn.active {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+}
+
+.badge-count {
+  background-color: #e53e3e;
+  color: #ffffff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+/* MAIN CONTENT */
+.chat-main-content { flex: 1; }
+
+.content-pane {
+  background-color: #36204e;
+  border-radius: 4px;
+  padding: 24px;
+  min-height: 480px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0,0.4);
+}
+
+.pane-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pane-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.mt-12 { margin-top: 12px; }
+.mt-20 { margin-top: 20px; }
+
+/* HÌNH 1: TÀI KHOẢN MỚI CHƯA CÓ BẠN BÈ */
+.empty-friends-card {
+  background-color: #eadff3;
+  padding: 40px 20px;
+  border-radius: 4px;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.empty-msg {
+  color: #1a1026;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.btn-action-light {
+  background-color: #eadff3;
+  color: #1a1026;
+  border: 1px solid #1a1026;
+  padding: 6px 18px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-action-light:hover { background-color: #ffffff; }
+
+/* HÌNH 2: THÊM BẠN BÈ */
+.add-section-block { margin-bottom: 20px; }
+
+.section-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.code-box-row { display: flex; gap: 12px; max-width: 500px; }
+
+.input-code-readonly {
+  flex: 1;
+  background-color: #dad0e2;
+  color: #1a1026;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 13px;
+  outline: none;
+}
+
+.text-left { text-align: left; }
+
+.search-pill-wrapper { position: relative; width: 100%; max-width: 500px; }
+
+.search-pill-input {
+  width: 100%;
+  padding: 10px 40px 10px 16px;
+  border-radius: 9999px;
+  border: none;
+  background-color: #ffffff;
+  color: #1a1026;
+  font-size: 13px;
+  font-weight: 600;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-icon {
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: #1a1026;
+  font-size: 14px;
+}
+
+.search-results-list { display: flex; flex-direction: column; gap: 10px; max-width: 500px; }
+
+.search-user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #241535;
+  padding: 10px 16px;
+  border-radius: 4px;
+}
+
+.user-avatar-sm {
+  width: 42px; height: 42px;
+  border-radius: 4px; object-fit: cover;
+  background-color: #1a1026;
+}
+
+.user-info-col { flex: 1; display: flex; flex-direction: column; }
+.user-name { font-size: 13px; font-weight: 700; color: #ffffff; }
+.user-handle { font-size: 11px; color: #9589a2; font-style: italic; }
+
+/* HÌNH 3: LỜI MỜI ĐANG CHỜ & LỜI MỜI ĐÃ GỬI */
+.invites-two-columns { display: flex; gap: 30px; }
+.invite-column { flex: 1; }
+.column-title { font-size: 14px; font-weight: 800; color: #ffffff; margin: 0 0 4px; }
+.column-sub-desc { font-size: 12px; color: #9589a2; margin: 0 0 16px; }
+.invites-list { display: flex; flex-direction: column; gap: 12px; }
+
+.invite-user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #241535;
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.invite-actions-btn-group { display: flex; gap: 8px; }
+
+.btn-accept, .btn-decline, .btn-sent-badge {
+  background-color: #eadff3;
+  color: #1a1026;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-sent-badge:hover { background-color: #ff8e8e; }
+
+.empty-sub-card {
+  background-color: #241535;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+  color: #9589a2;
+  font-size: 12px;
+}
+
+/* HÌNH 4: TRÊN MẠNG / RỜI MẠNG & BÁNH RĂNG ⚙ (HÌNH 5) */
+.friends-category-section { margin-top: 20px; }
+.category-heading { font-size: 12px; font-weight: 800; color: #ffffff; margin: 0 0 12px; letter-spacing: 0.5px; }
+
+.friends-list-grid { display: flex; flex-direction: column; gap: 10px; max-width: 500px; }
+
+.friend-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #241535;
+  padding: 8px 12px;
+  border-radius: 4px;
+  position: relative;
+}
+
+.friend-card-row.online { border-left: 3px solid #9468c2; }
+.friend-avatar { width: 44px; height: 44px; border-radius: 4px; object-fit: cover; background-color: #1a1026; }
+.friend-details { flex: 1; display: flex; flex-direction: column; }
+.friend-display-name { font-size: 13px; font-weight: 700; color: #9589a2; }
+.friend-display-name.online-text { color: #c0a1db; }
+.last-online-sub { font-size: 11px; color: #9589a2; }
+
+.gear-menu-wrapper { position: relative; }
+.btn-gear-icon { background: none; border: none; color: #ffffff; font-size: 20px; cursor: pointer; padding: 4px; transition: transform 0.2s; }
+.btn-gear-icon:hover { transform: rotate(45deg); }
+
+.gear-dropdown-menu {
+  position: absolute;
+  top: 100%; right: 0;
+  width: 170px;
+  background-color: #402c57;
+  border: 1px solid #7246a4;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+.dropdown-option {
+  width: 100%;
+  background: none; border: none;
+  color: #ffffff; padding: 10px 16px;
+  text-align: left; font-size: 13px;
+  font-weight: 600; cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dropdown-option:hover { background-color: #553b76; }
+
+/* KHÓA ĐĂNG NHẬP */
+.auth-required-box { display: flex; justify-content: center; padding-top: 60px; }
+.auth-required-card { background-color: #36204e; border: 1px solid #7246a4; padding: 40px; border-radius: 8px; text-align: center; max-width: 400px; }
+.lock-icon { font-size: 48px; margin-bottom: 16px; }
+.auth-required-card h2 { font-size: 18px; color: #ffffff; margin-bottom: 8px; }
+.auth-required-card p { font-size: 13px; color: #9589a2; margin-bottom: 24px; }
+.btn-login-now { background-color: #7b55a5; color: #ffffff; border: none; padding: 10px 24px; border-radius: 4px; font-weight: 700; cursor: pointer; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* ĐẢM BẢO POPUP HÌNH 2 PHỦ TOÀN MÀN HÌNH KHÔNG BỊ RỚT GÓC DƯỚI TRÁI */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+}
+
+.steam-modal-card {
+  width: 460px;
+  background-color: #36204e;
+  border: 1px solid #7246a4;
+  border-radius: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0,0.8);
+  overflow: hidden;
+}
+
+.modal-header-line {
+  background-color: #271739;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #52307e;
+}
+
+.modal-title-text { font-size: 13px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: 0.5px; }
+.btn-close-modal { background: none; border: none; color: #9589a2; font-size: 16px; cursor: pointer; }
+
+.modal-body-content { padding: 20px; }
+.input-steam-style { width: 100%; padding: 10px 14px; border-radius: 4px; border: 1px solid #7246a4; background-color: #dad0e2; color: #1a1026; font-size: 13px; font-weight: 700; outline: none; box-sizing: border-box; }
+
+.invite-tags-box { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.tag-friend-chip { background-color: #7b55a5; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 12px; display: flex; align-items: center; gap: 6px; }
+.btn-remove-chip { background: none; border: none; color: #ffffff; cursor: pointer; font-size: 10px; }
+
+.friends-invite-picker-list { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.picker-friend-item { display: flex; align-items: center; gap: 10px; background-color: #241535; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+
+.modal-footer-actions { display: flex; justify-content: flex-end; gap: 12px; }
+.btn-steam-cancel { background-color: #4d2b78; color: #ffffff; border: none; padding: 8px 18px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.btn-steam-primary { background-color: #7b55a5; color: #ffffff; border: none; padding: 8px 20px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; }
+.btn-danger-submit { background-color: #e53e3e !important; }
+.text-danger { color: #ff5252 !important; }
+/* FIX CHI TIẾT GIAO DIỆN MODAL HÌNH 3 KHÔNG CÒN BỊ VỠ */
+.group-settings-card {
+  width: 720px;
+  max-width: 90vw;
+  background-color: #36204e;
+  border: 1px solid #7246a4;
+  border-radius: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0,0.8);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.group-settings-body {
+  display: flex;
+  min-height: 380px;
+}
+
+.settings-nav-sidebar {
+  width: 200px;
+  background-color: #271739;
+  border-right: 1px solid #52307e;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-item-btn {
+  background: none; border: none; color: #9589a2;
+  padding: 10px 14px; text-align: left; font-size: 13px;
+  font-weight: 700; cursor: pointer; border-radius: 4px;
+}
+.nav-item-btn:hover, .nav-item-btn.active {
+  background-color: #422564; color: #ffffff;
+}
+
+.btn-leave-group-red {
+  margin-top: auto;
+  background: none; border: none; color: #ff5252;
+  padding: 10px 14px; text-align: left; font-size: 12px;
+  font-weight: bold; cursor: pointer;
+}
+.btn-leave-group-red:hover { text-decoration: underline; }
+
+.settings-pane-content {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pane-heading-title { font-size: 18px; font-weight: 800; color: #ffffff; margin: 0 0 16px; }
+
+.avatar-upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.group-avatar-preview-box {
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid #7246a4;
+  background-color: #1a1026;
+}
+
+.group-big-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-upload-thumb {
+  background-color: #493462; color: #ffffff; border: 1px solid #7246a4;
+  padding: 6px 16px; border-radius: 4px; font-size: 11px; cursor: pointer;
+}
+.btn-upload-thumb:hover { background-color: #7246a4; }
+.invite-actions-btn-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-accept {
+  background-color: #48bb78;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn-accept:hover { background-color: #38a169; }
+
+.btn-decline {
+  background-color: #56446e;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn-decline:hover { background-color: #e53e3e; }
+/* ===== Bổ sung: class đang dùng trong HTML nhưng chưa có style ===== */
+.mt-16 { margin-top: 16px; }
+.text-center { text-align: center; }
+.form-group-custom { display: flex; flex-direction: column; gap: 6px; }
+.form-group-custom label { font-size: 11px; font-weight: 800; color: #c0a1db; letter-spacing: 0.4px; }
+.sub-label { font-size: 11px; font-weight: 800; color: #c0a1db; display: block; margin-bottom: 6px; }
+.online-status { color: #48bb78 !important; }
+.friend-card-row.offline .friend-avatar { filter: grayscale(0.6); opacity: 0.8; }
+.members-list-settings { display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto; }
+.member-item-row { display: flex; align-items: center; gap: 12px; background-color: #2e1b43; border: 1px solid #52307e; border-radius: 4px; padding: 8px 12px; }
+.save-settings-bar { display: flex; justify-content: flex-end; }
+.search-hint-text { font-size: 12px; color: #9589a2; margin: 8px 0 0; }
+.user-avatar-sm, .friend-avatar, .group-big-avatar { object-fit: cover; background-color: #1b1028; }
+.btn-action-light:disabled, .btn-upload-thumb:disabled { opacity: 0.5; cursor: not-allowed; }
+.input-steam-style:disabled { opacity: 0.6; cursor: not-allowed; }
+.sidebar-btn, .btn-action-light, .btn-accept, .btn-decline, .dropdown-option, .btn-gear-icon { font-family: inherit; }
+.picker-friend-item:focus-visible { outline: 2px solid #c0a1db; outline-offset: -2px; }
+.search-user-card .btn-action-light + .btn-action-light { margin-left: 8px; }
+
+/* ===== Responsive ===== */
+@media (max-width: 800px) {
+  .chat-main-flex { flex-direction: column; }
+  .chat-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 8px; position: static; }
+  .sidebar-group { flex: 1; min-width: 200px; }
+  .steam-modal-card, .group-settings-card { width: calc(100vw - 24px); max-width: none; }
+  .group-settings-body { flex-direction: column; }
+  .settings-nav-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+  .search-user-card, .invite-user-card { flex-wrap: wrap; }
+}
+
+/* ===== Quản lý thành viên nhóm ===== */
+.members-head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.add-members-panel { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; padding: 12px; border: 1px dashed var(--steal-border-color, #452d62); border-radius: 6px; }
+.add-members-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.join-requests-box { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.member-actions { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.member-item-row .user-info-col { min-width: 0; }
+.member-link:hover { text-decoration: underline; cursor: pointer; }
+.btn-danger-light { color: #e53e3e; }
+.btn-danger-light:hover { background-color: #e53e3e; color: #ffffff; }
+.pending-badge { color: #f6ad55; font-weight: 700; }
+.btn-steam-primary:disabled { opacity: 0.5; cursor: not-allowed; }

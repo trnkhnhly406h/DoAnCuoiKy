@@ -1,0 +1,262 @@
+<div class="admin-auth-container">
+  <div class="auth-card-box">
+
+    <!-- HEADER CARD BANNER NỀN XÁM NHẠT SÁNG LOGO STEAL -->
+    <div class="auth-card-header">
+      <div class="logo-group">
+        <div class="logo-circle">
+          <!-- Dán link ảnh logo của bạn vào thuộc tính src bên dưới -->
+          <img 
+            src="https://res.cloudinary.com/dhbnmxe6t/image/upload/v1792316510/697b16f2-e2f5-45f1-80f3-45b009c7d060.png" 
+            alt="STEAL Logo" 
+            class="logo-img" 
+            (error)="onLogoError($event)" />
+        </div>
+        <span class="logo-text">STEAL</span>
+      </div>
+    </div>
+
+    <!-- MÀN HÌNH 1: FORM ĐĂNG NHẬP CHÍNH -->
+    @if (currentStep === 'login_form' || currentStep === 'login_error') {
+      <div class="auth-card-body">
+
+        <h2 class="auth-title">ĐĂNG NHẬP HỆ THỐNG QUẢN TRỊ</h2>
+
+        <div class="auth-form-group">
+          <label class="form-label-bold">ĐĂNG NHẬP BẰNG EMAIL</label>
+          <input 
+            type="email" 
+            class="auth-input" 
+            [class.input-error]="currentStep === 'login_error' || loginEmptyError"
+            [(ngModel)]="loginEmail" 
+            placeholder="admin@stealgame.vn" />
+        </div>
+
+        
+
+<div class="auth-form-group">
+  <label class="form-label-bold">MẬT KHẨU</label>
+
+  <div class="admin-password-wrapper">
+
+    <input
+      [type]="showLoginPassword ? 'text' : 'password'"
+      class="auth-input"
+      [(ngModel)]="loginPassword"
+      autocomplete="current-password"
+      placeholder="Nhập mật khẩu"
+    />
+
+    <button
+      type="button"
+      class="admin-password-toggle"
+      (click)="toggleLoginPassword()"
+      [attr.title]="showLoginPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'">
+
+      <i
+        class="bi"
+        [ngClass]="showLoginPassword ? 'bi-eye-slash' : 'bi-eye'">
+      </i>
+
+    </button>
+
+  </div>
+</div>
+
+
+
+        <div class="form-action-center">
+          <button type="button" class="btn-auth-primary" [disabled]="isSubmitting" (click)="xuLyDangNhap()">
+  <span class="btn-label-text">{{ isSubmitting ? 'Đang xử lý...' : 'Đăng nhập' }}</span>
+</button>
+          
+          <button type="button" class="btn-forgot-password" (click)="chuyenStep('forgot_password')">
+            Quên mật khẩu?
+          </button>
+
+          <!-- HIỂN THỊ LỖI KHI BỎ TRỐNG THÔNG TIN -->
+          @if (loginEmptyError) {
+            <p class="error-msg-red">Vui lòng nhập đầy đủ Email và Mật khẩu!</p>
+          }
+
+          <!-- HIỂN THỊ LỖI KHI NHẬP SAI MẬT KHẨU HOẶC EMAIL -->
+          @if (currentStep === 'login_error' && !loginEmptyError) {
+            <p class="error-msg-red">Vui lòng kiểm tra lại tên tài khoản và mật khẩu, rồi thử lại.</p>
+          }
+        </div>
+
+      </div>
+    }
+
+    <!-- MÀN HÌNH 2: TÀI KHOẢN BỊ TẠM KHÓA 5 PHÚT -->
+    @if (currentStep === 'locked') {
+      <div class="auth-card-body body-center">
+        <!-- NÚT QUAY LẠI BỊ VÔ HIỆU HÓA KHI ĐANG LOCK -->
+        <button 
+          type="button" 
+          class="btn-back-inside" 
+          [disabled]="lockCountdown > 0" 
+          [class.btn-back-disabled]="lockCountdown > 0"
+          (click)="quayLai()">
+          <i class="bi bi-arrow-return-left"></i> Quay lại
+        </button>
+
+        <h2 class="auth-title title-red-gate">
+          <i class="bi bi-slash-circle-fill icon-red"></i> TÀI KHOẢN BỊ TẠM KHÓA
+        </h2>
+
+        <p class="locked-desc-text text-center">
+          Bạn đã nhập sai mật khẩu quá 3 lần liên tiếp. Để đảm bảo an toàn, chức năng đăng nhập bị tạm dừng trong:
+        </p>
+
+        <div class="lock-timer-box">
+          <i class="bi bi-stopwatch-fill timer-icon"></i> {{ formatTime(lockCountdown) }}
+        </div>
+
+        <p class="locked-sub-text text-center">
+          Vui lòng thử lại sau hoặc liên hệ Super Admin nếu bạn quên mật khẩu.
+        </p>
+      </div>
+    }
+
+    <!-- MÀN HÌNH 3: XÁC THỰC 2FA RSA HARDWARE TOKEN -->
+    @if (currentStep === '2fa') {
+      <div class="auth-card-body body-center">
+        <button type="button" class="btn-back-inside" (click)="quayLai()">
+          <i class="bi bi-arrow-return-left"></i> Quay lại
+        </button>
+
+        <div class="gate-title-group">
+          <i class="bi bi-shield-lock-fill gate-lock-icon"></i>
+          <h2 class="auth-title">XÁC THỰC BẢO MẬT RSA</h2>
+        </div>
+
+        <p class="auth-subtitle">Vui lòng nhập mã Token 6 chữ số từ thiết bị RSA Token</p>
+
+        <div class="token-inputs-row">
+          @for (digit of tokenDigits; track $index) {
+            <input 
+              type="text" 
+              maxLength="1" 
+              class="token-box" 
+              [(ngModel)]="tokenDigits[$index]" 
+              (keyup)="onTokenKeyup($event, $index)" />
+          }
+        </div>
+
+        <p class="refresh-token-text">
+          <i class="bi bi-arrow-repeat"></i> Mã tự động làm mới sau: {{ rsaCountdown }}s
+        </p>
+
+        <div class="form-action-center">
+          <button type="button" class="btn-auth-primary btn-wide" (click)="xacNhan2FA()">
+            <span class="btn-label-text">Xác nhận Đăng nhập</span>
+          </button>
+        </div>
+      </div>
+    }
+
+   <!-- MÀN HÌNH 4: KHÔI PHỤC MẬT KHẨU (CHỈ DÀNH CHO SUPER ADMIN) -->
+    @if (currentStep === 'forgot_password') {
+      <div class="auth-card-body">
+        <button type="button" class="btn-back-inside" (click)="quayLai()">
+          <i class="bi bi-arrow-return-left"></i> Quay lại
+        </button>
+
+        <h2 class="auth-title title-yellow-key">
+          <i class="bi bi-key-fill icon-yellow"></i> KHÔI PHỤC MẬT KHẨU
+        </h2>
+
+        <p class="auth-subtitle text-center">
+          <i class="bi bi-shield-lock text-warning"></i> Tính năng chỉ dành riêng cho <strong>Super Admin</strong>
+        </p>
+
+        <div class="auth-form-group">
+          <label class="form-label-bold">Email Admin<span class="star-red">*</span>:</label>
+          <div style="display: flex; gap: 8px;">
+            <input 
+              type="email" 
+              class="auth-input" 
+              [(ngModel)]="forgotForm.email" 
+              placeholder="admin@stealgame.vn" />
+            <button 
+              type="button" 
+              class="btn-resend-otp-figma" 
+              style="white-space: nowrap; font-size: 13px;"
+              [disabled]="isCheckingRecovery || (resendOtpCountdown < 60 && resendOtpCountdown > 0)" 
+              (click)="guiLaiOTP()">
+              <i class="bi bi-send-fill" *ngIf="resendOtpCountdown === 60"></i>
+              {{ isCheckingRecovery ? 'Đang kiểm tra...' : (resendOtpCountdown < 60 && resendOtpCountdown > 0 ? ('Gửi lại (' + resendOtpCountdown + 's)') : 'Gửi mã OTP') }}
+            </button>
+          </div>
+        </div>
+
+        @if (isSuperAdminVerified) {
+          <div style="background: rgba(72, 187, 120, 0.15); border: 1px solid #48bb78; color: #48bb78; padding: 8px 12px; border-radius: 4px; font-size: 12.5px;">
+            <i class="bi bi-check-circle-fill"></i> Xác thực Super Admin thành công! Mã OTP đã được gửi về email.
+          </div>
+        }
+
+        <div class="auth-form-group">
+          <label class="form-label-bold">Mã OTP gửi qua Email<span class="star-red">*</span>:</label>
+          <input type="text" class="auth-input input-otp-code" [(ngModel)]="forgotForm.otp" placeholder="- - - - - -" />
+        </div>
+
+        <div class="auth-form-group">
+          <label class="form-label-bold">Mật khẩu mới (ít nhất 8 ký tự, có chữ, số, ký tự đặc biệt)<span class="star-red">*</span>:</label>
+          <input type="password" class="auth-input" [(ngModel)]="forgotForm.newPassword" placeholder="••••••••" />
+        </div>
+
+        <div class="auth-form-group">
+          <label class="form-label-bold">Nhập lại mật khẩu mới<span class="star-red">*</span>:</label>
+          <input type="password" class="auth-input" [(ngModel)]="forgotForm.confirmPassword" placeholder="••••••••" />
+        </div>
+
+        <div class="form-action-center margin-top-12">
+          <button type="button" class="btn-auth-primary btn-wide" [disabled]="isSubmitting" (click)="datLaiMatKhau()">
+            <span class="btn-label-text">
+               {{ isSubmitting ? 'Đang cập nhật...' : 'Đặt lại mật khẩu Super Admin' }}
+            </span>
+          </button>
+        </div>
+      </div>
+    }
+
+  </div>
+
+  <!-- POPUP CẢNH BÁO TỪ CHỐI STAFF / EDITOR -->
+  @if (showRestrictedModal) {
+    <div class="steal-modal-overlay" (click)="dongPopupRestricted()">
+      <div class="steal-modal-box" (click)="$event.stopPropagation()">
+        <div class="steal-modal-icon-header">
+          <div class="icon-danger-circle">
+            <i class="bi bi-shield-x"></i>
+          </div>
+        </div>
+
+        <h3 class="steal-modal-title">TỪ CHỐI KHÔI PHỤC MẬT KHẨU</h3>
+        
+        <div class="steal-modal-content">
+          <div class="role-badge-row">
+            Vai trò tài khoản: <span class="badge-role-tag">{{ restrictedRole }}</span>
+          </div>
+
+          <p class="modal-desc-main">
+            Theo chính sách bảo mật của hệ thống STEAL, <strong>chỉ Quản trị viên trưởng (Super Admin)</strong> mới được phép tự khôi phục mật khẩu.
+          </p>
+
+          <div class="alert-notice-box">
+            <i class="bi bi-info-circle-fill notice-icon"></i>
+            <span>Vui lòng liên hệ trực tiếp với <strong>Super Admin</strong> để được cấp lại mật khẩu đăng nhập.</span>
+          </div>
+        </div>
+
+        <div class="steal-modal-actions">
+          <button type="button" class="btn-auth-primary btn-modal-close" (click)="dongPopupRestricted()">
+            Đã hiểu, quay lại Đăng nhập
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

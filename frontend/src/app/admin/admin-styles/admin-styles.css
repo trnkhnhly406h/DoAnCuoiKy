@@ -1,0 +1,9 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+body.admin-mode {
+  margin: 0;
+  padding: 0;
+  background-color: #131525;
+  color: #c6d4df;
+  font-family: 'Motiva Sans', Arial, Helvetica, sans-serif;
+}

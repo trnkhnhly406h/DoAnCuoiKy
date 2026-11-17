@@ -1,0 +1,239 @@
+<div class="wishlist-page-bg" (click)="closeMenus()">
+
+  <app-login-required *ngIf="!auth.isLoggedIn" message="Bạn cần đăng nhập để xem danh sách ước của mình."></app-login-required>
+
+  <section class="wishlist-main-wrapper" *ngIf="auth.isLoggedIn">
+   
+    <div class="wishlist-header-title">
+      <img [src]="profileAvatar" alt="Avatar" class="user-avatar-small" appImgFallback>
+      <h1 class="page-title-text">DANH SÁCH ƯỚC CỦA {{ accountName | uppercase }}</h1>
+    </div>
+
+    <div class="wishlist-container-panel">
+     
+      <div class="filter-top-bar">
+       
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            placeholder="Nhập từ khoá, thẻ tag hoặc danh mục..."
+            class="filter-search-input"
+            [(ngModel)]="keyword"
+          />
+        </div>
+
+        <div class="filter-actions-right">
+         
+          <!-- MENU TÙY CHỌN 3 CỘT -->
+          <div class="dropdown-control-wrapper">
+            <button class="btn-filter-dropdown" (click)="toggleOptionsMenu($event)">
+              <span>Tùy chọn</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+
+            <!-- POPOVER 3 CỘT -->
+            <div class="dropdown-popover-panel options-3col-panel" *ngIf="showOptionsMenu" (click)="$event.stopPropagation()">
+             
+              <!-- CỘT 1: CHẾ ĐỘ XEM & GIẢM GIÁ -->
+              <div class="options-col">
+               
+                <div class="col-section">
+                  <div class="col-title">CHẾ ĐỘ XEM</div>
+                  <label class="radio-item" (click)="viewMode = 'Thu gọn'">
+                    <span class="custom-radio" [class.checked]="viewMode === 'Thu gọn'"></span>
+                    <span>Thu gọn</span>
+                  </label>
+                  <label class="radio-item" (click)="viewMode = 'Mở rộng'">
+                    <span class="custom-radio" [class.checked]="viewMode === 'Mở rộng'"></span>
+                    <span>Mở rộng</span>
+                  </label>
+                </div>
+
+                <div class="col-section margin-top-sec">
+                  <div class="col-title">GIẢM GIÁ</div>
+                  <label class="radio-item" (click)="discountFilter = 'TAT_CA'">
+                    <span class="custom-radio" [class.checked]="discountFilter === 'TAT_CA'"></span>
+                    <span>Tất cả sản phẩm trong danh sách</span>
+                  </label>
+                  <label class="radio-item" (click)="discountFilter = 'CHI_GIAM_GIA'">
+                    <span class="custom-radio" [class.checked]="discountFilter === 'CHI_GIAM_GIA'"></span>
+                    <span>Chỉ sản phẩm đang giảm giá</span>
+                  </label>
+                  <label class="radio-item" (click)="discountFilter = 'GIAM_50'">
+                    <span class="custom-radio" [class.checked]="discountFilter === 'GIAM_50'"></span>
+                    <span>Giảm từ 50% trở lên</span>
+                  </label>
+                  <label class="radio-item" (click)="discountFilter = 'GIAM_75'">
+                    <span class="custom-radio" [class.checked]="discountFilter === 'GIAM_75'"></span>
+                    <span>Giảm từ 75% trở lên</span>
+                  </label>
+                </div>
+
+              </div>
+
+              <!-- CỘT 3: MỨC GIÁ & NÚT CÀI ĐẶT THÔNG BÁO -->
+              <div class="options-col col-right-flex">
+                <div>
+                  <div class="col-title">MỨC GIÁ</div>
+                 
+                  <div class="price-slider-container">
+                    <input
+                      type="range"
+                      min="200000"
+                      [max]="maxPrice"
+                      step="50000"
+                      [value]="maxPriceFilter"
+                      (input)="setPriceFilter($event)"
+                      class="custom-range-slider"
+                      aria-label="Mức giá tối đa"
+                    />
+
+                    <div class="ticks-bar">
+                      <span></span><span></span><span></span><span></span>
+                      <span></span><span></span><span></span><span></span>
+                      <span></span><span></span><span></span>
+                    </div>
+
+                    <div class="price-selected-text">
+                      {{ priceFilterLabel }}
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn-notification-settings" (click)="openNotificationSettings()">
+                  CÀI ĐẶT THÔNG BÁO
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SẮP XẾP THEO -->
+          <div class="dropdown-control-wrapper">
+            <button class="btn-filter-dropdown" (click)="toggleSortMenu($event)">
+              <span>Sắp xếp theo: {{ sortKey }}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+
+            <div class="dropdown-popover-panel sort-options-menu" *ngIf="showSortMenu" (click)="$event.stopPropagation()">
+              <div class="sort-item" *ngFor="let key of sortKeys" [class.active]="sortKey === key" (click)="chooseSort(key)">{{ key }}</div>
+            </div>
+          </div>
+
+          <!-- CHIA SẺ -->
+          <button class="btn-share-icon" (click)="openShare($event)" title="Chia sẻ danh sách ước">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="wishlist-count-text">
+        {{ rows.length }} sản phẩm
+      </div>
+
+      <!-- DANH SÁCH GAME -->
+      <div class="wishlist-cards-list" *ngIf="rows.length > 0; else dsRong" [class.view-expanded]="viewMode === 'Mở rộng'">
+        <div class="wishlist-game-card" *ngFor="let row of rows; trackBy: trackById">
+          <a [routerLink]="['/game', row.game.id]"><img [src]="row.game.coverImage" [alt]="row.game.title" class="game-card-thumb" appImgFallback></a>
+
+          <div class="game-card-details">
+            <h2 class="game-card-title"><a [routerLink]="['/game', row.game.id]">{{ row.game.title }}</a></h2>
+           
+            <div class="game-meta-row flex-align-center">
+              <span class="meta-label">DANH MỤC CỦA TÔI:</span>
+              <div class="tags-group">
+                <span class="meta-tag-item" *ngFor="let tag of row.tags">{{ tag }}</span>
+              </div>
+            </div>
+
+            <div class="game-meta-row info-sub-row">
+              <span class="release-date-text">Ngày phát hành: {{ row.game.releaseDate | date: 'dd/MM/yyyy' }}</span>
+              <span class="rating-box-right">
+                Đánh giá: <strong class="rating-text">{{ row.game.reviewsSummary }}</strong>
+              </span>
+            </div>
+
+            <div class="game-meta-row added-date-row">
+              <span>Đã thêm vào {{ row.item.addedAt | date: 'dd/MM/yyyy' }}</span>
+              <button class="btn-remove-wishlist" (click)="remove(row.item.id, $event)" title="Xoá khỏi danh sách ước">
+                ✕ Xoá
+              </button>
+            </div>
+
+            <div class="bottom-price-buy-box">
+              <div class="price-badge-box">
+                <span class="discount-percent" *ngIf="row.item.discountPercent > 0">-{{ row.item.discountPercent }}%</span>
+                <div class="price-numbers">
+                  <span class="old-price" *ngIf="row.item.discountPercent > 0">{{ formatMoney(row.item.originalPrice) }}đ</span>
+                  <span class="current-price">{{ row.game.isFree ? 'Miễn phí' : formatMoney(row.item.price) + 'đ' }}</span>
+                </div>
+              </div>
+
+              <button class="btn-add-to-cart" (click)="addToCart(row, $event)">
+                Thêm vào giỏ hàng
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #dsRong>
+        <div class="empty-wishlist-box">
+          {{ cart.wishlistItems.length === 0 ? 'Danh sách ước của bạn đang trống. Hãy thêm game bạn quan tâm từ cửa hàng!' : 'Không tìm thấy trò chơi nào phù hợp với bộ lọc hiện tại.' }}
+        </div>
+      </ng-template>
+
+    </div>
+
+  </section>
+
+  <!-- MODAL CHIA SẺ -->
+  <div class="share-modal-overlay" *ngIf="showShareModal" (click)="closeShare()">
+    <div class="share-modal-container" (click)="$event.stopPropagation()">
+      <button class="btn-close-x" (click)="closeShare()" aria-label="Đóng">X</button>
+      <h2 class="share-modal-title">CHIA SẺ LIÊN KẾT</h2>
+      <p class="share-modal-desc">
+        Bất kỳ ai có liên kết này đều có thể xem danh sách ước của bạn với các bộ lọc hiện tại, bất kể cài đặt quyền riêng tư hồ sơ của bạn như thế nào. Họ sẽ không thể thay đổi các bộ lọc này.
+      </p>
+
+      <div class="link-display-box">
+        <input
+          type="text"
+          readonly
+          [value]="shareUrl ? shareUrl : 'Đã thu hồi liên kết'"
+          class="share-link-input"
+          [class.revoked-text]="!shareUrl"
+        />
+      </div>
+
+      <div class="share-modal-actions-row">
+        <button class="btn-modal-action btn-revoke" (click)="revokeLinks()">
+          Thu hồi tất cả liên kết
+        </button>
+        <button class="btn-modal-action btn-copy-gradient" (click)="copyLink()">
+          {{ copied ? 'Đã sao chép!' : 'Sao chép liên kết' }}
+        </button>
+        <button class="btn-modal-action btn-complete" (click)="closeShare()">
+          Hoàn tất
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

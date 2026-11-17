@@ -1,0 +1,290 @@
+
+<div class="profile-container">
+
+  <!-- ========================================== -->
+  <!-- CHƯA ĐĂNG NHẬP: HIỆN MÀN HÌNH YÊU CẦU LOGIN -->
+  <!-- ========================================== -->
+
+  <app-login-required
+    *ngIf="!authService.isLoggedIn"
+    message="Bạn cần đăng nhập tài khoản STEAL để truy cập Hồ sơ cá nhân.">
+  </app-login-required>
+
+
+  <!-- ========================================== -->
+  <!-- ĐÃ ĐĂNG NHẬP: HIỆN HỒ SƠ CÁ NHÂN -->
+  <!-- ========================================== -->
+
+  <ng-container *ngIf="authService.isLoggedIn">
+
+    <div
+      class="profile-card">
+
+      <!-- THÔNG TIN NGƯỜI DÙNG -->
+      <div class="user-info-banner">
+
+        <img
+          [src]="profileService.avatar"
+          [alt]="profileService.displayName"
+          class="profile-avatar avatar-img"
+          appImgFallback
+        />
+
+        <div class="user-details-box">
+
+          <div class="user-title-row">
+
+            <span class="user-display-name">
+              {{ profileService.displayName }}
+            </span>
+
+            <button
+              class="btn-edit-profile"
+              [routerLink]="['/sua-ho-so']">
+              Sửa hồ sơ
+            </button>
+
+          </div>
+
+          <div class="user-location">
+
+            <span>
+              {{ flag }} {{ profileService.profile.country }}
+            </span>
+
+            <span
+              *ngIf="profileService.profile.realName"
+              class="real-name">
+              · {{ profileService.profile.realName }}
+            </span>
+
+          </div>
+
+          
+<p class="user-bio">
+  {{ profileService.profile.bio || 'Chưa cập nhật tiểu sử.' }}
+</p>
+
+
+        </div>
+      </div>
+
+
+      <!-- ====================================== -->
+      <!-- GAME HAY CHƠI -->
+      <!-- ====================================== -->
+
+      <div class="profile-section">
+
+        <div class="profile-section-head">
+
+          <h3 class="section-title">
+            Game hay chơi
+            ({{ cartWishlistService.libraryGames.length }})
+          </h3>
+
+          <span
+            *ngIf="!profileService.profile.showGames"
+            class="hidden-badge">
+            Đang ẩn với người khác
+          </span>
+
+        </div>
+
+        <div
+          *ngIf="cartWishlistService.libraryGames.length > 0"
+          class="games-grid">
+
+          <div
+            *ngFor="let game of cartWishlistService.libraryGames.slice(0, previewLimit)"
+            class="game-tile"
+            (click)="goToGameDetail(game)"
+            style="cursor: pointer;">
+
+            <img
+              [src]="game.coverImage"
+              [alt]="game.title"
+              appImgFallback
+            />
+
+            <div class="game-tile-title">
+              {{ game.title }}
+            </div>
+
+          </div>
+        </div>
+
+        <a
+          *ngIf="cartWishlistService.libraryGames.length > 0"
+          [routerLink]="['/thu-vien']"
+          class="view-all-link">
+          Xem toàn bộ thư viện →
+        </a>
+
+        <div
+          *ngIf="cartWishlistService.libraryGames.length === 0"
+          class="empty-section-banner">
+
+          <p>Bạn chưa sở hữu game nào.</p>
+
+          <button
+            class="btn-explore"
+            [routerLink]="['/']">
+            Khám phá cửa hàng
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- ====================================== -->
+      <!-- DANH SÁCH ƯỚC -->
+      <!-- ====================================== -->
+
+      <div class="profile-section">
+
+        <div class="profile-section-head">
+
+          <h3 class="section-title">
+            Danh sách ước
+            ({{ cartWishlistService.wishlistItems.length }})
+          </h3>
+
+          <span
+            *ngIf="!profileService.profile.showWishlist"
+            class="hidden-badge">
+            Đang ẩn với người khác
+          </span>
+
+        </div>
+
+        <div
+          *ngIf="cartWishlistService.wishlistItems.length > 0"
+          class="games-grid">
+
+          <div
+            *ngFor="let item of cartWishlistService.wishlistItems.slice(0, previewLimit)"
+            class="game-tile"
+            (click)="goToGameDetail(item)"
+            style="cursor: pointer;">
+
+            <img
+              [src]="item.thumb"
+              [alt]="item.title"
+              appImgFallback
+            />
+
+            <div class="game-tile-title">
+              {{ item.title }}
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          *ngIf="cartWishlistService.wishlistItems.length === 0"
+          class="empty-section-banner">
+
+          <p>Danh sách ước của bạn đang trống.</p>
+
+          <button
+            class="btn-explore"
+            [routerLink]="['/uu-dai']">
+            Xem game đang ưu đãi
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- ====================================== -->
+      <!-- BẠN BÈ -->
+      <!-- ====================================== -->
+
+      <div class="profile-section">
+
+        <div class="profile-section-head">
+
+          <h3 class="section-title">
+            Bạn bè
+            ({{ chatService.friendsList.length }})
+          </h3>
+
+          <span
+            *ngIf="!profileService.profile.showFriends"
+            class="hidden-badge">
+            Đang ẩn với người khác
+          </span>
+
+        </div>
+
+        <div
+          *ngIf="chatService.friendsList.length > 0"
+          class="friends-list">
+
+          <div
+            *ngFor="let friend of chatService.friendsList.slice(0, previewLimit)"
+            class="friend-item"
+            [routerLink]="['/nguoi-dung', friend.id]"
+            style="cursor: pointer;">
+
+            <img
+              [src]="friend.avatar"
+              [alt]="friend.username"
+              class="friend-avatar"
+              appImgFallback
+            />
+
+            <div class="friend-info">
+
+              <span class="friend-name">
+                {{ friend.username }}
+              </span>
+
+              <span class="friend-last-online">
+                {{
+                  friend.isOnline
+                    ? '● Đang trực tuyến'
+                    : (friend.lastOnlineText || 'Rời mạng mới đây')
+                }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <a
+          *ngIf="chatService.friendsList.length > 0"
+          [routerLink]="['/tro-chuyen']"
+          [queryParams]="{ tab: 'ban-be' }"
+          class="view-all-link">
+          Xem tất cả bạn bè →
+        </a>
+
+        <div
+          *ngIf="chatService.friendsList.length === 0"
+          class="empty-section-banner">
+
+          <p>Bạn chưa có người bạn nào.</p>
+
+          <button
+            class="btn-explore"
+            [routerLink]="['/tro-chuyen']"
+            [queryParams]="{ tab: 'them-ban' }">
+            Thêm bạn bè
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</div>

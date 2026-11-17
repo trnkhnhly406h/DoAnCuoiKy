@@ -1,0 +1,220 @@
+<div class="page-layout">
+  <!-- Banner trên cùng: banner1.png ... banner5.png tự động chạy -->
+  <div class="top-promo-banner">
+    <a *ngFor="let b of promoBanners; let i = index"
+       class="promo-slide"
+       [class.active]="i === currentPromoIndex"
+       [routerLink]="b.route"
+       [attr.aria-label]="b.alt"
+       [attr.aria-hidden]="i !== currentPromoIndex"
+       [tabindex]="i === currentPromoIndex ? 0 : -1"
+       [style.background-image]="'url(' + b.image + ')'"></a>
+    <div class="promo-dots">
+      <span *ngFor="let p of promoBanners; let i = index"
+            [class.active]="i === currentPromoIndex"
+            (click)="selectPromo(i)"></span>
+    </div>
+  </div>
+
+  <!-- Hero Slider Game Nổi Bật (tự chạy; rê chuột vào ảnh bìa để xem trailer) -->
+  <div class="hero-slider" *ngIf="currentHero as hero">
+    <button class="slider-arrow" (click)="stepHero(-1)" aria-label="Game trước">«</button>
+    <div class="hero-card">
+      <div class="hero-main-preview"
+           (mouseenter)="setHeroHover(true)"
+           (mouseleave)="setHeroHover(false)"
+           (click)="openHero(hero)">
+        <img [src]="hero.cover" [alt]="hero.title" appImgFallback />
+        <video *ngIf="heroHover && hero.video"
+               class="hero-video"
+               [src]="hero.video"
+               [muted]="true"
+               autoplay loop playsinline></video>
+      </div>
+      <div class="hero-sidebar">
+        <h3 class="hero-title" (click)="openHero(hero)">{{ hero.title }}</h3>
+        <p class="hero-status">Ngày phát hành: {{ hero.releaseDate | date: 'dd/MM/yyyy' }}</p>
+        <p class="hero-desc">{{ hero.description }}</p>
+
+        <div class="hero-price">
+          <span *ngIf="hero.isFree" class="free-badge">Chơi miễn phí</span>
+          <div *ngIf="!hero.isFree" class="price-box">
+            <span class="discount-badge">-{{ hero.discountPercent }}%</span>
+            <span class="original-price">{{ hero.originalPrice | number }}đ</span>
+            <span class="price">{{ hero.finalPrice | number }}đ</span>
+          </div>
+        </div>
+
+        <div class="thumbnail-grid">
+          <div *ngFor="let shot of hero.shots" class="thumb">
+            <img [src]="shot" [alt]="hero.title" appImgFallback />
+          </div>
+        </div>
+
+        <button class="btn-primary" (click)="openHero(hero)">
+          {{ hero.isFree ? 'Xem trang game (Miễn phí)' : 'Xem chi tiết game' }}
+        </button>
+      </div>
+    </div>
+    <button class="slider-arrow" (click)="stepHero(1)" aria-label="Game sau">»</button>
+  </div>
+
+  <!-- GAME NỔI BẬT GRID -->
+  <div class="section-container">
+    <div class="section-header-row">
+      <h2 class="section-title">GAME NỔI BẬT</h2>
+      <button class="btn-see-more" [routerLink]="['/game-noi-bat']">Xem thêm</button>
+    </div>
+    <div class="game-grid">
+      <div *ngFor="let game of featuredGames; let i = index; trackBy: trackByGame"
+           class="game-card"
+           (click)="goToDetail(game)">
+        <div class="card-image">
+          <img [src]="game.coverImage" [alt]="game.title" appImgFallback />
+        </div>
+        <div class="sq-actions card-sq-actions">
+          <button type="button" class="sq-btn" [class.active]="cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)" (click)="onAddCart($event, game)"
+                  [title]="cartWishlistService.isOwned(game.id) ? 'Đã sở hữu' : cartWishlistService.isInCart(game.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">{{ (cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)) ? '✓' : '+' }}</button>
+          <button type="button" class="sq-btn wish" [class.active]="cartWishlistService.isInWishlist(game.id)" (click)="onAddWishlist($event, game)"
+                  [title]="cartWishlistService.isInWishlist(game.id) ? 'Bỏ khỏi danh sách ước' : 'Thêm vào danh sách ước'">★</button>
+        </div>
+        <div class="card-price-tag">
+          <span *ngIf="game.discountPercent > 0" class="discount-badge">-{{ game.discountPercent }}%</span>
+          <span class="price">{{ game.isFree ? 'Miễn phí' : ((game.finalPrice | number) + 'đ') }}</span>
+        </div>
+        <app-game-hover-card class="hover-card-container" [game]="game" [position]="(i % 3 === 2) ? 'left' : 'right'"></app-game-hover-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME KINH DỊ GRID -->
+  <div class="section-container">
+    <div class="section-header-row">
+      <h2 class="section-title">GAME KINH DỊ</h2>
+      <button class="btn-see-more" [routerLink]="['/the-loai', 'kinh-di']">Xem thêm</button>
+    </div>
+    <div class="game-grid">
+      <div *ngFor="let game of horrorGames; let i = index; trackBy: trackByGame"
+           class="game-card"
+           (click)="goToDetail(game)">
+        <div class="card-image">
+          <img [src]="game.coverImage" [alt]="game.title" appImgFallback />
+        </div>
+        <div class="sq-actions card-sq-actions">
+          <button type="button" class="sq-btn" [class.active]="cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)" (click)="onAddCart($event, game)"
+                  [title]="cartWishlistService.isOwned(game.id) ? 'Đã sở hữu' : cartWishlistService.isInCart(game.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">{{ (cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)) ? '✓' : '+' }}</button>
+          <button type="button" class="sq-btn wish" [class.active]="cartWishlistService.isInWishlist(game.id)" (click)="onAddWishlist($event, game)"
+                  [title]="cartWishlistService.isInWishlist(game.id) ? 'Bỏ khỏi danh sách ước' : 'Thêm vào danh sách ước'">★</button>
+        </div>
+        <div class="card-price-tag">
+          <span *ngIf="game.discountPercent > 0" class="discount-badge">-{{ game.discountPercent }}%</span>
+          <span class="price">{{ game.isFree ? 'Miễn phí' : ((game.finalPrice | number) + 'đ') }}</span>
+        </div>
+        <app-game-hover-card class="hover-card-container" [game]="game" [position]="(i % 3 === 2) ? 'left' : 'right'"></app-game-hover-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME CHIẾN THUẬT GRID -->
+  <div class="section-container">
+    <div class="section-header-row">
+      <h2 class="section-title">GAME CHIẾN THUẬT</h2>
+      <button class="btn-see-more" [routerLink]="['/the-loai', 'chien-thuat']">Xem thêm</button>
+    </div>
+    <div class="game-grid">
+      <div *ngFor="let game of strategyGames; let i = index; trackBy: trackByGame"
+           class="game-card"
+           (click)="goToDetail(game)">
+        <div class="card-image">
+          <img [src]="game.coverImage" [alt]="game.title" appImgFallback />
+        </div>
+        <div class="sq-actions card-sq-actions">
+          <button type="button" class="sq-btn" [class.active]="cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)" (click)="onAddCart($event, game)"
+                  [title]="cartWishlistService.isOwned(game.id) ? 'Đã sở hữu' : cartWishlistService.isInCart(game.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">{{ (cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)) ? '✓' : '+' }}</button>
+          <button type="button" class="sq-btn wish" [class.active]="cartWishlistService.isInWishlist(game.id)" (click)="onAddWishlist($event, game)"
+                  [title]="cartWishlistService.isInWishlist(game.id) ? 'Bỏ khỏi danh sách ước' : 'Thêm vào danh sách ước'">★</button>
+        </div>
+        <div class="card-price-tag">
+          <span *ngIf="game.discountPercent > 0" class="discount-badge">-{{ game.discountPercent }}%</span>
+          <span class="price">{{ game.isFree ? 'Miễn phí' : ((game.finalPrice | number) + 'đ') }}</span>
+        </div>
+        <app-game-hover-card class="hover-card-container" [game]="game" [position]="(i % 3 === 2) ? 'left' : 'right'"></app-game-hover-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHÂN LOẠI TAB (MỚI RA MẮT, BÁN CHẠY, ƯU ĐÃI, MIỄN PHÍ) -->
+  <div class="tab-list-section">
+    <div class="tab-header">
+      <span *ngFor="let tab of tabs"
+            class="tab-item"
+            [class.active]="activeTab.label === tab.label"
+            (click)="selectTab(tab)">
+        {{ tab.label }}
+      </span>
+    </div>
+
+    <div *ngIf="currentTabGames.length === 0" class="empty-tab-msg">
+      Hiện chưa có game phù hợp trong mục này.
+    </div>
+
+    <div *ngFor="let game of currentTabGames; trackBy: trackByGame"
+         class="game-row"
+         (click)="goToDetail(game)">
+      <div class="row-thumb">
+        <img [src]="game.coverImage" [alt]="game.title" appImgFallback />
+      </div>
+
+      <div class="row-info">
+        <h3>{{ game.title }}</h3>
+        <span class="review-badge">{{ game.reviewsSummary }}</span>
+        <div class="tags">
+          <a *ngFor="let tag of catalog.tagLinks(game)" class="tag" [routerLink]="tag.route" (click)="$event.stopPropagation()">{{ tag.label }}</a>
+        </div>
+      </div>
+
+      <div class="row-right-content">
+        <div class="sq-actions">
+          <button type="button" class="sq-btn" [class.active]="cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)" (click)="onAddCart($event, game)"
+                  [title]="cartWishlistService.isOwned(game.id) ? 'Đã sở hữu' : cartWishlistService.isInCart(game.id) ? 'Đã trong giỏ hàng' : 'Thêm vào giỏ hàng'">{{ (cartWishlistService.isInCart(game.id) || cartWishlistService.isOwned(game.id)) ? '✓' : '+' }}</button>
+          <button type="button" class="sq-btn wish" [class.active]="cartWishlistService.isInWishlist(game.id)" (click)="onAddWishlist($event, game)"
+                  [title]="cartWishlistService.isInWishlist(game.id) ? 'Bỏ khỏi danh sách ước' : 'Thêm vào danh sách ước'">★</button>
+        </div>
+
+        <div class="row-bottom-price">
+          <span *ngIf="cartWishlistService.isOwned(game.id)" class="owned-badge">✓ Đã sở hữu</span>
+          <span *ngIf="!cartWishlistService.isOwned(game.id) && game.isFree" class="free-badge">Chơi miễn phí</span>
+
+          <div *ngIf="!cartWishlistService.isOwned(game.id) && !game.isFree" class="price-box">
+            <span *ngIf="game.discountPercent > 0" class="discount-badge">-{{ game.discountPercent }}%</span>
+            <span *ngIf="game.discountPercent > 0" class="original-price">{{ game.originalPrice | number }}đ</span>
+            <span class="price">{{ game.finalPrice | number }}đ</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tab-footer">
+      <button class="btn-see-more" [routerLink]="activeTab.route">Xem thêm {{ activeTab.label }}</button>
+    </div>
+  </div>
+
+  <!-- CAROUSEL DANH MỤC THỂ LOẠI -->
+  <div class="category-section">
+    <div class="section-header-row">
+      <h2 class="section-title">DANH MỤC THỂ LOẠI</h2>
+    </div>
+    <div class="category-carousel">
+      <button class="slider-arrow" (click)="prevCategories()">«</button>
+      <div class="category-grid">
+        <a *ngFor="let cat of visibleCategories"
+           class="cat-card"
+           [routerLink]="['/the-loai', cat.slug]">
+          {{ cat.label }}
+        </a>
+      </div>
+      <button class="slider-arrow" (click)="nextCategories()">»</button>
+    </div>
+  </div>
+</div>

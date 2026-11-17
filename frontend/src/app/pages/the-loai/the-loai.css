@@ -1,0 +1,1276 @@
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ========================================
+   1. CONTAINER
+======================================== */
+
+.steal-page-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba(69, 39, 105, 0.6) 8.17%,
+    #190f26 35.1%,
+    rgba(69, 39, 105, 0.7) 63.94%,
+    #1b1029 88.94%
+  );
+  color: #ffffff;
+  font-family: var(--font-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  padding-top: 135px;
+}
+
+.steal-main-content {
+  width: 100%;
+  max-width: 1239px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+  padding: 0 20px 65px;
+}
+
+/* ========================================
+   2. HERO BANNER
+======================================== */
+
+.hero-slider-section {
+  width: 100%;
+  max-width: 1133px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.hero-banner-wrapper {
+  width: 100%;
+  height: 350px;
+  display: flex;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.banner-main-media {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #1b1029;
+  background-size: cover;
+}
+
+.banner-side-box {
+  width: 340px;
+  height: 100%;
+  background: #28222f;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 26px;
+  box-sizing: border-box;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.banner-genre-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 140%;
+  color: #ffffff;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.banner-title-line {
+  width: 45px;
+  height: 2px;
+  background: #7d51ad;
+  border-radius: 2px;
+}
+
+.side-desc-text {
+  margin: 0;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 160%;
+  color: #e9e2f0;
+  text-align: left;
+}
+
+/* ========================================
+   3. THANH THỂ LOẠI
+======================================== */
+
+.genre-category-nav {
+  width: 100%;
+  max-width: 1133px;
+  min-height: 50px;
+  background: #1f1926;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 15px;
+  padding: 9px 18px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #7d51ad #1f1926;
+}
+
+.cat-nav-item {
+  position: relative;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 6px 0 8px;
+  transition: color 0.2s;
+}
+
+.cat-nav-item:hover,
+.cat-nav-item.active {
+  color: #7d51ad;
+}
+
+.active-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #7d51ad;
+  border-radius: 2px;
+}
+
+/* ========================================
+   4. BỐ CỤC GAME + SIDEBAR
+======================================== */
+
+.genre-main-layout {
+  width: 100%;
+  max-width: 1133px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.genre-content-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.genre-sidebar {
+  width: 250px;
+  flex: 0 0 250px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+.sidebar-secondary-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.genre-sidebar .genre-filter {
+  min-width: 0;
+}
+
+/* ========================================
+   5. DANH SÁCH GAME
+======================================== */
+
+.wishlist-cards-section,
+.large-cards-list-section {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-toggle-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #1f1926;
+  border-radius: 6px;
+  padding: 12px 15px;
+}
+
+.section-heading-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.section-heading-text h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.section-heading-text > span {
+  font-size: 11px;
+  color: #ccbcda;
+}
+
+.section-toggle-btn,
+.featured-collapse-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #362548;
+  border: 1px solid rgba(233, 226, 240, 0.2);
+  border-radius: 4px;
+  padding: 9px 12px;
+  color: #e9e2f0;
+  font: 600 12px 'Commissioner', sans-serif;
+  cursor: pointer;
+}
+
+.featured-collapse-bar {
+  width: 100%;
+  min-height: 40px;
+}
+
+.section-toggle-btn:hover,
+.featured-collapse-bar:hover {
+  background: #7d51ad;
+  color: #ffffff;
+}
+
+.toggle-chevron {
+  display: inline-block;
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.toggle-chevron.chevron-up {
+  transform: rotate(180deg);
+}
+
+.wishlist-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ========================================
+   6. THẺ GAME - ĐÃ THU GỌN
+======================================== */
+
+/*
+  Không đặt height cố định.
+  Thẻ tự tăng chiều cao khi nội dung dài,
+  tránh cắt chữ hoặc đè các thành phần.
+*/
+
+.game-item-card-small,
+.game-item-card-large {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  background: #533080;
+  display: flex;
+  align-items: stretch;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Thẻ nhỏ: 160px -> 125px */
+.game-item-card-small {
+  min-height: 125px;
+}
+
+/* Thẻ lớn: 170px -> 135px */
+.game-item-card-large {
+  min-height: 135px;
+}
+
+/*
+  Ảnh chiếm toàn bộ chiều cao của thẻ.
+  cover giúp hạn chế khoảng trống trên dưới.
+*/
+.game-thumb-left,
+.large-thumb-media {
+  width: 210px;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #342248;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/*
+  Nội dung thẻ:
+  - Giảm padding trên/dưới
+  - Chừa vùng bên phải cho nút thao tác
+  - Chừa vùng dưới cho giá
+*/
+.game-info-center,
+.large-info-center {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 82px 35px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+/*
+  Thẻ nhỏ dùng ít khoảng trống hơn.
+*/
+.game-item-card-small .game-info-center {
+  padding-top: 10px;
+  padding-bottom: 34px;
+}
+
+/*
+  Thẻ lớn có nhiều thông tin hơn,
+  vẫn chừa đủ khoảng trống phía dưới.
+*/
+.game-item-card-large .large-info-center {
+  padding-top: 11px;
+  padding-bottom: 36px;
+}
+
+/* Tên game */
+.game-title-txt {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.35;
+  color: #ffffff;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mô tả game */
+.game-short-desc,
+.large-desc-txt {
+  font-size: 11px;
+  line-height: 140%;
+  color: #e8e0ee;
+  margin: 0 0 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+/* Ngày phát hành ở thẻ nhỏ */
+.game-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  margin: 2px 0;
+}
+
+.game-meta-row .meta-item {
+  font-size: 10px;
+  color: #e0d3eb;
+  line-height: 1.35;
+}
+
+/* Thông tin thẻ lớn */
+.large-meta-row-inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #e0d3eb;
+  margin-top: 4px;
+  min-width: 0;
+}
+
+.large-meta-row-inline span {
+  overflow-wrap: anywhere;
+}
+
+/* Tags */
+.game-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  min-width: 0;
+}
+
+.game-tags-row .meta-item {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.tag-badge-gray {
+  padding: 2px 6px;
+  background: #362548;
+  color: #e9e2f0;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 1.3;
+  border-radius: 3px;
+  border: 1px solid rgba(233, 226, 240, 0.15);
+}
+
+/* ========================================
+   7. NÚT GIỎ HÀNG / WISHLIST
+======================================== */
+
+.card-action-buttons {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.action-btn-sq {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  background: #7d51ad;
+}
+
+.wishlist-btn-sq {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.action-btn-sq:hover {
+  background: #643b96;
+}
+
+/* ========================================
+   8. GIÁ GAME - ĐƯA LÊN NHẸ
+======================================== */
+
+.game-price-wrapper {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  max-width: calc(100% - 24px);
+  z-index: 2;
+}
+
+.discount-badge {
+  background: #4c6b22;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 6px;
+  white-space: nowrap;
+}
+
+.price-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: #2c1a41;
+  padding: 3px 7px;
+}
+
+.original-price {
+  font-size: 9px;
+  text-decoration: line-through;
+  color: #e9e2f0;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.final-price {
+  font-weight: 700;
+  font-size: 11px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.single-price-box {
+  background: #4c6b22;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.free-badge {
+  background: #3c4530;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+  color: #b5d688;
+  white-space: nowrap;
+}
+
+/* ========================================
+   9. THANH PHÂN NHÓM GAME
+======================================== */
+
+.sub-filter-nav-bar {
+  width: 100%;
+  min-height: 48px;
+  background: #1f1926;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+
+.sub-filter-tabs {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 13px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sub-filter-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.sub-tab-item {
+  position: relative;
+  padding: 0 0 7px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 11px;
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sub-tab-item:hover,
+.sub-tab-item.active {
+  color: #7d51ad;
+}
+
+.sub-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #7d51ad;
+}
+
+.search-input-box {
+  width: 145px;
+  min-width: 100px;
+  height: 32px;
+  background: #ffffff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  flex-shrink: 1;
+  box-sizing: border-box;
+}
+
+.search-input-box input {
+  border: 0;
+  background: transparent;
+  outline: none;
+  color: #2c1a41;
+  font-size: 12px;
+  width: 100%;
+  min-width: 0;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+/* ========================================
+   10. SIDEBAR BỘ LỌC
+======================================== */
+
+.filter-group {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(37, 22, 55, 0.9);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.filter-header {
+  min-height: 31px;
+  background: #4b3764;
+  font-weight: 700;
+  font-size: 13px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  box-sizing: border-box;
+}
+
+.filter-body {
+  padding: 12px 10px;
+}
+
+.genre-sidebar .filter-body {
+  padding: 12px;
+}
+
+.price-slider-wrapper {
+  margin: 10px 0;
+}
+
+.real-price-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: #442768;
+  outline: none;
+  cursor: pointer;
+}
+
+.real-price-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.real-price-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.price-slider-text {
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  color: #e9e2f0;
+  margin-bottom: 6px;
+}
+
+.filter-divider {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 12px 0;
+}
+
+/* ========================================
+   11. CUSTOM CHECKBOX
+======================================== */
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.genre-sidebar .checkbox-list {
+  gap: 11px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+  background: transparent;
+  display: inline-block;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.checkbox-item:hover .custom-checkbox {
+  border-color: #8c60ba;
+}
+
+.checkbox-item input[type="checkbox"]:checked + .custom-checkbox {
+  background-color: #8c60ba;
+  border-color: #8c60ba;
+}
+
+.checkbox-item input[type="checkbox"]:checked + .custom-checkbox::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-item input[type="checkbox"]:focus-visible + .custom-checkbox {
+  outline: 2px solid #af84d6;
+  outline-offset: 3px;
+}
+
+.checkbox-label {
+  font-size: 12px;
+  line-height: 140%;
+  color: #e9e2f0;
+  cursor: pointer;
+}
+
+.genre-sidebar .checkbox-label {
+  line-height: 1.5;
+}
+
+/* ========================================
+   12. NÚT XÓA BỘ LỌC
+======================================== */
+
+.clear-sidebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  background: #6f7375;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.clear-sidebar-btn:hover {
+  background: #7d51ad;
+}
+
+.clear-sidebar-btn:active {
+  transform: translateY(1px);
+}
+
+.clear-sidebar-btn:focus-visible {
+  outline: 2px solid #af84d6;
+  outline-offset: 2px;
+}
+
+/* ========================================
+   13. KHÔNG CÓ KẾT QUẢ
+======================================== */
+
+.no-games-found {
+  width: 100%;
+  padding: 35px 18px;
+  box-sizing: border-box;
+  background: rgba(31, 25, 38, 0.8);
+  border: 1px solid rgba(175, 132, 214, 0.2);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.no-games-found h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.no-games-found p {
+  font-size: 12px;
+  line-height: 160%;
+  color: #ccbcda;
+  margin: 0 0 18px;
+}
+
+.reset-filter-btn {
+  padding: 10px 20px;
+  background: #7d51ad;
+  color: #ffffff;
+  border: 0;
+  border-radius: 5px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ========================================
+   14. HIỆN THÊM GAME
+======================================== */
+
+.load-more-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.btn-load-more {
+  width: 100%;
+  max-width: 350px;
+  height: 40px;
+  background: #362548;
+  border: 1px solid rgba(233, 226, 240, 0.2);
+  border-radius: 6px;
+  color: #e9e2f0;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-load-more:hover {
+  background: #7d51ad;
+  color: #ffffff;
+}
+
+/* ========================================
+   15. TOAST POPUP
+======================================== */
+
+.custom-toast {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  width: 350px;
+  max-width: calc(100vw - 40px);
+  min-height: 75px;
+  background: #271739;
+  border: 1px solid #7d51ad;
+  border-left: 4px solid #7d51ad;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 18px;
+  box-sizing: border-box;
+  z-index: 99999;
+  overflow: hidden;
+  animation: toastSlideIn 0.3s ease forwards;
+}
+
+.toast-icon {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #7d51ad;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.toast-message {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e6d9f1;
+  overflow-wrap: anywhere;
+}
+
+.toast-warning {
+  border-left-color: #af84d6;
+}
+
+.toast-warning .toast-icon {
+  background: #4d2b79;
+}
+
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #af84d6;
+  transform-origin: left;
+  animation: toastProgress 2s linear forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastProgress {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* ========================================
+   16. RESPONSIVE - DESKTOP NHỎ
+======================================== */
+
+@media (max-width: 1100px) {
+  .genre-main-layout {
+    gap: 14px;
+  }
+
+  .genre-sidebar {
+    width: 230px;
+    flex-basis: 230px;
+  }
+
+  .game-thumb-left,
+  .large-thumb-media {
+    width: 185px;
+  }
+
+  .game-info-center,
+  .large-info-center {
+    padding-right: 75px;
+  }
+
+  .sub-filter-tabs {
+    gap: 10px;
+  }
+
+  .sub-tab-item {
+    font-size: 10px;
+  }
+}
+
+/* ========================================
+   17. RESPONSIVE - TABLET
+======================================== */
+
+@media (max-width: 900px) {
+  .banner-side-box {
+    width: 285px;
+    padding: 20px;
+  }
+
+  .hero-banner-wrapper {
+    height: 310px;
+  }
+
+  .genre-main-layout {
+    flex-direction: column;
+  }
+
+  .genre-content-left {
+    width: 100%;
+  }
+
+  .genre-sidebar {
+    width: 100%;
+    flex: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px;
+  }
+
+  .sidebar-secondary-filters {
+    grid-column: 1;
+  }
+
+  .genre-sidebar .genre-filter {
+    grid-column: 2;
+  }
+
+  .game-thumb-left,
+  .large-thumb-media {
+    width: 230px;
+  }
+
+  .sub-tab-item {
+    font-size: 12px;
+  }
+}
+
+/* ========================================
+   18. RESPONSIVE - MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+  .steal-main-content {
+    padding: 0 12px 45px;
+  }
+
+  .hero-slider-section {
+    margin-top: 5px;
+  }
+
+  .hero-banner-wrapper {
+    height: auto;
+    flex-direction: column;
+  }
+
+  .banner-main-media {
+    flex: none;
+    width: 100%;
+    height: 210px;
+  }
+
+  .banner-side-box {
+    width: 100%;
+    height: auto;
+    min-height: 115px;
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .banner-genre-title {
+    font-size: 15px;
+  }
+
+  .side-desc-text {
+    font-size: 12px;
+  }
+
+  .genre-category-nav {
+    margin-top: 14px;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 10px 12px;
+  }
+
+  .genre-main-layout {
+    margin-top: 14px;
+  }
+
+  .section-toggle-heading {
+    padding: 10px;
+  }
+
+  .section-heading-text h2 {
+    font-size: 11px;
+  }
+
+  .section-toggle-btn {
+    font-size: 11px;
+    padding: 7px 9px;
+  }
+
+  /*
+    Mobile cần chừa thêm không gian cho
+    các nút thao tác và khung giá.
+  */
+  .game-item-card-small,
+  .game-item-card-large {
+    min-height: 140px;
+  }
+
+  .game-thumb-left,
+  .large-thumb-media {
+    width: 35%;
+  }
+
+  .game-info-center,
+  .large-info-center,
+  .game-item-card-small .game-info-center,
+  .game-item-card-large .large-info-center {
+    padding: 38px 9px 43px 10px;
+  }
+
+  .game-title-txt {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .game-short-desc,
+  .large-desc-txt {
+    font-size: 10px;
+    -webkit-line-clamp: 2;
+  }
+
+  .game-meta-row .meta-item,
+  .large-meta-row-inline,
+  .game-tags-row .meta-item {
+    font-size: 9px;
+  }
+
+  .tag-badge-gray {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+
+  .card-action-buttons {
+    top: 7px;
+    right: 7px;
+  }
+
+  .action-btn-sq {
+    width: 23px;
+    height: 23px;
+  }
+
+  .game-price-wrapper {
+    right: 7px;
+    bottom: 7px;
+  }
+
+  .sub-filter-nav-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .sub-filter-tabs {
+    width: 100%;
+    gap: 20px;
+  }
+
+  .search-input-box {
+    width: 100%;
+    height: 34px;
+  }
+
+  .genre-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-secondary-filters,
+  .genre-sidebar .genre-filter {
+    grid-column: 1;
+  }
+
+  .custom-toast {
+    right: 15px;
+    bottom: 15px;
+    width: calc(100vw - 30px);
+  }
+}
+
+/* ========================================
+   19. RESPONSIVE - MOBILE NHỎ
+======================================== */
+
+@media (max-width: 380px) {
+  .game-thumb-left,
+  .large-thumb-media {
+    width: 32%;
+  }
+
+  .game-info-center,
+  .large-info-center,
+  .game-item-card-small .game-info-center,
+  .game-item-card-large .large-info-center {
+    padding-left: 8px;
+    padding-right: 6px;
+  }
+
+  .game-title-txt {
+    font-size: 11px;
+  }
+
+  .discount-badge,
+  .final-price,
+  .single-price-box,
+  .free-badge {
+    font-size: 10px;
+  }
+}
+
+/* ===== Bổ sung: thẻ bấm được ===== */
+a.tag-badge-gray { text-decoration: none; cursor: pointer; transition: background-color 0.15s, color 0.15s; }
+a.tag-badge-gray:hover { background-color: #9367c1; color: #ffffff; }
+.game-title-txt a { color: inherit; text-decoration: none; }
+.game-title-txt a:hover { text-decoration: underline; }
+.game-thumb-left, .large-thumb-media { cursor: pointer; background-size: cover; background-position: center; }
+.cat-nav-item { text-decoration: none; }

@@ -1,0 +1,1055 @@
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ========================================
+   1. CONTAINER
+======================================== */
+
+.search-page-bg {
+  width: 100%;
+  min-height: 100vh;
+
+  background: linear-gradient(
+    180deg,
+    rgba(69, 39, 105, 0.6) 8.17%,
+    #190f26 35.1%,
+    rgba(69, 39, 105, 0.7) 63.94%,
+    #1b1029 88.94%
+  );
+
+  color: #ffffff;
+
+  font-family: var(--font-main);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: relative;
+
+  box-sizing: border-box;
+
+  padding-top: 135px;
+
+  overflow-x: hidden;
+}
+
+/* ========================================
+   2. NỘI DUNG CHÍNH
+======================================== */
+
+.search-container {
+  width: 100%;
+  max-width: 1133px;
+
+  margin: 0 auto;
+
+  padding: 0 15px 65px;
+
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-family: var(--font-main);
+
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.4;
+
+  color: #ffffff;
+
+  margin: 0 0 20px;
+
+  text-transform: uppercase;
+}
+
+/* ========================================
+   3. BỐ CỤC GAME + SIDEBAR
+======================================== */
+
+.search-main-layout {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 18px;
+
+  width: 100%;
+}
+
+.search-content-left {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(69, 39, 106, 0.4);
+
+  padding: 12px;
+
+  border-radius: 5px;
+
+  box-sizing: border-box;
+}
+
+/* ========================================
+   4. THANH TÌM KIẾM
+======================================== */
+
+.search-filter-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 16px;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  max-width: 430px;
+  min-width: 0;
+
+  height: 36px;
+
+  background: #512e7d;
+
+  border-radius: 4px;
+
+  overflow: hidden;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 0 12px;
+
+  background: transparent;
+
+  border: none;
+  outline: none;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.search-input::placeholder {
+  color: #d1c3dc;
+  opacity: 0.85;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.search-btn {
+  width: 40px;
+  height: 36px;
+
+  border: none;
+
+  background: #674392;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+
+  transition: background 0.2s;
+}
+
+.search-btn:hover {
+  background: #8c60ba;
+}
+
+.result-count {
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #e0d5e9;
+
+  white-space: nowrap;
+}
+
+/* ========================================
+   5. LƯỚI GAME - 3 THẺ MỖI HÀNG
+======================================== */
+
+.game-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 14px;
+
+  width: 100%;
+  min-width: 0;
+
+  align-items: start;
+}
+
+/* ========================================
+   6. THẺ GAME
+   - KHÔNG ÉP CHIỀU CAO BẰNG CHIỀU RỘNG
+   - CHIỀU CAO THEO ẢNH + GIÁ
+   - LOẠI BỎ KHOẢNG TRỐNG
+======================================== */
+
+.game-item-card {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #271838;
+
+  border-radius: 5px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0,
+    0.28
+  );
+
+  box-sizing: border-box;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.game-item-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 7px 18px rgba(0, 0, 0,
+    0.4
+  );
+}
+
+/* ========================================
+   7. HÌNH ẢNH GAME
+   - GIỮ NGUYÊN TỶ LỆ
+   - KHÔNG CẮT XÉN
+   - KHÔNG KÉO GIÃN
+   - KHÔNG CÒN FLEX: 1
+======================================== */
+
+.game-thumbnail {
+  width: 100%;
+  min-width: 0;
+
+  height: auto;
+
+  display: block;
+
+  background: #271838;
+
+  overflow: hidden;
+
+  flex: none;
+}
+
+.game-thumbnail img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-width: 100%;
+
+  object-fit: contain;
+
+  border: none;
+}
+
+/* ========================================
+   8. VÙNG GIÁ NGAY SÁT DƯỚI HÌNH
+   - KHÔNG CÓ KHOẢNG TRỐNG LỚN
+   - GIÁ NẰM GÓC PHẢI
+   - KHÔNG CHỒNG LÊN ẢNH
+======================================== */
+
+.game-price-area {
+  width: 100%;
+
+  min-height: 34px;
+  height: auto;
+
+  flex: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  padding: 3px 7px;
+
+  margin: 0;
+
+  background: #271838;
+
+  box-sizing: border-box;
+}
+
+.game-price-wrapper {
+  display: flex;
+  align-items: stretch;
+
+  max-width: 100%;
+
+  border-radius: 3px;
+
+  overflow: hidden;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0,
+    0.35
+  );
+}
+
+/* ========================================
+   9. GAME GIẢM GIÁ
+======================================== */
+
+.discount-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #9bcb24;
+
+  color: #17220a;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  padding: 5px 7px;
+
+  white-space: nowrap;
+}
+
+.price-stack {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-end;
+  justify-content: center;
+
+  gap: 2px;
+
+  background: #1b1028;
+
+  padding: 4px 8px;
+}
+
+.original-price {
+  color: #a799b5;
+
+  font-size: 9px;
+  font-weight: 500;
+
+  text-decoration: line-through;
+
+  white-space: nowrap;
+}
+
+.final-price {
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+/* ========================================
+   10. GAME KHÔNG GIẢM GIÁ
+======================================== */
+
+.single-price-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 30px;
+
+  background: #1b1028;
+
+  padding: 5px 10px;
+
+  box-sizing: border-box;
+}
+
+.normal-price-tag {
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+/* ========================================
+   11. GAME MIỄN PHÍ
+======================================== */
+
+.free-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 30px;
+
+  background: #3c4530;
+
+  color: #b5d688;
+
+  padding: 5px 10px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+/* ========================================
+   12. SIDEBAR BỘ LỌC
+======================================== */
+
+.search-sidebar {
+  width: 250px;
+  flex: 0 0 250px;
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  align-content: start;
+
+  gap: 14px;
+
+  box-sizing: border-box;
+}
+
+.sidebar-secondary-filters {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  min-width: 0;
+}
+
+.genre-filter {
+  min-width: 0;
+}
+
+.filter-group {
+  width: 100%;
+
+  border: 1px solid rgba(255, 255, 255,
+    0.2
+  );
+
+  border-radius: 4px;
+
+  background: rgba(37, 22, 55,
+    0.9
+  );
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+.filter-header {
+  min-height: 31px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  background: #4b3764;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  box-sizing: border-box;
+}
+
+.filter-body {
+  padding: 12px;
+}
+
+/* ========================================
+   13. THANH GIÁ
+======================================== */
+
+.price-slider-wrapper {
+  margin: 10px 0;
+}
+
+.real-price-slider {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 100%;
+  height: 4px;
+
+  border-radius: 2px;
+
+  background: #442768;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.real-price-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  cursor: pointer;
+}
+
+.real-price-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  cursor: pointer;
+}
+
+.price-slider-text {
+  text-align: center;
+
+  font-weight: 600;
+  font-size: 12px;
+
+  color: #e9e2f0;
+
+  margin-bottom: 6px;
+}
+
+.filter-divider {
+  border-bottom: 1px solid rgba(255, 255, 255,
+    0.2
+  );
+
+  margin: 12px 0;
+}
+
+/* ========================================
+   14. CUSTOM CHECKBOX
+======================================== */
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+.checkbox-item {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  user-select: none;
+
+  min-width: 0;
+}
+
+.checkbox-item input[type="checkbox"] {
+  position: absolute;
+
+  opacity: 0;
+
+  width: 1px;
+  height: 1px;
+}
+
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+
+  border: 1px solid rgba(255, 255, 255,
+    0.4
+  );
+
+  border-radius: 2px;
+
+  background: transparent;
+
+  display: inline-block;
+
+  position: relative;
+
+  flex-shrink: 0;
+
+  transition: all 0.2s;
+}
+
+.checkbox-item:hover .custom-checkbox {
+  border-color: #8c60ba;
+}
+
+.checkbox-item input[type="checkbox"]:checked
++ .custom-checkbox {
+  background-color: #8c60ba;
+
+  border-color: #8c60ba;
+}
+
+.checkbox-item input[type="checkbox"]:checked
++ .custom-checkbox::after {
+  content: '';
+
+  position: absolute;
+
+  left: 4px;
+  top: 1px;
+
+  width: 4px;
+  height: 8px;
+
+  border: solid #ffffff;
+
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg);
+}
+
+.checkbox-item input[type="checkbox"]:focus-visible
++ .custom-checkbox {
+  outline: 2px solid #af84d6;
+
+  outline-offset: 3px;
+}
+
+.checkbox-label {
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: #e9e2f0;
+
+  font-family: var(--font-main);
+
+  cursor: pointer;
+
+  overflow-wrap: anywhere;
+}
+
+/* ========================================
+   15. NÚT XÓA BỘ LỌC
+======================================== */
+
+.clear-sidebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 36px;
+
+  padding: 8px 12px;
+
+  border: none;
+  border-radius: 5px;
+
+  background: #6f7375;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.02em;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+.clear-sidebar-btn:hover {
+  background: #7d51ad;
+}
+
+.clear-sidebar-btn:active {
+  transform: translateY(1px);
+}
+
+.clear-sidebar-btn:focus-visible {
+  outline: 2px solid #af84d6;
+  outline-offset: 2px;
+}
+
+/* ========================================
+   16. KHÔNG CÓ KẾT QUẢ
+======================================== */
+
+.no-games-found {
+  width: 100%;
+
+  padding: 35px 18px;
+  margin-top: 10px;
+
+  box-sizing: border-box;
+
+  background: rgba(31, 25, 38,
+    0.8
+  );
+
+  border: 1px solid rgba(175, 132, 214,
+    0.2
+  );
+
+  border-radius: 8px;
+
+  text-align: center;
+}
+
+.no-games-found h3 {
+  font-size: 16px;
+
+  margin: 0 0 8px;
+}
+
+.no-games-found p {
+  font-size: 12px;
+  line-height: 160%;
+
+  color: #ccbcda;
+
+  margin: 0 0 18px;
+}
+
+.reset-filter-btn {
+  padding: 10px 20px;
+
+  background: #7d51ad;
+
+  color: #ffffff;
+
+  border: none;
+  border-radius: 5px;
+
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.reset-filter-btn:hover {
+  background: #643b96;
+}
+
+/* ========================================
+   17. HIỆN THÊM GAME
+======================================== */
+
+.load-more-wrapper {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 18px;
+
+  width: 100%;
+}
+
+.btn-load-more {
+  width: 100%;
+  max-width: 350px;
+
+  min-height: 40px;
+
+  background: #362548;
+
+  border: 1px solid rgba(233, 226, 240,
+    0.2
+  );
+
+  border-radius: 6px;
+
+  color: #e9e2f0;
+
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.btn-load-more:hover {
+  background: #7d51ad;
+
+  color: #ffffff;
+}
+
+/* ========================================
+   18. FOOTER
+======================================== */
+
+app-footer {
+  display: block;
+  width: 100%;
+
+  margin-top: auto;
+}
+
+/* ========================================
+   19. RESPONSIVE - DESKTOP NHỎ
+======================================== */
+
+@media screen and (max-width: 1100px) {
+
+  .search-main-layout {
+    gap: 14px;
+  }
+
+  .search-sidebar {
+    width: 230px;
+    flex-basis: 230px;
+  }
+
+  .game-grid {
+    gap: 11px;
+  }
+
+  .discount-badge {
+    font-size: 11px;
+    padding: 4px 5px;
+  }
+
+  .final-price,
+  .normal-price-tag,
+  .free-badge {
+    font-size: 10px;
+  }
+
+}
+
+/* ========================================
+   20. RESPONSIVE - TABLET
+======================================== */
+
+@media screen and (max-width: 900px) {
+
+  .search-main-layout {
+    flex-direction: column;
+  }
+
+  .search-content-left {
+    width: 100%;
+  }
+
+  .search-sidebar {
+    width: 100%;
+    flex: none;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    align-items: start;
+
+    gap: 14px;
+  }
+
+  .sidebar-secondary-filters {
+    grid-column: 1;
+  }
+
+  .genre-filter {
+    grid-column: 2;
+  }
+
+  .game-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+/* ========================================
+   21. RESPONSIVE - MOBILE
+======================================== */
+
+@media screen and (max-width: 600px) {
+
+  .search-container {
+    padding: 0 12px 45px;
+  }
+
+  .page-title {
+    font-size: 18px;
+
+    margin-bottom: 15px;
+  }
+
+  .search-content-left {
+    padding: 10px;
+  }
+
+  .search-filter-top-bar {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 10px;
+  }
+
+  .search-input-wrapper {
+    max-width: 100%;
+  }
+
+  .result-count {
+    font-size: 11px;
+  }
+
+  .game-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+  }
+
+  .game-price-area {
+    min-height: 30px;
+    height: auto;
+
+    padding: 3px 5px;
+  }
+
+  .discount-badge {
+    font-size: 10px;
+
+    padding: 3px 5px;
+  }
+
+  .price-stack {
+    padding: 3px 5px;
+
+    gap: 1px;
+  }
+
+  .original-price {
+    font-size: 8px;
+  }
+
+  .final-price,
+  .normal-price-tag {
+    font-size: 9px;
+  }
+
+  .single-price-box,
+  .free-badge {
+    min-height: 25px;
+
+    padding: 4px 6px;
+  }
+
+  .free-badge {
+    font-size: 9px;
+  }
+
+  .search-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-secondary-filters,
+  .genre-filter {
+    grid-column: 1;
+  }
+
+}
+
+/* ========================================
+   22. RESPONSIVE - MOBILE NHỎ
+======================================== */
+
+@media screen and (max-width: 380px) {
+
+  .game-grid {
+    gap: 8px;
+  }
+
+  .game-price-area {
+    min-height: 28px;
+
+    padding: 2px 4px;
+  }
+
+  .discount-badge {
+    font-size: 9px;
+
+    padding: 3px 4px;
+  }
+
+  .price-stack {
+    padding: 3px 4px;
+  }
+
+  .original-price {
+    font-size: 7px;
+  }
+
+  .final-price,
+  .normal-price-tag,
+  .free-badge {
+    font-size: 8px;
+  }
+
+}
+
+/* ===== Bổ sung ===== */
+a.game-thumbnail { display: block; cursor: pointer; }
+.search-btn { border: none; }
+
+.game-item-card { position: relative; }
+.search-sq-actions { position: absolute; right: 6px; bottom: 44px; }

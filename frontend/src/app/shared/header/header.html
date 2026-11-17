@@ -1,0 +1,244 @@
+<header class="sticky-header">
+  <div class="top-nav">
+    <div class="header-container">
+      <a class="brand-logo" [routerLink]="['/']">
+        <img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556158/logo.png" alt="STEAL Logo" class="logo-img">
+        <span class="logo-text">STEAL</span>
+      </a>
+
+      <nav class="main-menu">
+        <div class="nav-item has-dropdown">
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">CỬA HÀNG</a>
+          <div class="dropdown-menu">
+            <a [routerLink]="['/']">Trang chủ</a>
+            <a [routerLink]="['/game-noi-bat']">Game nổi bật</a>
+            <a [routerLink]="['/ban-chay-nhat']">Game bán chạy</a>
+            <a [routerLink]="['/moi-ra-mat']">Game mới ra mắt</a>
+            <a [routerLink]="['/uu-dai']">Ưu đãi</a>
+            <a [routerLink]="['/mien-phi']">Miễn phí</a>
+          </div>
+        </div>
+
+        <div class="nav-item has-dropdown">
+          <a class="nav-link" [class.active]="isProfileSectionActive" [routerLink]="['/ho-so']">TRANG CÁ NHÂN</a>
+          <div class="dropdown-menu">
+            <a [routerLink]="['/ho-so']">Hồ sơ</a>
+            <a [routerLink]="['/thu-vien']">Thư viện</a>
+            <a [routerLink]="['/cai-dat-tai-khoan']">Cài đặt tài khoản</a>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <a class="nav-link" [routerLink]="['/tro-chuyen']" routerLinkActive="active">TRÒ CHUYỆN</a>
+        </div>
+
+        <div class="nav-item">
+          <a class="nav-link" [routerLink]="['/cau-chuyen-steal']" routerLinkActive="active">CÂU CHUYỆN STEAL</a>
+        </div>
+
+        <div class="nav-item">
+          <a class="nav-link" [routerLink]="['/ho-tro']" routerLinkActive="active">HỖ TRỢ</a>
+        </div>
+      </nav>
+
+      <div class="user-auth">
+        <ng-container *ngIf="!isLoggedIn">
+          <button class="auth-link-btn" (click)="login()">ĐĂNG NHẬP</button>
+          <span class="auth-sep">|</span>
+          <button class="auth-link-btn" (click)="register()">ĐĂNG KÝ</button>
+        </ng-container>
+
+        <ng-container *ngIf="isLoggedIn">
+          <div class="user-profile-wrapper">
+            <div class="user-info-trigger" role="button" tabindex="0" aria-haspopup="menu" [attr.aria-expanded]="activePopup === 'user'"
+                 (click)="togglePopup('user')" (keydown.enter)="togglePopup('user')">
+              <img [src]="currentUser.avatar" [alt]="currentUser.name" class="user-avatar" appImgFallback />
+              <span class="user-name">{{ currentUser.name }} ▼</span>
+            </div>
+            <div class="user-dropdown-menu menu-open" *ngIf="activePopup === 'user'" role="menu">
+              <a class="user-dropdown-item" [routerLink]="['/ho-so']" (click)="closePopupImmediately()">Hồ sơ</a>
+              <a class="user-dropdown-item" [routerLink]="['/thu-vien']" (click)="closePopupImmediately()">Thư viện</a>
+              <a class="user-dropdown-item" [routerLink]="['/danh-sach-uoc']" (click)="closePopupImmediately()">Danh sách ước</a>
+              <a class="user-dropdown-item" [routerLink]="['/gio-hang']" (click)="closePopupImmediately()">Giỏ hàng</a>
+              <a class="user-dropdown-item" [routerLink]="['/cai-dat-tai-khoan']" (click)="closePopupImmediately()">Cài đặt tài khoản</a>
+              <div class="user-dropdown-item has-sub-menu">
+                <span>Ngôn ngữ ▶</span>
+                <div class="language-sub-menu">
+                  <a *ngFor="let lang of languagesList" (click)="selectLanguage(lang)">{{ lang }}</a>
+                </div>
+              </div>
+              <a class="user-dropdown-item logout-item" role="button" tabindex="0"
+                 (click)="logout(); $event.stopPropagation()" (keydown.enter)="logout(); $event.stopPropagation()">Đăng xuất</a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-nav">
+    <div class="header-container sub-container">
+      <div class="sub-menu">
+        <div class="sub-item-wrapper" (mouseenter)="openPopup('category')" (mouseleave)="scheduleClose(250)">
+          <button class="sub-item-btn" [class.active]="activePopup === 'category'" (click)="togglePopup('category')">Danh mục ▾</button>
+        </div>
+
+        <div class="sub-item-wrapper" (mouseenter)="openPopup('policy')" (mouseleave)="onMouseLeavePopup()">
+          <button class="sub-item-btn" (click)="togglePopup('policy')">Chính sách ▾</button>
+          <div class="popup-box policy-dropdown-list" *ngIf="activePopup === 'policy'" (mouseenter)="onMouseEnterPopup()" (mouseleave)="onMouseLeavePopup()">
+            <a *ngFor="let pol of policiesList" class="policy-item" [routerLink]="[pol.route]" (click)="closePopupImmediately()">
+              {{ pol.label }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-box-wrapper">
+        <div class="search-input-container">
+          <input type="text" placeholder="Tìm kiếm game..." [(ngModel)]="searchQuery" (keydown.enter)="submitSearch()" />
+          <button *ngIf="searchQuery" class="clear-btn" (click)="clearSearch()">✕</button>
+          <button class="search-btn" (click)="submitSearch()">
+            <img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556158/search.png" class="hdr-icon" alt="Tìm kiếm" />
+          </button>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- THÔNG BÁO -->
+        <div class="action-item-wrapper" (mouseenter)="openPopup('notification')" (mouseleave)="onMouseLeavePopup()">
+          <button class="icon-btn" (click)="togglePopup('notification')" title="Thông báo">
+            <img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556158/thongbao.png" class="hdr-icon" alt="Thông báo" />
+            <span *ngIf="notificationService.unreadCount > 0" class="action-badge red-badge">{{ notificationService.unreadCount }}</span>
+          </button>
+          <div class="popup-box notification-popup" *ngIf="activePopup === 'notification'" (mouseenter)="onMouseEnterPopup()" (mouseleave)="onMouseLeavePopup()">
+            <div class="popup-header-row">
+              <h3>THÔNG BÁO</h3>
+              <button class="btn-select-all" (click)="notificationService.toggleSelectAll()">
+                {{ notificationService.isAllSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả' }}
+              </button>
+            </div>
+            <div class="notification-list">
+              <div *ngFor="let notif of notificationService.items; trackBy: trackById"
+                   class="notification-item"
+                   [class.selected]="notif.selected"
+                   (click)="notificationService.toggleSelected(notif)">
+                <div class="notif-thumb">{{ notif.icon }}</div>
+                <div class="notif-content">
+                  <div class="notif-top">
+                    <span class="notif-title">{{ notif.title }}</span>
+                    <span class="notif-date">{{ notif.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                  </div>
+                  <p class="notif-desc">{{ notif.desc }}</p>
+                </div>
+                <div class="notif-right-actions">
+                  <span class="status-dot" [class.unread]="!notif.isRead" [class.read]="notif.isRead">●</span>
+                </div>
+              </div>
+              <div *ngIf="notificationService.items.length === 0" class="empty-msg">Bạn chưa có thông báo nào</div>
+            </div>
+            <div class="popup-action-bar" *ngIf="notificationService.items.length > 0">
+              <button (click)="markSelected(true)">Đánh dấu đã đọc</button>
+              <button (click)="deleteSelected()">Xóa</button>
+              <button (click)="markSelected(false)">Đánh dấu chưa đọc</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- DANH SÁCH ƯỚC -->
+        <div class="action-item-wrapper" (mouseenter)="openPopup('wishlist')" (mouseleave)="onMouseLeavePopup()">
+          <button class="icon-btn" (click)="togglePopup('wishlist')" title="Danh sách ước">
+            <img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556158/wishlist.png" class="hdr-icon" alt="Danh sách ước" />
+            <span *ngIf="cartWishlistService.wishlistItems.length > 0" class="action-badge yellow-badge">{{ cartWishlistService.wishlistItems.length }}</span>
+          </button>
+          <div class="popup-box wishlist-popup" *ngIf="activePopup === 'wishlist'" (mouseenter)="onMouseEnterPopup()" (mouseleave)="onMouseLeavePopup()">
+            <div class="popup-header-row">
+              <h3>DANH SÁCH ƯỚC</h3>
+            </div>
+            <div class="wishlist-list">
+              <div *ngFor="let item of cartWishlistService.wishlistItems; trackBy: trackById" class="wishlist-item">
+                <div class="mini-thumb" (click)="goToGameDetail(item.id)" style="cursor: pointer;">
+                  <img [src]="item.thumb" [alt]="item.title" appImgFallback />
+                </div>
+                <div class="mini-details">
+                  <span class="mini-title" (click)="goToGameDetail(item.id)" style="cursor: pointer;">{{ item.title }}</span>
+                  <span class="mini-price">{{ item.price > 0 ? (item.price | number) + 'đ' : 'Miễn phí' }}</span>
+                </div>
+                <button class="btn-remove-mini" (click)="cartWishlistService.removeFromWishlist(item.id)" title="Xóa khỏi ước">✕</button>
+              </div>
+              <div *ngIf="cartWishlistService.wishlistItems.length === 0" class="empty-msg">{{ isLoggedIn ? 'Danh sách ước đang trống' : 'Đăng nhập để dùng danh sách ước' }}</div>
+            </div>
+            <div class="cart-footer-summary" *ngIf="cartWishlistService.wishlistItems.length > 0">
+              <button class="btn-checkout" (click)="goToWishlist()">Xem danh sách ước</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GIỎ HÀNG -->
+        <div class="action-item-wrapper" (mouseenter)="openPopup('cart')" (mouseleave)="onMouseLeavePopup()">
+          <button class="icon-btn" (click)="togglePopup('cart')" title="Giỏ hàng">
+            <img src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556158/giohang.png" class="hdr-icon" alt="Giỏ hàng" />
+            <span *ngIf="cartWishlistService.cartItems.length > 0" class="action-badge red-badge">{{ cartWishlistService.cartItems.length }}</span>
+          </button>
+          <div class="popup-box cart-popup" *ngIf="activePopup === 'cart'" (mouseenter)="onMouseEnterPopup()" (mouseleave)="onMouseLeavePopup()">
+            <div class="popup-header-row">
+              <h3>GIỎ HÀNG CỦA BẠN</h3>
+            </div>
+            <div class="cart-list">
+              <div *ngFor="let item of cartWishlistService.cartItems; trackBy: trackById" class="cart-item-row">
+                <div class="mini-thumb" (click)="goToGameDetail(item.id)" style="cursor: pointer;">
+                  <img [src]="item.thumb" [alt]="item.title" appImgFallback />
+                </div>
+                <div class="mini-details">
+                  <span class="mini-title" (click)="goToGameDetail(item.id)" style="cursor: pointer;">{{ item.title }}</span>
+                  <span class="mini-price">{{ item.price | number }}đ</span>
+                </div>
+                <button class="btn-remove-mini" (click)="cartWishlistService.removeFromCart(item.id)" title="Xóa khỏi giỏ">✕</button>
+              </div>
+              <div *ngIf="cartWishlistService.cartItems.length === 0" class="empty-msg">{{ isLoggedIn ? 'Giỏ hàng đang trống' : 'Đăng nhập để thêm game vào giỏ hàng' }}</div>
+            </div>
+            <div class="cart-footer-summary" *ngIf="cartWishlistService.cartItems.length > 0">
+              <div class="total-row">
+                <span>Tổng cộng:</span>
+                <span class="total-price">{{ cartWishlistService.cartTotalPrice | number }}đ</span>
+              </div>
+              <button class="btn-checkout" (click)="goToCart()">Xem giỏ hàng & thanh toán</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEGA MENU DANH MỤC -->
+  <div class="mega-danh-muc-panel" *ngIf="activePopup === 'category'" (mouseenter)="onMouseEnterPopup()" (mouseleave)="scheduleClose(250)">
+    <div class="mega-inner">
+      <h3 class="mega-title">DANH MỤC HÀNG ĐẦU</h3>
+      <div class="top-categories-grid">
+        <a *ngFor="let cat of topCategories" class="cat-card" [routerLink]="['/the-loai', cat.slug]"
+           [style.background-image]="cat.bg" (click)="closePopupImmediately()">
+          <div class="cat-badge">{{ cat.label | uppercase }}</div>
+        </a>
+      </div>
+
+      <h3 class="mega-title">TẤT CẢ THỂ LOẠI</h3>
+      <div class="sub-tags-row">
+        <a *ngFor="let genre of catalog.genres" class="tag-btn" [routerLink]="['/the-loai', genre.slug]" (click)="closePopupImmediately()">{{ genre.label }}</a>
+        <a class="tag-btn tag-btn-accent" [routerLink]="['/tim-kiem']" (click)="closePopupImmediately()">Tất cả game</a>
+        <a class="tag-btn tag-btn-accent" [routerLink]="['/uu-dai']" (click)="closePopupImmediately()">Ưu đãi</a>
+        <a class="tag-btn tag-btn-accent" [routerLink]="['/mien-phi']" (click)="closePopupImmediately()">Miễn phí</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- POPUP XÁC NHẬN ĐĂNG XUẤT -->
+<div class="logout-backdrop" *ngIf="showLogoutConfirm" (click)="cancelLogout()">
+  <div class="logout-card" role="alertdialog" aria-modal="true" aria-labelledby="logout-title" (click)="$event.stopPropagation()">
+    <h3 id="logout-title">Đăng xuất?</h3>
+    <p>Bạn có chắc chắn muốn đăng xuất khỏi tài khoản STEAL?</p>
+    <div class="logout-actions">
+      <button type="button" class="btn-lo-cancel" (click)="cancelLogout()">Hủy bỏ</button>
+      <button type="button" class="btn-lo-ok" (click)="confirmLogout()">Đăng xuất</button>
+    </div>
+  </div>
+</div>

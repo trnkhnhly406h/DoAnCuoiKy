@@ -1,0 +1,569 @@
+<div class="account-settings-page">
+  <!-- CHƯA ĐĂNG NHẬP -->
+  <app-login-required *ngIf="!isLoggedIn" message="Bạn cần đăng nhập tài khoản STEAL để truy cập trang Cài đặt tài khoản."></app-login-required>
+  <!-- ĐÃ ĐĂNG NHẬP -->
+  <div class="settings-container" *ngIf="isLoggedIn">
+    <!-- SIDEBAR BÊN TRÁI -->
+    <div class="settings-sidebar">
+      <button class="sidebar-item" [class.active]="activeTab === 'chi-tiet'" (click)="activeTab = 'chi-tiet'">Chi tiết tài khoản</button>
+      <button class="sidebar-item" [class.active]="activeTab === 'tuy-chinh'" (click)="activeTab = 'tuy-chinh'">Tùy chỉnh cửa hàng</button>
+      <button class="sidebar-item" [class.active]="activeTab === 'thong-bao'" (click)="activeTab = 'thong-bao'">Cài đặt thông báo</button>
+      <button class="sidebar-item" [class.active]="activeTab === 'bao-mat'" (click)="activeTab = 'bao-mat'">Bảo mật và thiết bị</button>
+      <button class="sidebar-item" [class.active]="activeTab === 'du-lieu'" (click)="activeTab = 'du-lieu'">Dữ liệu và duyệt web</button>
+    </div>
+    <!-- NỘI DUNG BÊN PHẢI -->
+    <div class="settings-content">
+      <!-- ========================================================================= -->
+      <!-- TAB 1: CHI TIẾT TÀI KHOẢN -->
+      <!-- ========================================================================= -->
+      <div class="tab-pane" *ngIf="activeTab === 'chi-tiet'">
+        <ng-container *ngIf="subMode === 'view'">
+          <div class="content-card">
+            <h3 class="card-title">Chi tiết tài khoản và liên hệ</h3>
+            <div class="details-grid">
+              <div class="detail-row">
+                <span class="label">Địa chỉ email:</span>
+                <span class="value">{{ accountService.accountInfo.email }}</span>
+                <span class="status-verified-badge">✓ {{ accountService.accountInfo.status }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Số điện thoại:</span>
+                <span class="value" [class.unlinked]="!accountService.hasPhone">
+                  {{ accountService.accountInfo.phone }}
+                </span>
+                <span class="status-verified-badge" *ngIf="accountService.hasPhone">✓ Đã xác minh</span>
+              </div>
+            </div>
+            <div class="actions-row">
+              <button class="btn-dark-action" (click)="startChangeEmail()">Thay đổi địa chỉ email</button>
+              <button class="btn-dark-action" (click)="startChangePhone()">
+                {{ accountService.hasPhone ? 'Thay đổi số điện thoại' : 'Thêm số điện thoại' }}
+              </button>
+              
+<button
+  type="button"
+  class="btn-dark-action btn-danger-link"
+  *ngIf="accountService.hasPhone"
+  [disabled]="isSavingAccount"
+  (click)="removePhone()">
+
+  {{ isSavingAccount ? 'Đang xử lý...' : 'Gỡ số điện thoại' }}
+
+</button>
+
+            </div>
+
+            <div class="delete-account-row">
+              <button class="btn-delete-account" (click)="openDeleteModal()">Yêu cầu xóa tài khoản STEAL của tôi</button>
+            </div>
+          </div>
+
+          <div class="content-card mt-20">
+            <h3 class="card-title">Thiết bị được cho phép</h3>
+            <p class="section-desc">
+              Mục này liệt kê các PC, thiết bị di động và trình duyệt web mà tài khoản của bạn đã đăng nhập gần đây.<br>
+              Để kết thúc tất cả phiên hiện tại, chọn "Đăng xuất tất cả" bên dưới.
+            </p>
+
+            <h4 class="sub-heading">Đang hoạt động</h4>
+
+            <div class="devices-list">
+              <div class="device-card" *ngFor="let dev of accountService.activeDevices">
+                <div class="device-icon">{{ dev.name.includes('Trình duyệt') ? '🌐' : '💻' }}</div>
+                <div class="device-info">
+                  <div class="device-header-line">
+                    <span class="device-name">{{ dev.name }}</span>
+                    <span class="badge-current" *ngIf="dev.isCurrent">THIẾT BỊ NÀY</span>
+                    <span class="device-location">{{ dev.location }}</span>
+                  </div>
+                  <p class="device-date">Ủy quyền vào {{ dev.authorizedDate }} với mật khẩu và mã STEAL Guard.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="logout-all-row">
+              <button class="btn-logout-all" (click)="logoutAllDevices()">Đăng xuất tất cả thiết bị khác</button>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="subMode === 'edit-email'">
+          <div class="content-card">
+            <h3 class="card-title">Thay đổi địa chỉ email</h3>
+            <div class="form-group-custom">
+              <label>Địa chỉ email hiện tại:</label>
+              <input type="text" [value]="accountService.accountInfo.email" readonly class="input-readonly">
+            </div>
+            <div class="form-group-custom">
+              <label>Địa chỉ email mới:</label>
+              <input type="email" [(ngModel)]="newEmailInput" placeholder="Nhập địa chỉ email mới..." class="input-editable">
+            </div>
+            <div class="error-msg-box" *ngIf="emailErrorMsg">{{ emailErrorMsg }}</div>
+            <div class="edit-email-actions">
+              <button class="btn-cancel-flat" (click)="cancelChangeEmail()">Hủy bỏ</button>
+              <button class="btn-confirm-email" (click)="confirmNewEmail()">Gửi mã xác minh OTP</button>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="subMode === 'edit-phone'">
+          <div class="content-card">
+            <h3 class="card-title">Cập nhật Số điện thoại bảo mật</h3>
+            <div class="form-group-custom">
+              <label>Số điện thoại hiện tại:</label>
+              <input type="text" [value]="accountService.accountInfo.phone" readonly class="input-readonly">
+            </div>
+            <div class="form-group-custom">
+              <label>Số điện thoại mới (Việt Nam):</label>
+              <input type="text" [(ngModel)]="newPhoneInput" [placeholder]="'Ví dụ: ' + phonePlaceholder" class="input-editable" inputmode="tel">
+            </div>
+            <div class="error-msg-box" *ngIf="phoneErrorMsg">⚠️ {{ phoneErrorMsg }}</div>
+            <div class="edit-email-actions">
+              <button class="btn-cancel-flat" (click)="cancelChangePhone()">Hủy bỏ</button>
+              <button class="btn-confirm-email" (click)="confirmNewPhone()">Gửi mã SMS OTP</button>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 2: TÙY CHỈNH CỬA HÀNG (DỰA THEO CHÍNH XÁC HÌNH 1) -->
+      <!-- ========================================================================= -->
+      <div class="tab-pane" *ngIf="activeTab === 'tuy-chinh'">
+        <div class="content-card">
+          <div class="card-header-flex">
+            <h3 class="card-title-lg">Tùy chỉnh nội dung cửa hàng</h3>
+            <span class="column-label-right">Ẩn</span>
+          </div>
+
+          <p class="section-desc">Tick vào loại nội dung bạn muốn <strong>ẩn</strong> khỏi cửa hàng STEAL. Game có nhãn tương ứng sẽ không xuất hiện trong danh sách và tìm kiếm (game bạn đã sở hữu vẫn nằm trong Thư viện).</p>
+
+          <div class="filter-options-list">
+            
+            <div class="filter-item-row">
+              <div class="filter-text-col">
+                <h4 class="filter-item-title">Bộ lọc nội dung mang yếu tố trưởng thành</h4>
+                <p class="filter-item-desc">Chủ đề mang yếu tố trưởng thành có thể không phù hợp với tất cả đối tượng.</p>
+              </div>
+              <label class="custom-checkbox-container">
+                <input type="checkbox" [(ngModel)]="matureContentFilter">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+            <div class="filter-item-row">
+              <div class="filter-text-col">
+                <h4 class="filter-item-title">Thường có yếu tố bạo lực máu me</h4>
+                <p class="filter-item-desc">Trò chơi hoặc nội dung này chứa cảnh bạo lực hoặc máu me.</p>
+              </div>
+              <label class="custom-checkbox-container">
+                <input type="checkbox" [(ngModel)]="frequentViolence">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+            <div class="filter-item-row">
+              <div class="filter-text-col">
+                <h4 class="filter-item-title">Một số nội dung khỏa thân hoặc khêu gợi</h4>
+                <p class="filter-item-desc">Trò chơi hoặc nội dung chứa một số cảnh khỏa thân hoặc khêu gợi, nhưng không phải là trọng tâm.</p>
+              </div>
+              <label class="custom-checkbox-container">
+                <input type="checkbox" [(ngModel)]="nuditySome">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+            <div class="filter-item-row">
+              <div class="filter-text-col">
+                <h4 class="filter-item-title">Nội dung khỏa thân hoặc khêu gợi thường xuyên</h4>
+                <p class="filter-item-desc">Trò chơi hoặc nội dung chủ yếu về chủ đề khỏa thân hoặc khêu gợi.</p>
+              </div>
+              <label class="custom-checkbox-container">
+                <input type="checkbox" [(ngModel)]="nudityFrequent">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+            <div class="filter-item-row">
+              <div class="filter-text-col">
+                <h4 class="filter-item-title">Nội dung gợi dục chỉ dành cho người lớn</h4>
+                <p class="filter-item-desc">Trò chơi hoặc nội dung tình dục rõ ràng hoặc qua hình ảnh và chỉ dành riêng cho người lớn.</p>
+              </div>
+              <label class="custom-checkbox-container">
+                <input type="checkbox" [(ngModel)]="adultOnlyNudity">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+
+          </div>
+
+          <!-- LỌC ẨN TỪ NGỮ -->
+          <div class="profanity-section mt-20">
+            <h3 class="sub-section-title">Lọc ẩn từ ngữ</h3>
+            <p class="section-desc">
+              Một số từ ngữ không phù hợp có thể bị lọc ẩn trong khung trò chuyện của STEAL. Bạn có thể thay đổi tùy chọn cho bộ lọc trò chuyện dưới đây:
+            </p>
+
+            <div class="radio-group-list">
+              <label class="custom-radio-row">
+                <input type="radio" name="profanityFilter" value="all" [(ngModel)]="profanityFilterOption">
+                <span class="radio-mark"></span>
+                <span class="radio-label-text">
+                  Lọc ẩn từ ngữ tục tĩu và các từ ngữ cụ thể bên dưới, thay bằng <strong class="censor-heart">"♥♥♥"</strong> hay <strong>"****"</strong>
+                </span>
+              </label>
+
+              <label class="custom-radio-row">
+                <input type="radio" name="profanityFilter" value="custom_only" [(ngModel)]="profanityFilterOption">
+                <span class="radio-mark"></span>
+                <span class="radio-label-text">Chỉ lọc các từ ngữ cụ thể do bạn chọn bên dưới</span>
+              </label>
+
+              <label class="custom-radio-row">
+                <input type="radio" name="profanityFilter" value="none" [(ngModel)]="profanityFilterOption">
+                <span class="radio-mark"></span>
+                <span class="radio-label-text">Đừng lọc bất kỳ từ ngữ nào</span>
+              </label>
+            </div>
+
+            <!-- LỌC TỪ NGỮ CỤ THỂ -->
+            <div class="custom-words-box mt-20">
+              <label class="words-label">Lọc từ ngữ cụ thể</label>
+
+              <div class="word-input-row" *ngFor="let word of customProfanityWords; let i = index; trackBy: trackByIndex">
+                <input type="text" [(ngModel)]="customProfanityWords[i]" [name]="'word' + i" maxlength="30" class="input-profanity-word" aria-label="Từ ngữ cần lọc">
+                <button type="button" class="btn-remove-word" (click)="removeProfanityWord(i)" aria-label="Xóa từ ngữ">✕</button>
+              </div>
+
+              <button type="button" class="btn-add-word-block" (click)="addProfanityWord()">+</button>
+            </div>
+
+            <div class="save-action-center mt-20">
+              <button class="btn-save-primary" (click)="saveStoreCustomization()">Lưu những thay đổi</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 3: CÀI ĐẶT THÔNG BÁO (THIẾT KẾ ĐỒ ÁN THỰC TẾ & CHUYÊN NGHIỆP) -->
+      <!-- ========================================================================= -->
+      <div class="tab-pane" *ngIf="activeTab === 'thong-bao'">
+        <div class="content-card">
+          <h3 class="card-title-lg">Cài đặt thông báo</h3>
+          <p class="section-desc">Quản lý cách STEAL gửi thông báo ưu đãi, tin nhắn cộng đồng và cập nhật bảo mật cho bạn.</p>
+
+          <div class="notification-group-section mt-20">
+            <h4 class="sub-heading">Thông báo ưu đãi & giao dịch</h4>
+
+            <div class="toggle-setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Game trong Danh sách ước giảm giá</span>
+                <p class="setting-desc">Nhận thông báo ngay khi game bạn yêu thích có đợt Sale hoặc giảm giá sâu.</p>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" [(ngModel)]="notifyWishlistSale">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="toggle-setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Hóa đơn & Biên nhận thanh toán</span>
+                <p class="setting-desc">Nhận thông báo xác nhận hóa đơn sau mỗi lần mua game thành công.</p>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" [(ngModel)]="notifyPurchaseReceipt">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="toggle-setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Tin tức hệ thống & Sự kiện STEAL</span>
+                <p class="setting-desc">Nhận thông tin về các sự kiện Sale Mùa Hè, Mùa Đông và cập nhật tính năng mới.</p>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" [(ngModel)]="notifyNewsEvents">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="notification-group-section mt-20">
+            <h4 class="sub-heading">Thông báo ứng dụng & Trình duyệt</h4>
+
+            <div class="toggle-setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Lời mời kết bạn & Tin nhắn</span>
+                <p class="setting-desc">Hiển thị thông báo khi có game thủ khác chấp nhận lời mời kết bạn hoặc gửi tin nhắn trực tiếp.</p>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" [(ngModel)]="notifyFriendRequest">
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="toggle-setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Game trong thư viện có bản cập nhật mới</span>
+                <p class="setting-desc">Thông báo khi các game bạn đã sở hữu vừa phát hành bản Patch hoặc DLC mới.</p>
+              </div>
+              <label class="switch-toggle">
+                <input type="checkbox" [(ngModel)]="notifyGameUpdates">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="save-action-center mt-20">
+            <button class="btn-save-primary" (click)="saveNotificationSettings()">Lưu cài đặt thông báo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 4: BẢO MẬT VÀ THIẾT BỊ -->
+      <!-- ========================================================================= -->
+      <div class="tab-pane" *ngIf="activeTab === 'bao-mat'">
+        <div class="content-card">
+          <h3 class="card-title-lg">Bảo mật tài khoản & Thiết bị</h3>
+          <p class="section-desc">Tăng cường lớp bảo mật cho tài khoản STEAL của bạn bằng xác thực 2 yếu tố và mật khẩu mạnh.</p>
+
+          <!-- KHUNG STEAL GUARD 2FA -->
+          <div class="security-status-box mt-20" [class.enabled]="is2FAEnabled">
+            <div class="status-shield-icon">{{ is2FAEnabled ? '🛡️' : '⚠️' }}</div>
+            <div class="status-info-text">
+              <h4 class="status-title">Xác thực 2 yếu tố STEAL Guard: {{ is2FAEnabled ? 'ĐANG BẬT' : 'ĐANG TẮT' }}</h4>
+              <p class="status-desc">
+                {{ is2FAEnabled 
+                  ? 'Tài khoản của bạn đang được bảo vệ cấp độ cao nhất qua Email và OTP Mobile.' 
+                  : 'Cảnh báo: Tài khoản của bạn có nguy cơ bị xâm nhập nếu không bật xác thực 2 bước!' }}
+              </p>
+            </div>
+            <button class="btn-toggle-2fa" [class.btn-danger-link]="is2FAEnabled" (click)="toggle2FA()">
+              {{ is2FAEnabled ? 'Tắt STEAL Guard' : 'Kích hoạt ngay' }}
+            </button>
+          </div>
+
+          <!-- FORM ĐỔI MẬT KHẨU -->
+          <div class="change-password-box mt-20">
+            <h4 class="sub-heading">Đổi mật khẩu tài khoản</h4>
+
+            <div class="form-group-custom">
+              <label>Mật khẩu hiện tại:</label>
+              <input type="password" [(ngModel)]="oldPasswordInput" placeholder="Nhập mật khẩu cũ..." class="input-editable" autocomplete="current-password">
+            </div>
+
+            <div class="form-group-custom">
+              <label>Mật khẩu mới:</label>
+              <input type="password" [(ngModel)]="newPasswordInput" placeholder="Ít nhất 8 ký tự, chữ hoa, chữ, số và ký tự đặc biệt..." class="input-editable" autocomplete="new-password">
+            </div>
+
+            <div class="form-group-custom">
+              <label>Xác nhận mật khẩu mới:</label>
+              <input type="password" [(ngModel)]="confirmPasswordInput" placeholder="Nhập lại mật khẩu mới..." class="input-editable" autocomplete="new-password">
+            </div>
+
+            <div class="error-msg-box" *ngIf="passwordErrorMsg">⚠️ {{ passwordErrorMsg }}</div>
+
+            <div class="edit-email-actions">
+
+<button
+  class="btn-confirm-email"
+  [disabled]="isSavingAccount"
+  (click)="changePassword()"
+>
+  {{ isSavingAccount ? 'Đang lưu...' : 'Lưu mật khẩu mới' }}
+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 5: DỮ LIỆU VÀ DUYỆT WEB (DỰA THEO CHÍNH XÁC HÌNH 2) -->
+      <!-- ========================================================================= -->
+      <div class="tab-pane" *ngIf="activeTab === 'du-lieu'">
+        <div class="content-card">
+          <h3 class="account-header-title">{{ userProfileService.displayName }}</h3>
+          
+          <div class="cookies-top-bar">
+            <h3 class="card-title-lg inline-title">Cookies tuỳ chọn</h3>
+            <div class="cookies-action-btns">
+              <button class="btn-cookie-action" (click)="acceptAllCookies()">Chấp nhận tất cả</button>
+              <button class="btn-cookie-action" (click)="rejectAllCookies()">Từ chối tất cả</button>
+            </div>
+          </div>
+
+          <!-- COOKIE TÙY CHỈNH NỘI DUNG -->
+          <div class="cookie-group-block mt-20">
+            <h4 class="cookie-group-title">Cookie tùy chỉnh nội dung của Steal</h4>
+            <p class="cookie-group-desc">Để tùy chỉnh nội dung biên tập trên Steal dựa trên việc sử dụng dịch vụ của bạn</p>
+
+            <div class="cookie-item-row">
+              <div class="cookie-item-info">
+                <span class="cookie-code-name">recentapps:</span>
+                <p class="cookie-item-desc">Các trang trò chơi bạn đã truy cập (đôi khi hiển thị ở chân trang cửa hàng thay cho phần đề xuất)</p>
+              </div>
+              <div class="toggle-btn-group">
+                <button type="button" [class.active]="!cookies.recentApps" (click)="setCookie('recentApps', false)">Tắt</button>
+                <button type="button" [class.active]="cookies.recentApps" (click)="setCookie('recentApps', true)">Bật</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- COOKIE PHÂN TÍCH -->
+          <div class="cookie-group-block mt-20">
+            <h4 class="cookie-group-title">Cookie phân tích của Steal</h4>
+            <p class="cookie-group-desc">Để đo lường lượng người dùng trên Steal và cải thiện dịch vụ</p>
+
+            <div class="cookie-item-row">
+              <div class="cookie-item-info">
+                <span class="cookie-code-name">app_impressions và browserid:</span>
+                <p class="cookie-item-desc">Dữ liệu phân tích nội bộ của chúng tôi dùng để xác định lưu lượng truy cập vào một trang cửa hàng cụ thể và được báo cáo ẩn danh. app_impressions chỉ tồn tại trong một lần xem trang</p>
+              </div>
+              <div class="toggle-btn-group">
+                <button type="button" [class.active]="!cookies.analytics" (click)="setCookie('analytics', false)">Tắt</button>
+                <button type="button" [class.active]="cookies.analytics" (click)="setCookie('analytics', true)">Bật</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- COOKIE CHIA SẺ MEDIA -->
+          <div class="cookie-group-block mt-20">
+            <h4 class="cookie-group-title">Cookie về chia sẻ Media</h4>
+
+            <div class="cookie-item-row">
+              <span class="media-service-name">Youtube</span>
+              <div class="toggle-btn-group">
+                <button type="button" [class.active]="!cookies.youtube" (click)="setCookie('youtube', false)">Tắt</button>
+                <button type="button" [class.active]="cookies.youtube" (click)="setCookie('youtube', true)">Bật</button>
+              </div>
+            </div>
+
+            <div class="cookie-item-row">
+              <span class="media-service-name">Vimeo</span>
+              <div class="toggle-btn-group">
+                <button type="button" [class.active]="!cookies.vimeo" (click)="setCookie('vimeo', false)">Tắt</button>
+                <button type="button" [class.active]="cookies.vimeo" (click)="setCookie('vimeo', true)">Bật</button>
+              </div>
+            </div>
+
+            <div class="cookie-item-row">
+              <span class="media-service-name">Sketchfab</span>
+              <div class="toggle-btn-group">
+                <button type="button" [class.active]="!cookies.sketchfab" (click)="setCookie('sketchfab', false)">Tắt</button>
+                <button type="button" [class.active]="cookies.sketchfab" (click)="setCookie('sketchfab', true)">Bật</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- XÓA BỘ NHỚ TẠM TRÌNH DUYỆT -->
+          <div class="clear-cache-section mt-20">
+            <h4 class="sub-heading">Dữ liệu web cá nhân</h4>
+            <button class="btn-dark-action" (click)="clearBrowserData()">Xóa bộ nhớ tạm & Cache duyệt web STEAL</button>
+          </div>
+
+          <div class="clear-cache-section mt-20">
+            <h4 class="sub-heading">Dữ liệu demo</h4>
+            <p class="section-desc">Dành cho trình diễn đồ án: chuyển nhanh giữa tài khoản mới hoàn toàn và tài khoản có dữ liệu mẫu.</p>
+            <div class="actions-row">
+              <button type="button" class="btn-dark-action" (click)="loadSampleData()">Nạp dữ liệu mẫu</button>
+              <button type="button" class="btn-dark-action btn-danger-link" (click)="resetToNewAccount()">Đặt lại về tài khoản mới</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- POPUP MODAL OTP CHUNG -->
+  <div class="modal-backdrop" *ngIf="showOtpModal">
+    <div class="otp-modal-card">
+      <div class="modal-header-row">
+        <div class="brand-mini"><span class="logo-text">STEAL SECURITY</span></div>
+        <button class="btn-close-modal" (click)="closeOtpPopup()">✕</button>
+      </div>
+
+      <div class="modal-body" *ngIf="!isOtpSuccess">
+        <h3 class="otp-title">XÁC MINH {{ otpPurpose === 'email' ? 'EMAIL' : 'SỐ ĐIỆN THOẠI' }}</h3>
+        <p class="otp-instruction info-text" *ngIf="otpInfoMessage && !otpErrorMessage">
+          {{ otpInfoMessage }}<br>
+          <small class="test-code-hint" *ngIf="showTestOtp">(Mã OTP thử nghiệm: <strong>{{ otpCodeHint }}</strong>)</small>
+        </p>
+        <p class="otp-instruction error-text" *ngIf="otpErrorMessage">🚨 {{ otpErrorMessage }}</p>
+
+        <app-otp-input #otpBox variant="box" [disabled]="isOtpLocked || isSavingAccount" (codeChange)="onOtpChange($event)" (submitted)="submitOtp()"></app-otp-input>
+
+        <div class="resend-row">
+          <button class="btn-resend" [disabled]="resendCooldown > 0 || isOtpLocked" (click)="handleResendOtp()">
+            {{ resendCooldown > 0 ? 'Gửi lại mã (' + resendCooldown + 's)' : '🔄 Gửi lại mã OTP' }}
+          </button>
+        </div>
+
+        <button class="btn-submit-otp" (click)="submitOtp()" [disabled]="isOtpLocked || isSavingAccount">Xác nhận & Hoàn tất</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- POPUP MODAL XÓA TÀI KHOẢN 3 BƯỚC OTP -->
+  <div class="modal-backdrop" *ngIf="showDeleteModal">
+    <div class="otp-modal-card delete-card">
+      <div class="modal-header-row">
+        <div class="brand-mini"><span class="logo-text danger">QUY TRÌNH XÓA TÀI KHOẢN AN TOÀN</span></div>
+        <button class="btn-close-modal" (click)="closeDeleteModal()">✕</button>
+      </div>
+
+      <div class="modal-body" *ngIf="deleteStep === 0">
+        <h3 class="otp-title danger">YÊU CẦU XÓA TÀI KHOẢN</h3>
+        <p class="section-desc">Sau 3 bước xác minh, tài khoản sẽ bị <strong>khóa ngay</strong>, không thể đăng nhập. Nếu trong <strong>30 ngày</strong> bạn không liên hệ hỗ trợ qua email để yêu cầu khôi phục và được Admin mở khóa, hệ thống sẽ tự động xóa tài khoản. Nhập <strong>DELETE</strong> để tiếp tục:</p>
+        <input type="text" [(ngModel)]="confirmDeleteText" placeholder="Gõ DELETE vào đây..." class="input-editable text-center mt-2" autocomplete="off">
+        <div class="edit-email-actions mt-20">
+          <button class="btn-cancel-flat" (click)="closeDeleteModal()">Hủy bỏ</button>
+          <button class="btn-confirm-email btn-danger" [disabled]="confirmDeleteText.trim() !== 'DELETE'" (click)="startDeleteVerification()">
+            Bắt đầu xác minh 3 bước OTP ▶
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body" *ngIf="deleteStep > 0">
+        <div class="delete-step-indicator">
+          <div class="step-pill" [class.active]="deleteStep >= 1" [class.done]="deleteStep > 1">1. Email</div>
+          <div class="step-line" [class.active]="deleteStep >= 2"></div>
+          <div class="step-pill" [class.active]="deleteStep >= 2" [class.done]="deleteStep > 2">2. SMS / SĐT</div>
+          <div class="step-line" [class.active]="deleteStep >= 3"></div>
+          <div class="step-pill" [class.active]="deleteStep === 3">3. Cả 2 kênh</div>
+        </div>
+
+        <h3 class="otp-title danger">XÁC MINH OTP BƯỚC {{ deleteStep }}/3</h3>
+        <p class="otp-instruction info-text" *ngIf="deleteOtpInfoMsg && !deleteOtpErrorMsg">
+          {{ deleteOtpInfoMsg }}<br>
+          <small class="test-code-hint" *ngIf="showTestOtp">(Mã OTP thử nghiệm Bước {{ deleteStep }}: <strong>{{ otpCodeHint }}</strong>)</small>
+        </p>
+        <p class="otp-instruction error-text" *ngIf="deleteOtpErrorMsg"> {{ deleteOtpErrorMsg }}</p>
+
+        <app-otp-input #deleteOtpBox variant="box" [disabled]="isDeletingAccount || deleteOtpVerified" (codeChange)="onDeleteOtpChange($event)" (submitted)="submitDeleteOtpStep()"></app-otp-input>
+
+        <div class="resend-row">
+          <button class="btn-resend" [disabled]="deleteResendCooldown > 0" (click)="handleResendDeleteOtp()">
+            {{ deleteResendCooldown > 0 ? 'Gửi lại mã (' + deleteResendCooldown + 's)' : 'Gửi lại mã OTP mới' }}
+          </button>
+        </div>
+
+        <div class="edit-email-actions">
+          <button class="btn-cancel-flat" (click)="closeDeleteModal()">Hủy quy trình</button>
+          <button class="btn-submit-otp btn-danger-submit" (click)="submitDeleteOtpStep()" [disabled]="isDeletingAccount">
+            {{ isDeletingAccount ? 'Đang xử lý...' : deleteOtpVerified ? 'Thử gửi lại yêu cầu khóa' : deleteStep === 3 ? 'KHÓA VÀ CHỜ XÓA SAU 30 NGÀY' : 'Xác nhận Bước ' + deleteStep + '/3 ▶' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,71 @@
+<div class="support-container">
+  <header class="support-header">
+    <h1>HỖ TRỢ</h1>
+    <p class="subtitle">Trung tâm hỗ trợ khách hàng STEAL</p>
+    <blockquote class="team-quote">
+      “Bạn gặp sự cố? Đội ngũ 5 cô gái MIS UEL luôn sẵn sàng hỗ trợ bạn!”
+    </blockquote>
+  </header>
+
+  <section class="support-search-section">
+    <h3>Tìm kiếm nhanh</h3>
+    <div class="big-search-box">
+      <input type="text" placeholder="Chúng tôi có thể giúp gì cho bạn hôm nay?" aria-label="Tìm kiếm hỗ trợ"
+             [(ngModel)]="searchQuery" (ngModelChange)="onSearch()">
+      <button type="button" class="btn-search" (click)="clearSearch()" *ngIf="isSearching">✕ Xóa</button>
+    </div>
+    <span class="search-hint">(Ví dụ: "hoàn tiền", "mật khẩu", "thanh toán"...)</span>
+  </section>
+
+  <section class="faq-section">
+    <h3>Các chủ đề hỗ trợ thường gặp</h3>
+
+    <p class="faq-empty" *ngIf="filteredGroups.length === 0">
+      Không tìm thấy nội dung khớp "{{ searchQuery }}". Hãy thử từ khóa khác hoặc gửi yêu cầu hỗ trợ ở cuối trang.
+    </p>
+
+    <div class="faq-block" *ngFor="let group of filteredGroups" [id]="group.id">
+      <h4>{{ group.title }}</h4>
+      <details class="faq-item" *ngFor="let item of group.items" [open]="isSearching">
+        <summary class="question">{{ item.question }}</summary>
+        <p class="answer">→ {{ item.answer }}</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="contact-section" id="lien-he">
+    <h3>Gửi yêu cầu hỗ trợ</h3>
+    <div class="contact-card">
+      <h4>Kênh liên hệ trực tiếp</h4>
+      <p class="contact-item">📩 <strong>Email hỗ trợ:</strong> <a href="mailto:support@stealgame.store">support@stealgame.store</a> <em>(Phản hồi trong vòng 2-4 giờ)</em></p>
+      <p class="contact-item">🏢 <strong>Địa chỉ dự án:</strong> Trường Đại học Kinh tế - Luật (UEL), ĐHQG-HCM, Q. Thủ Đức, TP. Hồ Chí Minh.</p>
+    </div>
+
+    <form class="ticket-form" (ngSubmit)="submitTicket()" novalidate>
+      <div class="ticket-row">
+        <div class="ticket-field">
+          <label for="tk-name">Họ và tên</label>
+          <input id="tk-name" name="name" type="text" [(ngModel)]="ticket.name" [class.input-error]="ticketErrors.name">
+          <span class="field-error" *ngIf="ticketErrors.name">{{ ticketErrors.name }}</span>
+        </div>
+        <div class="ticket-field">
+          <label for="tk-email">Email nhận phản hồi</label>
+          <input id="tk-email" name="email" type="email" [(ngModel)]="ticket.email" [class.input-error]="ticketErrors.email">
+          <span class="field-error" *ngIf="ticketErrors.email">{{ ticketErrors.email }}</span>
+        </div>
+      </div>
+      <div class="ticket-field">
+        <label for="tk-topic">Chủ đề</label>
+        <select id="tk-topic" name="topic" [(ngModel)]="ticket.topic">
+          <option *ngFor="let t of topics" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+      <div class="ticket-field">
+        <label for="tk-message">Nội dung</label>
+        <textarea id="tk-message" name="message" rows="5" maxlength="1000" [(ngModel)]="ticket.message" [class.input-error]="ticketErrors.message"></textarea>
+        <span class="field-error" *ngIf="ticketErrors.message">{{ ticketErrors.message }}</span>
+      </div>
+      <button type="submit" class="btn-submit-ticket">Gửi yêu cầu</button>
+    </form>
+  </section>
+</div>

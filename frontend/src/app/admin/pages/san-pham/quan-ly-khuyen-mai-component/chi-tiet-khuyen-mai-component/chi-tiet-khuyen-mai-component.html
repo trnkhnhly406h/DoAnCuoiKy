@@ -1,0 +1,126 @@
+<main class="promotion-detail-page">
+  <header class="page-top">
+    <div class="page-identity">
+      <span class="promotion-id" *ngIf="!dangTaoMoi">{{ idKhuyenMai }}</span>
+      <h1>{{ dangTaoMoi ? 'Tạo khuyến mãi mới' : maKhuyenMai }}</h1>
+    </div>
+    <button class="back-button" type="button" aria-label="Quay về danh sách khuyến mãi" (click)="quayVe()">
+      <i class="bi bi-arrow-left"></i>
+      <span>Quay về</span>
+    </button>
+  </header>
+
+  <form (ngSubmit)="luuKhuyenMai()" #promotionForm="ngForm" novalidate>
+    <section class="panel general-panel">
+      <h2>Thông tin chung</h2>
+      <div class="panel-rule"></div>
+
+      <div class="general-grid">
+        <label class="field-group">
+          <span>Mã khuyến mãi <b class="required">*</b></span>
+          <input
+            type="text"
+            name="maKhuyenMai"
+            [(ngModel)]="maKhuyenMai"
+            required
+            maxlength="60"
+            placeholder="Nhập mã khuyến mãi"
+          />
+        </label>
+
+        <label class="field-group">
+          <span>Mức giảm (%) <b class="required">*</b></span>
+          <input
+  type="number"
+  name="phanTramGiamGia"
+  [(ngModel)]="phanTramGiamGia"
+  required
+  min="1"
+  max="100"
+  step="1"
+  placeholder="Nhập mức giảm từ 1 đến 100"
+/>
+        </label>
+
+        <label class="field-group full-width">
+          <span>Mô tả chi tiết <b class="required">*</b></span>
+          <textarea
+            name="moTa"
+            [(ngModel)]="moTa"
+            required
+            rows="3"
+            maxlength="1000"
+            placeholder="Nhập mô tả chi tiết khuyến mãi"
+          ></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section class="panel validity-panel">
+      <h2>Thời gian hiệu lực</h2>
+      <div class="panel-rule"></div>
+
+      <div class="validity-grid">
+        <label class="field-group">
+          <span>Thời gian bắt đầu <b class="required">*</b></span>
+          <input
+            type="datetime-local"
+            name="ngayBatDau"
+            [(ngModel)]="ngayBatDau"
+            required
+          />
+        </label>
+
+        <div class="field-group">
+          <label class="end-date-toggle">
+            <input
+              type="checkbox"
+              name="coThoiGianKetThuc"
+              [(ngModel)]="coThoiGianKetThuc"
+              (ngModelChange)="doiTrangThaiKetThuc()"
+            />
+            <span>Có thời gian kết thúc</span>
+          </label>
+
+          <input
+            type="datetime-local"
+            name="ngayKetThuc"
+            [(ngModel)]="ngayKetThuc"
+            [required]="coThoiGianKetThuc"
+            [disabled]="!coThoiGianKetThuc"
+            [class.input-disabled]="!coThoiGianKetThuc"
+          />
+          <small class="field-hint" *ngIf="!coThoiGianKetThuc">
+            Mã khuyến mãi cố định, không có thời gian kết thúc.
+          </small>
+        </div>
+      </div>
+    </section>
+
+    <p class="form-error" *ngIf="thongBaoLoi" role="alert">{{ thongBaoLoi }}</p>
+
+    <footer class="page-actions">
+      <button class="btn-cancel" type="button" (click)="huy()">Hủy</button>
+<button
+  class="btn-save"
+  type="submit"
+  [disabled]="dangLuu"
+>
+  {{ dangLuu ? 'Đang lưu...' : 'Lưu' }}
+</button>
+    </footer>
+  </form>
+
+  <div class="modal-backdrop-custom" *ngIf="hienPopupThanhCong" (click)="dongPopupThanhCong()">
+    <section class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="successTitle" (click)="$event.stopPropagation()">
+      <div class="success-icon"><i class="bi bi-check-lg"></i></div>
+      <h2 id="successTitle">Lưu mã khuyến mãi thành công</h2>
+<p>
+  Mã <strong>{{ maKhuyenMai }}</strong> đã được lưu thành công vào hệ thống.
+</p>
+      <div class="confirm-actions">
+        <button type="button" class="btn-save" (click)="dongPopupThanhCong()">Đóng</button>
+      </div>
+    </section>
+  </div>
+</main>

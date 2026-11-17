@@ -1,0 +1,78 @@
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+/* Bảng màu tím STEAL + font Commissioner (nạp bằng <link> trong index.html) */
+:root {
+  /* Bảng màu gốc */
+  --indigo: #36204e;
+  --violet: #542e85;
+  --mauve: #7448a6;
+  --iris: #9367c1;
+  --periwinkle: #b186d7;
+  --lavender: #c5a9dc;
+
+  --font-main: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Biến giao diện dùng chung */
+  --steal-bg-main: #1b1029;
+  --steal-bg-top: var(--violet);
+  --steal-bg-header: var(--indigo);
+  --steal-bg-subnav: #2a1740;
+  --steal-bg-card: #2b1c3b;
+  --steal-bg-tab: #3d235c;
+
+  --steal-text-main: #efe6f7;
+  --steal-text-muted: #a89bb8;
+  --steal-text-link: var(--periwinkle);
+  --steal-accent-purple: var(--mauve);
+  --steal-green-discount: #a5cd3c;
+  --steal-border-color: #52307e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--steal-bg-main);
+}
+
+body {
+  background: linear-gradient(180deg, var(--steal-bg-top) 0%, var(--indigo) 5%, var(--steal-bg-main) 14%) no-repeat, var(--steal-bg-main);
+  color: var(--steal-text-main);
+  font-family: var(--font-main);
+  min-width: 320px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+::selection {
+  background: var(--iris);
+  color: #fff;
+}
+
+* {
+  scrollbar-color: var(--mauve) var(--indigo);
+}
+
+/* ===== 2 nút thao tác trên ô sản phẩm: + (giỏ hàng) và ★ (danh sách ước) ===== */
+.sq-actions { display: flex; gap: 6px; align-items: center; z-index: 10; }
+.sq-btn { width: 26px; height: 26px; padding: 0; border: 0; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; font-family: inherit; line-height: 1; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); background: #7d51ad; transition: background 0.15s; }
+.sq-btn.wish { font-size: 17px; }
+.sq-btn:hover { background: #643b96; }
+.sq-btn.active { background: #f5c542; color: #2b1c3b; }
+.sq-btn:focus-visible { outline: 2px solid #c0a1db; outline-offset: 2px; }

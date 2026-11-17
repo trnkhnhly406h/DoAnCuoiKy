@@ -1,0 +1,11 @@
+<div class="toast-stack" aria-live="polite">
+  <div class="toast"
+       *ngFor="let t of toast.messages; trackBy: trackById"
+       [class.success]="t.type === 'success'"
+       [class.warning]="t.type === 'warning'"
+       role="status"
+       (click)="toast.dismiss(t.id)">
+    <span class="toast-icon">{{ t.type === 'warning' ? '⚠️' : '✅' }}</span>
+    <span class="toast-text">{{ t.text }}</span>
+  </div>
+</div>

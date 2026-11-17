@@ -1,0 +1,117 @@
+<header class="topbar d-flex align-items-center justify-content-between px-4 py-2">
+  <!-- Logo & Tên Thương Hiệu bên trái -->
+  <a routerLink="/admin" class="d-flex align-items-center text-decoration-none gap-2">
+    <img
+      src="https://res.cloudinary.com/elcegnjl/image/upload/v1793556158/logo.png"
+      alt="STEAL Logo"
+      class="logo-img"
+    />
+
+    <span class="brand-text fw-bold fs-4">
+      {{ brandName || 'STEAL' }}
+    </span>
+  </a>
+
+
+  <!-- Chuông & Nút Admin bên phải -->
+  <div class="d-flex align-items-center gap-3">
+
+    <!-- CHUÔNG THÔNG BÁO VỚI HUY HIỆU ĐỎ VÀ POPUP HOẠT ĐỘNG KHÁCH HÀNG -->
+
+<!-- Chỉ Staff và Super Admin được thấy chuông -->
+@if (canViewOrderNotifications) {
+  <div
+    class="position-relative"
+    id="admin-notification-dropdown"
+  >
+
+    <button 
+        type="button" 
+        class="btn p-0 border-0 text-dark position-relative me-1" 
+        title="Thông báo hoạt động khách hàng"
+        (click)="toggleNotificationMenu($event)">
+        <i class="bi bi-bell-fill fs-4" [class.text-primary]="soLuongChuaXuLy > 0"></i>
+        @if (soLuongChuaXuLy > 0) {
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+            {{ soLuongChuaXuLy > 99 ? '99+' : soLuongChuaXuLy }}
+          </span>
+        }
+      </button>
+
+      <!-- DROPDOWN POPUP THÔNG BÁO -->
+      @if (isNotificationMenuOpen) {
+        <div class="notification-dropdown-panel position-absolute end-0 mt-2 bg-white rounded shadow-lg border" (click)="$event.stopPropagation()">
+          <div class="noti-header d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
+            <div class="fw-bold text-dark small d-flex align-items-center gap-2">
+              <i class="bi bi-bell text-primary"></i>
+              <span>HOẠT ĐỘNG KHÁCH HÀNG</span>
+            </div>
+            @if (soLuongChuaXuLy > 0) {
+              <span class="badge bg-danger rounded-pill small">{{ soLuongChuaXuLy }} chờ xử lý</span>
+            } @else {
+              <span class="badge bg-success rounded-pill small">Đã cập nhật</span>
+            }
+          </div>
+
+          <div class="noti-body" style="max-height: 380px; overflow-y: auto;">
+            @for (item of danhSachThongBao; track item.id) {
+              <div 
+                class="noti-item px-3 py-2 border-bottom cursor-pointer d-flex gap-2 align-items-start"
+                [class.unread-bg]="item.chuaXuLy"
+                (click)="bamThongBao(item)">
+                <div class="noti-icon fs-5 mt-1">{{ item.icon }}</div>
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center justify-content-between gap-2">
+                    <span class="noti-title fw-bold text-dark small">{{ item.tieuDe }}</span>
+                    <span class="badge" [ngClass]="item.badgeClass" style="font-size: 0.65rem;">{{ item.badgeText }}</span>
+                  </div>
+                  <p class="noti-desc text-muted mb-1 small" style="line-height: 1.3;">{{ item.noiDung }}</p>
+                  <span class="noti-time text-secondary" style="font-size: 0.7rem;">{{ item.thoiGian }}</span>
+                </div>
+              </div>
+            }
+
+            @if (danhSachThongBao.length === 0) {
+              <div class="p-4 text-center text-muted small">
+                <i class="bi bi-check2-circle fs-3 text-success d-block mb-1"></i>
+                Chưa có hoạt động mới nào từ khách hàng.
+              </div>
+            }
+          </div>
+
+          <div class="noti-footer px-3 py-2 text-center border-top bg-light">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-link text-decoration-none text-primary fw-semibold p-0 small" 
+              (click)="chuyenDenTrangDonHang()">
+              Xem toàn bộ đơn hàng & duyệt hoàn tiền &rarr;
+            </button>
+          </div>
+        </div>
+      }
+    </div>}
+    
+    <!-- Nút Admin bọc trong container có dropdown -->
+    <div class="position-relative" id="admin-user-dropdown">
+      <div 
+        class="admin-badge d-flex align-items-center gap-2 px-2 py-0 bg-white rounded cursor-pointer"
+        (click)="toggleUserMenu()">
+        <span class="fw-semibold text-dark">Admin</span>
+        <i class="bi bi-person-circle fs-4 text-dark"></i>
+      </div>
+
+      <!-- Dropdown chỉ hiện duy nhất nút Đăng xuất -->
+      @if (isUserMenuOpen) {
+        <div class="dropdown-menu-custom position-absolute end-0 mt-2 py-1 bg-white rounded shadow border">
+          <button 
+            type="button" 
+            class="dropdown-item-custom d-flex align-items-center justify-content-center gap-2 px-3 py-2 border-0 bg-transparent text-danger w-100 small fw-semibold" 
+            (click)="dangXuat()">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Đăng xuất</span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

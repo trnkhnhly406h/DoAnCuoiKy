@@ -1,0 +1,99 @@
+<div class="products-page container-fluid">
+  <header class="products-heading d-flex flex-wrap justify-content-between align-items-start gap-3">
+    <div><h1>DANH SÁCH KHUYẾN MÃI</h1></div>
+    <div class="heading-actions d-flex flex-wrap gap-3">
+      <button type="button" class="btn btn-export" (click)="xuatCsv()"><i class="bi bi-file-earmark-excel me-2"></i>Xuất file Excel</button>
+      <button type="button" class="btn btn-create" (click)="moTaoKhuyenMai()"><i class="bi bi-plus-circle me-2"></i>Tạo khuyến mãi</button>
+    </div>
+  </header>
+
+  <nav class="promotion-tabs" aria-label="Lọc trạng thái khuyến mãi">
+    <button type="button" [class.active]="tabDangChon === 'all'" (click)="chonTab('all')">Tất cả khuyến mãi</button>
+    <button type="button" [class.active]="tabDangChon === 'active'" (click)="chonTab('active')">Đã kích hoạt</button>
+    <button type="button" [class.active]="tabDangChon === 'inactive'" (click)="chonTab('inactive')">Chưa kích hoạt</button>
+  </nav>
+
+  <section class="filter-section" aria-label="Tìm kiếm và lọc khuyến mãi">
+    <div class="filters-row promotion-filters">
+      <label class="search-box"><i class="bi bi-search"></i><input type="search" class="form-control" placeholder="Tìm kiếm mã khuyến mãi" [(ngModel)]="tuKhoa" (keyup.enter)="apDungBoLoc()" /><button *ngIf="tuKhoa" type="button" class="clear-search" aria-label="Xóa từ khóa" (click)="tuKhoa = ''">×</button></label>
+      <div class="filter-dropdown date-dropdown">
+        <button type="button" class="btn filter-button" [class.filter-selected]="ngayBatDauLoc || ngayKetThucLoc" (click)="moDropdownHieuLuc = !moDropdownHieuLuc" [attr.aria-expanded]="moDropdownHieuLuc"><i class="bi bi-calendar3 me-2"></i><span>Hiệu lực</span><i class="bi bi-chevron-down ms-auto"></i></button>
+        <div class="filter-menu date-menu" *ngIf="moDropdownHieuLuc">
+          <strong class="date-menu-title">Thời gian hiệu lực</strong>
+          <label>Ngày bắt đầu<input type="date" class="form-control date-input" [(ngModel)]="ngayBatDauLoc" /></label>
+          <label>Ngày kết thúc<input type="date" class="form-control date-input" [(ngModel)]="ngayKetThucLoc" [min]="ngayBatDauLoc || null" /></label>
+          <p class="filter-hint">Chọn cùng một ngày để lọc khuyến mãi có hiệu lực trong ngày đó. Bấm lại nút Hiệu lực để đóng.</p>
+        </div>
+      </div>
+      <button type="button" class="btn btn-apply" (click)="apDungBoLoc()">Áp dụng</button>
+      <button type="button" class="btn btn-reset" (click)="datLaiBoLoc()">Đặt lại</button>
+    </div>
+  </section>
+
+  <div class="table-toolbar d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <p class="product-count mb-0">Có <strong>{{ tongMaSauLoc }}</strong> mã khuyến mãi</p>
+    <button type="button" class="btn btn-delete-selected" [disabled]="maKhuyenMaiDuocChon.size === 0" (click)="xacNhanXoaDaChon()"><i class="bi bi-trash3 me-2"></i>Xóa đã chọn <span *ngIf="maKhuyenMaiDuocChon.size">({{ maKhuyenMaiDuocChon.size }})</span></button>
+  </div>
+  <div *ngIf="dangTai" class="text-center py-4">
+  <span>Đang tải danh sách khuyến mãi...</span>
+</div>
+  <div class="table-responsive products-table-wrap"><table class="table products-table align-middle">
+    <thead><tr><th class="checkbox-col"><input type="checkbox" class="form-check-input" aria-label="Chọn tất cả mã khuyến mãi trang này" [checked]="trangDaChonHet" [indeterminate]="trangChonMotPhan" (change)="doiChonTatCaTrang($event)" /></th><th>Khuyến mãi</th><th class="text-center">Trạng thái</th><th class="text-center">Đã sử dụng</th><th class="text-center">Bắt đầu</th><th class="text-center">Kết thúc</th><th class="text-center">Tùy chọn</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let ma of maHienThi" class="product-row" (click)="moChiTiet(ma)" tabindex="0" (keydown.enter)="moChiTiet(ma)">
+        <td class="checkbox-col" (click)="$event.stopPropagation()"><input type="checkbox" class="form-check-input" [checked]="maKhuyenMaiDuocChon.has(ma.id)" [attr.aria-label]="'Chọn mã ' + ma.maKhuyenMai" (change)="doiChonMa(ma.id, $event)" /></td>
+        <td><div class="promo-cell"><span class="promo-code">{{ ma.maKhuyenMai }}</span><span class="promo-description">{{ ma.moTa }} · Giảm {{ ma.phanTramGiamGia }}%</span></div></td>
+<td class="text-center">
+  <span
+    class="status-badge"
+    [class.status-active]="ma.trangThai"
+    [class.status-inactive]="!ma.trangThai">
+    {{ ma.trangThai ? 'Đã kích hoạt' : 'Chưa kích hoạt' }}
+  </span>
+</td>        <td class="text-center">{{ ma.daSuDung }}</td>
+        <td class="text-center date-cell"><span>{{ dinhDangNgay(ma.ngayBatDau) }}</span><span>{{ dinhDangGio(ma.ngayBatDau) }}</span></td>
+        <td class="text-center date-cell"><span>{{ dinhDangNgay(ma.ngayKetThuc) }}</span><span>{{ dinhDangGio(ma.ngayKetThuc) }}</span></td>
+<td class="text-center action-cell" (click)="$event.stopPropagation()">
+
+  <button
+    type="button"
+    class="icon-action edit-action"
+    title="Chỉnh sửa khuyến mãi"
+    aria-label="Chỉnh sửa khuyến mãi"
+    (click)="moChiTiet(ma)">
+    <i class="bi bi-pencil-fill"></i>
+  </button>
+
+  <button
+    type="button"
+    class="icon-action"
+    [title]="ma.trangThai ? 'Tắt mã khuyến mãi' : 'Kích hoạt mã khuyến mãi'"
+    [attr.aria-label]="ma.trangThai ? 'Tắt mã khuyến mãi' : 'Kích hoạt mã khuyến mãi'"
+    (click)="doiTrangThai(ma)">
+    <i
+      class="bi"
+      [class.bi-toggle-on]="ma.trangThai"
+      [class.bi-toggle-off]="!ma.trangThai">
+    </i>
+  </button>
+
+  <button
+    type="button"
+    class="icon-action delete-action"
+    title="Xóa khuyến mãi"
+    aria-label="Xóa khuyến mãi"
+    (click)="xacNhanXoaMot(ma)">
+    <i class="bi bi-trash3-fill"></i>
+  </button>
+
+</td>
+      </tr>
+      <tr *ngIf="!maHienThi.length"><td colspan="7" class="empty-state"><i class="bi bi-search"></i><strong>Không tìm thấy mã khuyến mãi</strong><span>Thử đổi từ khóa hoặc bộ lọc rồi bấm Áp dụng.</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <footer class="pagination-footer" *ngIf="tongTrang > 1"><span>Trang {{ trangHienTai }} / {{ tongTrang }}</span><nav aria-label="Phân trang khuyến mãi"><ul class="pagination mb-0"><li class="page-item" [class.disabled]="trangHienTai === 1"><button class="page-link" type="button" [disabled]="trangHienTai === 1" aria-label="Trang trước" (click)="doiTrang(trangHienTai - 1)"><i class="bi bi-chevron-left"></i></button></li><li class="page-item" *ngFor="let trang of danhSachTrang" [class.active]="trang === trangHienTai"><button class="page-link" type="button" (click)="doiTrang(trang)">{{ trang }}</button></li><li class="page-item" [class.disabled]="trangHienTai === tongTrang"><button class="page-link" type="button" [disabled]="trangHienTai === tongTrang" aria-label="Trang sau" (click)="doiTrang(trangHienTai + 1)"><i class="bi bi-chevron-right"></i></button></li></ul></nav></footer>
+
+  <div class="modal-backdrop-custom" *ngIf="hienXacNhanXoa" (click)="huyXoa()"><section class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteTitle" (click)="$event.stopPropagation()"><div class="confirm-icon"><i class="bi bi-trash3"></i></div><h2 id="confirmDeleteTitle">Xác nhận xóa khuyến mãi</h2><p>Bạn có chắc chắn muốn xóa <strong>{{ idsChoXoa.length }}</strong> mã khuyến mãi đã chọn không?</p><p class="confirm-warning">Thao tác này sẽ xóa mã khuyến mãi khỏi danh sách hiện tại.</p><div class="confirm-actions"><button type="button" class="btn btn-cancel" (click)="huyXoa()">Hủy</button><button type="button" class="btn btn-confirm-delete" (click)="thucHienXoa()">Xác nhận xóa</button></div></section></div>
+  <div class="toast-message" *ngIf="thongBao" role="status"><i class="bi bi-check-circle-fill me-2"></i>{{ thongBao }}</div>
+</div>

@@ -1,0 +1,753 @@
+
+<!-- ========================================
+     TRẠNG THÁI TẢI DỮ LIỆU
+======================================== -->
+
+<div class="order-detail-container" *ngIf="isLoading">
+  <div class="loading-message">
+    Đang tải thông tin yêu cầu hoàn tiền...
+  </div>
+</div>
+
+<!-- ========================================
+     THÔNG BÁO LỖI
+======================================== -->
+<!-- <div style="background: yellow; color: black; padding: 15px;">
+  <p>donHang: {{ !!donHang }}</p>
+  <p>isLoading: {{ isLoading }}</p>
+  <p>errorMessage: {{ errorMessage }}</p>
+</div> -->
+<div class="order-detail-container" *ngIf="errorMessage && !isLoading">
+  <div class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <button
+    class="back-button"
+    type="button"
+    (click)="goBack()">
+    <i class="bi bi-arrow-left"></i>
+    <span>Quay về</span>
+  </button>
+</div>
+
+<!-- ========================================
+     CHI TIẾT YÊU CẦU HOÀN TIỀN
+======================================== -->
+
+<div
+  class="order-detail-container"
+  *ngIf="donHang && !isLoading && !errorMessage">
+
+  <!-- TOP HEADER BAR -->
+  <header class="detail-header">
+
+    <div class="header-left">
+
+      <div class="header-item">
+        <span class="label">Mã đơn hàng</span>
+        <span class="val order-code">
+          {{ donHang.maDonHang }}
+        </span>
+      </div>
+
+      <div class="header-item">
+        <span class="label">Mã yêu cầu hoàn tiền</span>
+        <span class="val">
+          {{ donHang.xuLyHoanTien?.idYeuCau }}
+        </span>
+      </div>
+
+      <div class="header-item">
+        <span class="label">Trạng thái đơn hàng</span>
+
+        <div class="status-badge-wrapper">
+          <span
+            class="status-badge"
+            [ngClass]="donHang.trangThai">
+
+            <ng-container [ngSwitch]="donHang.trangThai">
+              <span *ngSwitchCase="'thanh_cong'">
+                Thành công
+              </span>
+
+              <span *ngSwitchCase="'da_huy'">
+                Đã hủy
+              </span>
+            </ng-container>
+
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <button
+      class="back-button"
+      type="button"
+      aria-label="Quay về danh sách"
+      (click)="goBack()">
+
+      <i class="bi bi-arrow-left"></i>
+      <span>Quay về</span>
+
+    </button>
+
+  </header>
+
+  <main class="detail-content">
+
+    <!-- ========================================
+         BLOCK 1: THÔNG TIN ĐƠN HÀNG
+    ======================================== -->
+
+    <section class="info-block block-order-info">
+
+      <h2 class="block-title">
+        Thông tin đơn hàng
+      </h2>
+
+      <div class="divider-line"></div>
+
+      <div class="block-body grid-3-cols">
+
+        <div class="info-row">
+          <span class="info-label">Ngày tạo:</span>
+          <span class="info-value">
+            {{ donHang.ngayTao }}
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Mã đơn hàng:</span>
+          <span class="info-value">
+            {{ donHang.maDonHang }}
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Trạng thái:</span>
+
+          <span class="info-value text-bold">
+            {{ donHang.trangThai === 'thanh_cong' ? 'Thành công' : 'Đã hủy' }}
+          </span>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================
+         BLOCK 2: THÔNG TIN KHÁCH HÀNG
+    ======================================== -->
+
+    <section class="info-block block-customer-info">
+
+      <h2 class="block-title">
+        Thông tin khách hàng
+      </h2>
+
+      <div class="divider-line"></div>
+
+      <div class="block-body grid-3-cols">
+
+        <div class="info-row">
+          <span class="info-label">Mã tài khoản:</span>
+          <span class="info-value">
+            {{ donHang.khachHang.maTaiKhoan }}
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Tên tài khoản:</span>
+          <span class="info-value">
+            {{ donHang.khachHang.tenTaiKhoan }}
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Email:</span>
+          <span class="info-value">
+            {{ donHang.khachHang.email }}
+          </span>
+        </div>
+
+<div class="info-row">
+  <span class="info-label">Số điện thoại:</span>
+  <span class="info-value">
+    {{ donHang.khachHang.soDienThoai || 'Chưa cập nhật' }}
+  </span>
+</div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================
+         BLOCK 3: GAME ĐƯỢC YÊU CẦU HOÀN TIỀN
+    ======================================== -->
+
+    <section class="info-block block-products">
+
+      <h2 class="block-title">
+        {{ donHang.xuLyHoanTien ? 'Game được yêu cầu hoàn tiền' : 'Game trong đơn hàng' }}
+      </h2>
+
+      <div class="divider-line"></div>
+
+      <div class="block-body no-padding">
+
+        <table class="products-table">
+
+          <thead>
+            <tr>
+              <th class="col-game">Tên game</th>
+              <th class="col-qty">Số lượng</th>
+              <th class="col-price">Đơn giá</th>
+              <th class="col-total">Thành tiền</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let item of donHang.danhSachSanPham">
+
+              <td class="col-game">
+                {{ item.tenGame }}
+              </td>
+
+              <td class="col-qty">
+                {{ item.soLuong }}
+              </td>
+
+              <td class="col-price">
+                {{ formatCurrency(item.donGia) }}
+              </td>
+
+              <td class="col-total">
+                {{ formatCurrency(item.thanhTien) }}
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+    <!-- CÁC GAME KHÁC VẪN THUỘC HÓA ĐƠN, KHÔNG NẰM TRONG YÊU CẦU HOÀN -->
+    <section class="info-block block-products"
+             *ngIf="donHang.xuLyHoanTien && donHang.sanPhamKhac.length > 0">
+      <h2 class="block-title">Game khác trong cùng hóa đơn (xem yêu cầu hoàn riêng tại danh sách)</h2>
+      <div class="divider-line"></div>
+      <div class="block-body no-padding">
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th class="col-game">Tên game</th>
+              <th class="col-qty">Số lượng</th>
+              <th class="col-price">Đơn giá</th>
+              <th class="col-total">Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of donHang.sanPhamKhac">
+              <td class="col-game">{{ item.tenGame }}</td>
+              <td class="col-qty">{{ item.soLuong }}</td>
+              <td class="col-price">{{ formatCurrency(item.donGia) }}</td>
+              <td class="col-total">{{ formatCurrency(item.thanhTien) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================
+         BLOCK 4: THÔNG TIN THANH TOÁN
+    ======================================== -->
+
+    <section class="info-block block-payment">
+
+      <h2 class="block-title">
+        Thông tin thanh toán
+      </h2>
+
+      <div class="divider-line"></div>
+
+      <div class="block-body grid-2-columns">
+
+        <div class="payment-left">
+
+          <div class="info-row">
+            <span class="info-label">
+              Phương thức thanh toán:
+            </span>
+
+            <span class="info-value">
+              {{ donHang.thanhToan.phuongThuc }}
+            </span>
+          </div>
+
+        </div>
+
+        <div class="payment-right">
+
+          <div class="info-row">
+            <span class="info-label">
+              Số lượng game:
+            </span>
+
+            <span class="info-value">
+              {{ tongSoLuongSanPham }}
+            </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Tổng trước giảm giá:</span>
+            <span class="info-value">
+              {{ formatCurrency(donHang.thanhToan.tongTienHang) }}
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Giảm giá của đơn:</span>
+            <span class="info-value">
+              -{{ formatCurrency(donHang.thanhToan.giamGia) }}
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Tổng tiền khách đã trả:</span>
+            <span class="info-value text-bold">
+              {{ formatCurrency(donHang.thanhToan.tongTienPhaiTra) }}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================
+         BLOCK 5: XỬ LÝ HOÀN TIỀN
+    ======================================== -->
+
+    <section
+      class="info-block block-refund-processing"
+      *ngIf="donHang.xuLyHoanTien">
+
+      <h2 class="block-title">
+        Xử lý hoàn tiền
+      </h2>
+
+      <div class="divider-line"></div>
+
+      <div class="block-body">
+
+        <!-- PHẦN 1: THÔNG TIN YÊU CẦU -->
+
+        <div class="refund-section">
+
+          <h3 class="section-sub-title">
+            Thông tin yêu cầu
+          </h3>
+
+          <div class="grid-2-columns">
+
+            <div class="info-row">
+              <span class="info-label">
+                Mã yêu cầu:
+              </span>
+
+              <span class="info-value">
+                {{ donHang.xuLyHoanTien.idYeuCau }}
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">
+                Mã tài khoản:
+              </span>
+
+              <span class="info-value">
+                {{ donHang.xuLyHoanTien.maTaiKhoanYeuCau }}
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">
+                Ngày yêu cầu:
+              </span>
+
+              <span class="info-value">
+                {{ donHang.xuLyHoanTien.ngayYeuCau }}
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">
+                Số tiền dự kiến hoàn:
+              </span>
+
+              <span class="info-value text-bold highlight">
+                {{ formatCurrency(donHang.xuLyHoanTien.soTienHoan) }}
+              </span>
+            </div>
+
+          </div>
+
+          <div class="info-row reason-row">
+
+            <span class="info-label">
+              Lý do khách hàng:
+            </span>
+
+            <span class="info-value reason-box">
+              {{ donHang.xuLyHoanTien.lyDoKhachHang }}
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="inner-divider"></div>
+
+        <!-- PHẦN 2: TRẠNG THÁI XỬ LÝ -->
+
+        <div class="refund-section">
+
+          <h3 class="section-sub-title">
+            Trạng thái xử lý
+          </h3>
+
+          <div class="info-row align-center">
+
+            <span class="info-label">
+              Trạng thái hoàn tiền:
+            </span>
+
+            <span
+              class="status-badge refund-status"
+              [ngClass]="donHang.xuLyHoanTien.trangThaiXuLy">
+
+              <ng-container
+                [ngSwitch]="donHang.xuLyHoanTien.trangThaiXuLy">
+
+                <span *ngSwitchCase="'cho_xu_ly'">
+                  Chờ xử lý
+                </span>
+
+                <span *ngSwitchCase="'da_hoan_tien'">
+                  Đã duyệt
+                </span>
+
+                <span *ngSwitchCase="'tu_choi_hoan_tien'">
+                  Từ chối hoàn tiền
+                </span>
+
+              </ng-container>
+
+            </span>
+
+          </div>
+
+          <div
+            class="info-row"
+            *ngIf="donHang.xuLyHoanTien.trangThaiXuLy === 'tu_choi_hoan_tien'">
+
+            <span class="info-label">
+              Lý do từ chối:
+            </span>
+
+            <span class="info-value">
+              {{ donHang.xuLyHoanTien.lyDoTuChoi || '-' }}
+            </span>
+
+          </div>
+
+          <!-- NÚT PHÊ DUYỆT VÀ TỪ CHỐI -->
+
+          <div
+            class="action-buttons-group"
+            *ngIf="donHang.xuLyHoanTien.trangThaiXuLy === 'cho_xu_ly'">
+
+            <button
+              class="btn-action btn-approve"
+              type="button"
+              (click)="openApproveModal()">
+
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+
+                <path
+                  d="M20 6L9 17L4 12"
+                  stroke="#FFFFFF"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+
+              </svg>
+
+              <span>Phê duyệt</span>
+
+            </button>
+
+            <button
+              class="btn-action btn-reject"
+              type="button"
+              (click)="openRejectModal()">
+
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+
+                <path
+                  d="M18 6L6 18M6 6L18 18"
+                  stroke="#FFFFFF"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+
+              </svg>
+
+              <span>Từ chối</span>
+
+            </button>
+
+          </div>
+
+          <div
+            class="info-value"
+            *ngIf="donHang.xuLyHoanTien.trangThaiXuLy !== 'cho_xu_ly'">
+
+            Yêu cầu này đã được xử lý. Không thể thực hiện lại thao tác.
+
+          </div>
+
+        </div>
+
+        <div class="inner-divider"></div>
+
+        <!-- PHẦN 3: THÔNG TIN XỬ LÝ -->
+
+        <div class="refund-section">
+
+          <h3 class="section-sub-title">
+            Thông tin xử lý
+          </h3>
+
+          <div class="grid-2-columns">
+
+            <div class="info-row">
+              <span class="info-label">
+                Ngày xử lý:
+              </span>
+
+              <span class="info-value">
+                {{ donHang.xuLyHoanTien.ngayXuLy || 'Chưa xử lý' }}
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label">
+                Ngày ghi nhận hoàn tiền:
+              </span>
+
+              <span class="info-value">
+                {{ donHang.xuLyHoanTien.ngayHoanTien || 'Chưa ghi nhận' }}
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- LƯU Ý NGHIỆP VỤ -->
+
+        <div class="inner-divider"></div>
+
+        <div class="refund-note">
+          <i class="bi bi-info-circle me-2"></i>
+          Phê duyệt yêu cầu chỉ ghi nhận kết quả xử lý trong hệ thống.
+          Việc chuyển tiền thực tế cho khách hàng cần được thực hiện
+          thông qua phương thức thanh toán tương ứng.
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================
+       POPUP 1: XÁC NHẬN PHÊ DUYỆT
+  ======================================== -->
+
+  <div
+    class="modal-backdrop"
+    *ngIf="showApproveModal">
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h3>Xác nhận phê duyệt</h3>
+      </div>
+
+      <div class="modal-body">
+
+        <p>
+          Bạn có chắc chắn muốn phê duyệt yêu cầu hoàn tiền
+          cho game
+          <strong>{{ donHang.danhSachSanPham[0].tenGame }}</strong>
+          thuộc đơn hàng
+          <strong>{{ donHang.maDonHang }}</strong>?
+        </p>
+
+        <p>
+          Số tiền dự kiến hoàn:
+          <strong>
+            {{ formatCurrency(donHang.xuLyHoanTien!.soTienHoan) }}
+          </strong>
+        </p>
+
+        <p>
+          Thao tác này sẽ ghi nhận trạng thái duyệt trong hệ thống.
+        </p>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          class="btn-modal btn-cancel"
+          type="button"
+          (click)="closeApproveModal()">
+          Hủy
+        </button>
+
+        <button
+          class="btn-modal btn-confirm-green"
+          type="button"
+          (click)="confirmApprove()">
+          Xác nhận
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================
+       POPUP 2: XÁC NHẬN TỪ CHỐI
+  ======================================== -->
+
+  <div
+    class="modal-backdrop"
+    *ngIf="showRejectModal">
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h3>Xác nhận từ chối hoàn tiền</h3>
+      </div>
+
+      <div class="modal-body">
+
+        <p>
+          Bạn có chắc chắn muốn từ chối yêu cầu hoàn tiền
+          cho game
+          <strong>{{ donHang.danhSachSanPham[0].tenGame }}</strong>
+          thuộc đơn hàng
+          <strong>{{ donHang.maDonHang }}</strong>?
+        </p>
+
+        <div class="form-group">
+
+          <label for="rejectReason">
+            Lý do từ chối
+            <span class="required">*</span>:
+          </label>
+
+          <textarea
+            id="rejectReason"
+            rows="3"
+            placeholder="Nhập lý do từ chối hoàn tiền..."
+            [(ngModel)]="lyDoTuChoiInput"
+            class="form-control">
+          </textarea>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          class="btn-modal btn-cancel"
+          type="button"
+          (click)="closeRejectModal()">
+          Hủy
+        </button>
+
+        <button
+          class="btn-modal btn-confirm-red"
+          type="button"
+          (click)="confirmReject()">
+          Xác nhận
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================
+       POPUP 3: THÔNG BÁO THÀNH CÔNG
+  ======================================== -->
+
+  <div
+    class="modal-backdrop"
+    *ngIf="showSuccessModal"
+    (click)="closeSuccessModal()">
+
+    <section
+      class="confirm-modal"
+      role="dialog"
+      aria-modal="true"
+      (click)="$event.stopPropagation()">
+
+      <div class="success-icon">
+        <i class="bi bi-check-lg"></i>
+      </div>
+
+      <h2>Thông báo</h2>
+
+      <p>{{ successMessage }}</p>
+
+      <div class="confirm-actions">
+
+        <button
+          type="button"
+          class="btn-save"
+          (click)="closeSuccessModal()">
+          Đóng
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</div>

@@ -1,0 +1,114 @@
+<div class="edit-profile-container">
+
+  <!-- CHƯA ĐĂNG NHẬP -->
+  <app-login-required *ngIf="!authService.isLoggedIn" message="Bạn cần đăng nhập tài khoản STEAL để chỉnh sửa hồ sơ cá nhân."></app-login-required>
+
+  <!-- NỘI DUNG SỬA HỒ SƠ -->
+  <div class="edit-profile-card" *ngIf="authService.isLoggedIn">
+    <div class="edit-header-row">
+      <img [src]="formData.avatarUrl || profileService.defaultAvatar" alt="Avatar Mini" class="mini-avatar" appImgFallback>
+      <span class="breadcrumb-text">
+        <strong>{{ formData.username || 'Tài khoản mới' }}</strong> / Sửa hồ sơ
+      </span>
+    </div>
+
+    <form (ngSubmit)="onSave()" novalidate>
+      <div class="form-section">
+        <h3 class="form-section-title">Tổng quan</h3>
+
+        <div class="form-group">
+          <label>Tên hiển thị <span class="required-star">*</span></label>
+          <input type="text" [(ngModel)]="formData.username" name="username" maxlength="32" placeholder="Nhập tên hiển thị..." class="form-control"
+                 (blur)="touched.username = true" [class.input-error]="usernameError && show('username')">
+          <div class="error-msg" *ngIf="usernameError && show('username')">⚠️ {{ usernameError }}</div>
+        </div>
+
+        <div class="form-group">
+          <label>Họ và Tên thật</label>
+          <input type="text" [(ngModel)]="formData.realName" name="realName" maxlength="50" placeholder="Nhập họ và tên..." class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Quốc gia</label>
+          <select [(ngModel)]="formData.country" name="country" class="form-control select-control">
+            <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+          </select>
+          <ng-container *ngIf="formData.country === otherCountry">
+            <input type="text" [(ngModel)]="customCountry" name="customCountry" maxlength="40" placeholder="Nhập tên quốc gia của bạn..." class="form-control mt-2"
+                   (blur)="touched.country = true" [class.input-error]="countryError && show('country')">
+            <div class="error-msg" *ngIf="countryError && show('country')">⚠️ {{ countryError }}</div>
+          </ng-container>
+        </div>
+
+        <div class="form-group">
+          <label>Mô tả về bản thân</label>
+          <textarea rows="3" [(ngModel)]="formData.bio" name="bio" [maxlength]="bioMaxLength" placeholder="Viết vài dòng giới thiệu bản thân..." class="form-control"></textarea>
+          <div class="char-count">{{ formData.bio.length }}/{{ bioMaxLength }}</div>
+        </div>
+
+        <div class="form-group">
+          <label>URL tìm kiếm <span class="required-star">*</span></label>
+          <input type="text" [(ngModel)]="formData.searchUrl" name="searchUrl" maxlength="32" (blur)="touched.searchUrl = true" [class.input-error]="urlError && show('searchUrl')" placeholder="Ví dụ: namconnnhai" class="form-control">
+          <div class="error-msg" *ngIf="urlError && show('searchUrl')">⚠️ {{ urlError }}</div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-title">Ảnh đại diện</h3>
+        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+        <button type="button" class="btn-upload-avatar" (click)="triggerFileInput()">📁 Tải ảnh đại diện từ máy</button>
+
+        <div class="avatar-crop-box">
+          <ng-container *ngIf="hasNewImage; else currentAvatarTpl">
+            <div class="crop-canvas-wrapper">
+              <canvas #cropCanvas class="crop-canvas" tabindex="0" aria-label="Khung cắt ảnh đại diện, dùng phím mũi tên để di chuyển"
+                      [class.dragging]="isDragging"
+                      (pointerdown)="onPointerDown($event)" (pointermove)="onPointerMove($event)"
+                      (pointerup)="onPointerUp()" (pointercancel)="onPointerUp()"
+                      (keydown)="onCanvasKey($event)"></canvas>
+            </div>
+            <p class="crop-hint">💡 <i>Nhấn giữ và kéo vào khung ảnh để chọn góc mong muốn</i></p>
+            <div class="zoom-controls">
+              <span class="zoom-label">🔍 Thu phóng:</span>
+              <input type="range" min="1" max="3" step="0.05" [value]="zoomScale" (input)="onZoom($event)" class="zoom-slider" aria-label="Thu phóng ảnh">
+            </div>
+          </ng-container>
+          <ng-template #currentAvatarTpl>
+            <img [src]="formData.avatarUrl || profileService.defaultAvatar" alt="Ảnh đại diện hiện tại" class="avatar-current" appImgFallback>
+            <p class="crop-hint">Ảnh đại diện hiện tại. Tải ảnh mới từ máy để thay đổi (PNG/JPG, tối đa 3MB).</p>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="form-section toggle-section">
+        <h3 class="form-section-title">Cài đặt hiển thị</h3>
+        <div class="toggle-row">
+          <span>Game hay chơi</span>
+          <div class="toggle-buttons">
+            <button type="button" [class.active]="!formData.showGames" (click)="formData.showGames = false">Ẩn</button>
+            <button type="button" [class.active]="formData.showGames" (click)="formData.showGames = true">Hiện</button>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <span>Danh sách ước</span>
+          <div class="toggle-buttons">
+            <button type="button" [class.active]="!formData.showWishlist" (click)="formData.showWishlist = false">Ẩn</button>
+            <button type="button" [class.active]="formData.showWishlist" (click)="formData.showWishlist = true">Hiện</button>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <span>Danh sách bạn bè</span>
+          <div class="toggle-buttons">
+            <button type="button" [class.active]="!formData.showFriends" (click)="formData.showFriends = false">Ẩn</button>
+            <button type="button" [class.active]="formData.showFriends" (click)="formData.showFriends = true">Hiện</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">Hủy bỏ</button>
+        <button type="submit" class="btn-save">Lưu</button>
+      </div>
+    </form>
+  </div>
+</div>

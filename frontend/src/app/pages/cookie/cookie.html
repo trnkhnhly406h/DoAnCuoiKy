@@ -1,0 +1,151 @@
+<div class="policy-page-bg">
+<!-- NỘI DUNG TRANG COOKIE -->
+  <section class="policy-main-wrapper">
+    
+    <div class="cookie-top-info">
+      <div class="cookie-breadcrumb">
+        <a [routerLink]="['/']" class="crumb-link">Trang chủ</a>
+        <span class="crumb-sep">&gt;</span>
+        <span class="crumb-current">Tài khoản cá nhân</span>
+      </div>
+      <h2 class="account-title">{{ accountName }}</h2>
+    </div>
+
+    <div class="cookie-section-bar">
+      <span>Cookies tuỳ chọn</span>
+    </div>
+
+    <div class="cookie-action-banner">
+      <button class="btn-action" [class.active-banner-btn]="isAcceptAll" (click)="chapNhanTatCa()">Chấp nhận tất cả</button>
+      <button class="btn-action" [class.active-banner-btn]="!isAcceptAll" (click)="tuChoiTatCa()">Từ chối tất cả</button>
+    </div>
+
+    <!-- FRAME 1 -->
+    <div class="cookie-card-frame">
+      <h3 class="card-title">Cookie tùy chỉnh nội dung của Valve</h3>
+      <p class="card-desc">Để tùy chỉnh nội dung biên tập trên Steal dựa trên việc sử dụng dịch vụ của bạn</p>
+
+      <div class="cookie-row-box">
+        <div class="row-text">
+          <span class="cookie-name">recentapps:</span>
+          <span class="cookie-desc-text">Các trang trò chơi bạn đã truy cập (đôi khi hiển thị ở chân trang cửa hàng thay cho phần đề xuất)</span>
+        </div>
+        <div class="toggle-group">
+          <button class="btn-toggle" [class.active-off]="!c.recentApps" (click)="set('recentApps', false)">Tắt</button>
+          <button class="btn-toggle" [class.active-on]="c.recentApps" (click)="set('recentApps', true)">Bật</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAME 2 -->
+    <div class="cookie-card-frame">
+      <h3 class="card-title">Cookie phân tích của Valve</h3>
+      <p class="card-desc">Để đo lường lượng người dùng trên Steal và cải thiện dịch vụ</p>
+
+      <div class="cookie-row-box">
+        <div class="row-text">
+          <span class="cookie-name">app_impressions và browserid:</span>
+          <span class="cookie-desc-text">Dữ liệu phân tích nội bộ của chúng tôi dùng để xác định lưu lượng truy cập vào một trang cửa hàng cụ thể và được báo cáo ẩn danh. app_impressions chỉ tồn tại trong một lần xem trang</span>
+        </div>
+        <div class="toggle-group">
+          <button class="btn-toggle" [class.active-off]="!c.analytics" (click)="set('analytics', false)">Tắt</button>
+          <button class="btn-toggle" [class.active-on]="c.analytics" (click)="set('analytics', true)">Bật</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cookie-section-bar">
+      <span>Cookie bắt buộc về mặt kỹ thuật</span>
+    </div>
+
+    <!-- FRAME 3 -->
+    <div class="cookie-card-frame">
+      <p class="card-desc mb-12">Các cookie sau đây luôn được thiết lập khi bạn sử dụng các trang web Steal:</p>
+
+      <div class="static-row-box mb-10">
+        <span class="cookie-name">sessionId:</span>
+        <span class="cookie-desc-text">Bảo vệ người dùng và dịch vụ của chúng tôi khỏi một số cuộc tấn công nhất định (gọi là tấn công giả mạo yêu cầu qua trang web / CSRF).</span>
+      </div>
+
+      <div class="static-row-box mb-10">
+        <span class="cookie-name">shoppingCartGID:</span>
+        <span class="cookie-desc-text">Chỉ được thiết lập nếu bạn đã thêm sản phẩm vào giỏ hàng trên cửa hàng Steal khi chưa đăng nhập</span>
+      </div>
+
+      <div class="static-row-box mb-10">
+        <span class="cookie-name">steamCountry:</span>
+        <span class="cookie-desc-text">Kết quả lưu tạm (cache) từ việc tra cứu iploc trên địa chỉ IP công cộng của bạn. Dữ liệu này được dùng để tuân thủ các yêu cầu về pháp lý và thuế theo khu vực.</span>
+      </div>
+
+      <div class="static-row-box mb-10">
+        <span class="cookie-name">birthtime và lastagecheckage:</span>
+        <span class="cookie-desc-text">Chỉ được thiết lập nếu bạn điền vào khung xác nhận độ tuổi và được dùng để giới hạn quyền truy cập vào nội dung có thể không phù hợp.</span>
+      </div>
+
+      <div class="static-row-box mb-10">
+        <span class="cookie-name">steamLoginSecure, steamRememberLogin, và steamMachineAuth:</span>
+        <span class="cookie-desc-text">Được sử dụng để hỗ trợ đăng nhập an toàn vào Steal.</span>
+      </div>
+
+      <div class="static-row-box">
+        <span class="cookie-name">cookieSettings:</span>
+        <span class="cookie-desc-text">Lưu trữ các cài đặt bạn thực hiện trên trang này hoặc trên biểu ngữ cảnh báo cookie</span>
+      </div>
+    </div>
+
+    <div class="cookie-section-bar">
+      <span>Thu thập dữ liệu</span>
+    </div>
+
+    <!-- FRAME 4 -->
+    <div class="cookie-card-frame">
+      <h3 class="card-title">Yêu cầu ý kiến phản hồi</h3>
+      <p class="card-desc">
+        Bạn có thể giúp chúng tôi cải thiện Steal OS bằng cách cho phép Steal thỉnh thoảng hỏi ý kiến về trải nghiệm của bạn. Ví dụ: khi ở trong Thư viện Steal, bạn có thể thấy một thông báo hỏi xem mức xếp hạng Tương thích Steal Deck của một trò chơi có chính xác hay không
+      </p>
+
+      <div class="cookie-row-box align-center">
+        <div class="row-text">
+          <span class="cookie-desc-text font-14">Steal có thể hỏi ý kiến phản hồi của tôi khi sử dụng các thiết bị Steal OS</span>
+        </div>
+        <div class="toggle-group">
+          <button class="btn-toggle" [class.active-off]="!c.feedbackRequests" (click)="set('feedbackRequests', false)">Tắt</button>
+          <button class="btn-toggle" [class.active-on]="c.feedbackRequests" (click)="set('feedbackRequests', true)">Bật</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAME 5 -->
+    <div class="cookie-card-frame">
+      <h3 class="card-title">Dữ liệu tốc độ khung hình ẩn danh</h3>
+      <p class="card-desc">
+        Dữ liệu này giúp chúng tôi tìm hiểu về độ tương thích của trò chơi và cải thiện trải nghiệm trên các thiết bị chạy Steal. Dữ liệu được lưu trữ ẩn danh không liên kết với tài khoản Steal của bạn và được xác định cùng với loại phần cứng bạn đang dùng để chơi
+      </p>
+
+      <div class="cookie-row-box align-center">
+        <div class="row-text">
+          <span class="cookie-desc-text font-14">Bật tính năng thu thập tốc độ khung hình ẩn danh khi chơi game và đang đăng nhập bằng tài khoản Steal này</span>
+        </div>
+        <div class="toggle-group">
+          <button class="btn-toggle" [class.active-off]="!c.frameRateData" (click)="set('frameRateData', false)">Tắt</button>
+          <button class="btn-toggle" [class.active-on]="c.frameRateData" (click)="set('frameRateData', true)">Bật</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAME 6 -->
+    <div class="cookie-card-frame">
+      <h3 class="card-title">Phần cứng đã lưu</h3>
+      <p class="card-desc mb-20">
+        Đây là các thiết bị bạn đã chọn lưu vào tài khoản của mình để chia sẻ thông số kỹ thuật thiết bị với các bài đánh giá trên Steal.
+      </p>
+
+      <div class="btn-add-pc-wrapper">
+        <button class="btn-add-pc" [class.btn-added]="c.pcSaved" (click)="themPC()">
+          {{ c.pcSaved ? 'Đã thêm PC này' : 'Thêm PC này' }}
+        </button>
+      </div>
+    </div>
+
+  </section>
+</div>

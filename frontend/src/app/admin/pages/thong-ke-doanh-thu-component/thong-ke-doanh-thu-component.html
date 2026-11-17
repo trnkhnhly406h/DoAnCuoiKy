@@ -1,0 +1,279 @@
+<div class="report-page container-fluid px-0">
+  <!-- HEADER TRANG BÁO CÁO -->
+  <div class="report-header mb-3">
+    <h1 class="page-title">BÁO CÁO</h1>
+  </div>
+
+  <!-- BỘ LỌC THỜI GIAN & KỲ SO SÁNH -->
+  <div class="filter-panel panel mb-4">
+    <div class="filter-wrapper d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <!-- CÁC NÚT CHỌN KHOẢNG THỜI GIAN -->
+      <div class="period-buttons d-flex flex-wrap align-items-center gap-2">
+        <button
+          type="button"
+          class="btn-period"
+          [class.active]="khoangThoiGian === 'today'"
+          (click)="chonKhoangThoiGian('today')"
+        >
+          Hôm nay
+        </button>
+        <span class="divider">|</span>
+        <button
+          type="button"
+          class="btn-period"
+          [class.active]="khoangThoiGian === '7days'"
+          (click)="chonKhoangThoiGian('7days')"
+        >
+          7 ngày gần nhất
+        </button>
+        <span class="divider">|</span>
+        <button
+          type="button"
+          class="btn-period"
+          [class.active]="khoangThoiGian === 'thisMonth'"
+          (click)="chonKhoangThoiGian('thisMonth')"
+        >
+          Tháng này
+        </button>
+        <span class="divider">|</span>
+        <button
+          type="button"
+          class="btn-period"
+          [class.active]="khoangThoiGian === '3months'"
+          (click)="chonKhoangThoiGian('3months')"
+        >
+          3 tháng gần nhất
+        </button>
+        <span class="divider">|</span>
+        <button
+          type="button"
+          class="btn-period"
+          [class.active]="khoangThoiGian === 'thisYear'"
+          (click)="chonKhoangThoiGian('thisYear')"
+        >
+          Năm nay
+        </button>
+        <span class="divider">|</span>
+        <button
+          type="button"
+          class="btn-period"
+          [class.active]="khoangThoiGian === 'custom'"
+          (click)="chonKhoangThoiGian('custom')"
+        >
+          Tùy chọn ngày
+        </button>
+      </div>
+
+      <!-- Ô CHỌN NGÀY TÙY CHỌN -->
+      <div class="custom-date-picker d-flex align-items-center gap-2" *ngIf="hienLichTuChon">
+        <div class="date-input-group">
+          <label class="form-label text-muted-custom">Từ ngày:</label>
+          <input
+            type="date"
+            class="form-control form-control-sm input-dark"
+            [(ngModel)]="ngayBatDau"
+          />
+        </div>
+        <div class="date-input-group">
+          <label class="form-label text-muted-custom">Đến ngày:</label>
+          <input
+            type="date"
+            class="form-control form-control-sm input-dark"
+            [(ngModel)]="ngayKetThuc"
+          />
+        </div>
+        <button type="button" class="btn btn-apply text-white" (click)="apDungBoLoc()">
+          Áp dụng
+        </button>
+      </div>
+
+      <!-- HIỂN THỊ CHÚ THÍCH KỲ SO SÁNH -->
+      <div class="comparison-tag text-muted-custom ms-auto" *ngIf="!hienLichTuChon">
+        <i class="bi bi-info-circle me-1"></i>
+        <span>So sánh với: <strong>{{ tenKySoSanh }}</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NỘI DUNG CHÍNH (CẤU TRÚC HÀNG CÂN BẰNG NGANG MỚI) -->
+  
+  <!-- HÀNG 1: 4 Thẻ chỉ số (Trái) & Biểu đồ lượng đơn hàng có So sánh (Phải) -->
+  <div class="report-row">
+    <!-- 4 THẺ THỐNG KÊ NHANH -->
+    <div class="stats-cards-grid">
+      <!-- 1. TỔNG DOANH THU -->
+      <div class="stat-card">
+        <div class="stat-title">Tổng doanh thu</div>
+        <div class="stat-value">{{ formatCurrency(thongKeKyNay.tongDoanhThu) }}</div>
+        <div
+          class="stat-compare"
+          [class.up]="thayDoi.doanhThu >= 0"
+          [class.down]="thayDoi.doanhThu < 0"
+        >
+          <i class="bi" [class.bi-arrow-up-short]="thayDoi.doanhThu >= 0" [class.bi-arrow-down-short]="thayDoi.doanhThu < 0"></i>
+          <span>{{ thayDoi.doanhThu >= 0 ? '+' : '' }}{{ thayDoi.doanhThu | number:'1.1-1' }}% so với Kỳ trước</span>
+        </div>
+      </div>
+
+      <!-- 2. TỔNG ĐƠN HÀNG -->
+      <div class="stat-card">
+        <div class="stat-title">Tổng đơn hàng</div>
+        <div class="stat-value">{{ thongKeKyNay.tongDonHang }} Đơn</div>
+        <div
+          class="stat-compare"
+          [class.up]="thayDoi.donHang >= 0"
+          [class.down]="thayDoi.donHang < 0"
+        >
+          <i class="bi" [class.bi-arrow-up-short]="thayDoi.donHang >= 0" [class.bi-arrow-down-short]="thayDoi.donHang < 0"></i>
+          <span>{{ thayDoi.donHang >= 0 ? '+' : '' }}{{ thayDoi.donHang | number:'1.1-1' }}% so với Kỳ trước</span>
+        </div>
+      </div>
+
+      <!-- 3. TỶ LỆ THANH TOÁN -->
+      <div class="stat-card">
+        <div class="stat-title">Tỷ lệ thanh toán</div>
+        <div class="stat-value">{{ thongKeKyNay.tyLeThanhToan | number:'1.1-1' }}%</div>
+        <div
+          class="stat-compare"
+          [class.up]="thayDoi.tyLeThanhToan >= 0"
+          [class.down]="thayDoi.tyLeThanhToan < 0"
+        >
+          <i class="bi" [class.bi-arrow-up-short]="thayDoi.tyLeThanhToan >= 0" [class.bi-arrow-down-short]="thayDoi.tyLeThanhToan < 0"></i>
+          <span>{{ thayDoi.tyLeThanhToan >= 0 ? '+' : '' }}{{ thayDoi.tyLeThanhToan | number:'1.1-1' }}% so với Kỳ trước</span>
+        </div>
+      </div>
+
+      <!-- 4. KHÁCH HÀNG MỚI -->
+      <div class="stat-card">
+        <div class="stat-title">Khách hàng mới</div>
+        <div class="stat-value">{{ thongKeKyNay.khachHangMoi }} Người dùng</div>
+        <div
+          class="stat-compare"
+          [class.up]="thayDoi.khachHangMoi >= 0"
+          [class.down]="thayDoi.khachHangMoi < 0"
+        >
+          <i class="bi" [class.bi-arrow-up-short]="thayDoi.khachHangMoi >= 0" [class.bi-arrow-down-short]="thayDoi.khachHangMoi < 0"></i>
+          <span>{{ thayDoi.khachHangMoi >= 0 ? '+' : '' }}{{ thayDoi.khachHangMoi | number:'1.1-1' }}% so với Kỳ trước</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIỂU ĐỒ LƯỢNG ĐƠN HÀNG (CÓ ĐƯỜNG SO SÁNH KỲ TRƯỚC) -->
+    <div class="chart-panel panel">
+      <div class="chart-header">
+        <div class="chart-title">Lượng đơn hàng</div>
+        <div class="chart-highlight-badge" [class.text-success]="thayDoi.donHang >= 0" [class.text-danger]="thayDoi.donHang < 0">
+          <span class="fs-6 fw-bold text-white me-2">{{ thongKeKyNay.tongDonHang }} Đơn</span>
+          <i class="bi" [class.bi-arrow-up-right]="thayDoi.donHang >= 0" [class.bi-arrow-down-right]="thayDoi.donHang < 0"></i>
+          <span>{{ thayDoi.donHang >= 0 ? '+' : '' }}{{ thayDoi.donHang | number:'1.1-1' }}%</span>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas #donHangCanvas></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- HÀNG 2: Doanh thu thuần (Trái) & Doanh thu theo danh mục (Phải) -->
+  <div class="report-row-equal">
+    <!-- BIỂU ĐỒ DOANH THU THUẦN -->
+    <div class="chart-panel panel">
+      <div class="chart-header">
+        <div class="chart-title">Doanh thu thuần</div>
+        <div class="chart-highlight-badge" [class.text-success]="thayDoi.doanhThu >= 0" [class.text-danger]="thayDoi.doanhThu < 0">
+          <span class="fs-6 fw-bold text-white me-2">{{ formatCurrency(thongKeKyNay.tongDoanhThu) }}</span>
+          <i class="bi" [class.bi-arrow-up-right]="thayDoi.doanhThu >= 0" [class.bi-arrow-down-right]="thayDoi.doanhThu < 0"></i>
+          <span>{{ thayDoi.doanhThu >= 0 ? '+' : '' }}{{ thayDoi.doanhThu | number:'1.1-1' }}%</span>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas #doanhThuCanvas></canvas>
+      </div>
+    </div>
+
+    <!-- BIỂU ĐỒ TRÒN DOANH THU THEO DANH MỤC -->
+    <div class="chart-panel panel">
+      <div class="chart-header">
+        <div class="chart-title">Doanh thu theo danh mục</div>
+      </div>
+      <div class="doughnut-container">
+        <canvas #danhMucCanvas></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- HÀNG 3: Phương thức thanh toán (Trái) & Tỷ lệ kết quả đơn hàng (Phải) -->
+  <div class="report-row-equal">
+    <!-- BIỂU ĐỒ TRÒN PHƯƠNG THỨC THANH TOÁN -->
+    <div class="chart-panel panel">
+      <div class="chart-header">
+        <div class="chart-title">Phương thức thanh toán</div>
+      </div>
+      <div class="doughnut-container">
+        <canvas #phuongThucCanvas></canvas>
+      </div>
+    </div>
+
+    <!-- BIỂU ĐỒ TRÒN TỶ LỆ KẾT QUẢ ĐƠN HÀNG -->
+    <div class="chart-panel panel">
+      <div class="chart-header">
+        <div class="chart-title">Tỷ lệ kết quả đơn hàng</div>
+      </div>
+      <div class="doughnut-container">
+        <canvas #ketQuaDonCanvas></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- HÀNG 4: Top Game Bán Chạy (Trái) & Top Khách Hàng (Phải) -->
+  <div class="report-row-equal">
+    <!-- DANH SÁCH TOP 10 GAME BÁN CHẠY NHẤT -->
+    <div class="list-panel panel">
+      <div class="panel-header mb-3">
+        <div class="chart-title">Top game bán chạy</div>
+      </div>
+      <div class="top-list">
+        <div
+          class="top-item d-flex align-items-center justify-content-between"
+          *ngFor="let game of top10Games; let i = index"
+          (click)="xemChiTietGame(game.id)"
+        >
+          <div class="d-flex align-items-center gap-3">
+            <span class="rank-number" [class.top-1]="i === 0" [class.top-3]="i > 0 && i < 3">{{ i + 1 }}</span>
+            <img [src]="game.hinhAnh" [alt]="game.tenGame" class="game-thumb rounded" />
+            <span class="item-name text-white">{{ game.tenGame }}</span>
+          </div>
+          <div class="item-meta text-muted-custom">
+            <span class="fw-semibold text-light me-1">{{ game.luotBan }}</span> lượt tải
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DANH SÁCH TOP 10 KHÁCH HÀNG CHI TIÊU NHIỀU NHẤT -->
+    <div class="list-panel panel">
+      <div class="panel-header mb-3">
+        <div class="chart-title">Top khách hàng</div>
+      </div>
+      <div class="top-list">
+        <div
+          class="top-item d-flex align-items-center justify-content-between"
+          *ngFor="let khach of top10KhachHang; let i = index"
+          (click)="xemChiTietKhachHang(khach.id)"
+        >
+          <div class="d-flex align-items-center gap-3">
+            <span class="rank-number" [class.top-1]="i === 0" [class.top-3]="i > 0 && i < 3">{{ i + 1 }}</span>
+            <div class="customer-info d-flex flex-column">
+              <span class="item-name text-white fw-semibold">{{ khach.tenKhachHang }}</span>
+              <span class="sub-text text-muted-custom">{{ khach.soDonHang }} đơn hàng</span>
+            </div>
+          </div>
+          <div class="item-meta text-light fw-bold">
+            {{ formatCurrency(khach.tongChiTieu) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

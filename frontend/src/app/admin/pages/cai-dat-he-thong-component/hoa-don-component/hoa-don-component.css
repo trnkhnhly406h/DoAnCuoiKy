@@ -1,0 +1,333 @@
+/* CONTAINER TỔNG THỂ */
+.invoice-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Comme', 'Commissioner', sans-serif;
+  color: #FFFFFF;
+}
+
+.top-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.btn-reset-default {
+  height: 34px;
+  padding: 0 14px;
+  background: #7D7D8D;
+  border-radius: 5px;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  transition: background 0.2s ease;
+}
+
+.btn-reset-default:hover {
+  background: #686875;
+}
+
+/* KHUNG BẢNG TỔNG */
+.invoice-main-card {
+  width: 100%;
+  background: rgba(217, 217, 217, 0.1);
+  border: 1px solid #7D7D8D;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* BANNER TIÊU ĐỀ HÀNG NGANG CHIA 2 CỘT TỶ LỆ FLEX */
+.card-header-banner {
+  height: 44px;
+  background: #3D445E;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  border-bottom: 1px solid #7D7D8D;
+  width: 100%;
+}
+
+.col-left-header {
+  flex: 0 0 45%; /* Cột trái chiếm 45% */
+  max-width: 45%;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+
+.col-right-header {
+  flex: 0 0 55%; /* Cột phải chiếm 55% */
+  max-width: 55%;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+
+/* NỘI DUNG 2 CỘT CHIA TỶ LỆ CO GIÃN LINH HOẠT (FLUID FLEX LAYOUT) */
+.card-body-content {
+  display: flex;
+  flex-direction: row;
+  min-height: 440px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+/* CỘT TRÁI: FORM NHẬP THÔNG TIN (CHIẾM 45%) */
+.form-left-panel {
+  flex: 0 0 45%;
+  max-width: 45%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.form-input {
+  width: 100%;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #7D7D8D;
+  border-radius: 4px;
+  padding: 0 12px;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #3B82F6;
+}
+
+.form-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #7D7D8D;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #FFFFFF;
+  font-size: 13px;
+  line-height: 1.4;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  font-family: 'Comme', sans-serif;
+  transition: border-color 0.2s;
+}
+
+.form-textarea:focus {
+  border-color: #3B82F6;
+}
+
+.form-action-row {
+  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-save-changes {
+  height: 38px;
+  padding: 0 18px;
+  background: #3B82F6;
+  border-radius: 5px;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  transition: background 0.2s ease;
+}
+
+.btn-save-changes:hover {
+  background: #2563EB;
+}
+
+/* VẠCH KẺ DỌC */
+.vertical-divider {
+  width: 1px;
+  background: #7D7D8D;
+  flex-shrink: 0;
+}
+
+/* CỘT PHẢI: PREVIEW HÓA ĐƠN TRẮNG (CHIẾM 55%) */
+.preview-right-panel {
+  flex: 0 0 55%;
+  max-width: 55%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* TỜ GIẤY HÓA ĐƠN TRẮNG TỰ CO ĐỀU KHI MÀN HÌNH NHỎ (100% MAXIMUM WIDTH) */
+.invoice-paper {
+  width: 100%;
+  max-width: 440px; /* Thu bớt kích thước max cho vừa khung nhìn nhỏ */
+  background: #FFFFFF;
+  color: #000000;
+  padding: 16px 18px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 4px;
+}
+
+.paper-header-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #000000;
+  margin-bottom: 2px;
+}
+
+.paper-line {
+  width: 100%;
+  height: 1px;
+  background: #7D7D8D;
+  opacity: 0.4;
+}
+
+.store-info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.store-logo-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #EAEAEF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.store-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.store-name {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  color: #000000;
+}
+
+.store-text, .customer-text {
+  font-size: 12.5px;
+  margin: 0;
+  color: #333333;
+}
+
+.customer-info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.paper-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4px 0;
+}
+
+.paper-table th {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #000000;
+  padding: 4px;
+  border-bottom: 1px solid #DDD;
+}
+
+.paper-table td {
+  font-size: 12.5px;
+  color: #000000;
+  padding: 4px;
+}
+
+.col-stt { width: 10%; text-align: center; }
+.col-product { width: 60%; text-align: left; }
+.col-price { width: 30%; text-align: right; }
+
+.summary-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-label, .total-amount {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #000000;
+}
+
+.payment-method {
+  font-size: 12.5px;
+  color: #333333;
+  margin: 0;
+}
+
+.paper-footer-thanks {
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-style: italic;
+  color: #555555;
+  padding-top: 2px;
+}

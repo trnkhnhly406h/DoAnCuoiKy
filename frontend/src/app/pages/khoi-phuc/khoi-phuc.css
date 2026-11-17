@@ -1,0 +1,283 @@
+.auth-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.auth-modal-container {
+    position: relative;
+  background: #2c1a41;
+  width: 695px;
+  min-height: 568px;
+  border-radius: 8px;
+  padding: 40px 60px;
+  box-sizing: border-box;
+  box-shadow: 0 15px 40px rgba(0, 0, 0,0.8);
+  font-family: var(--font-main) !important;
+  color: #e9e2f0;
+  position: relative;
+}
+.btn-close-x {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #e9e2f0;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  z-index: 10;
+}
+
+.btn-close-x:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.auth-logo-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.logo-circle {
+  width: 81px;
+  height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-circle img {
+  width: 81px;
+  height: 85px;
+  object-fit: contain;
+}
+
+.steal-title {
+  font-weight: 600;
+  font-size: 30px;
+  color: #583684;
+}
+
+.step-title {
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: -0.015em;
+  color: #e9e2f0;
+  margin-bottom: 15px;
+}
+
+.otp-hint {
+  text-align: center;
+  font-weight: 300;
+  font-size: 14px;
+  color: #e9e2f0;
+  margin-bottom: 25px;
+}
+
+.auth-form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.auth-label {
+  font-weight: 400;
+  font-size: 15px;
+  color: #e9e2f0;
+  margin-bottom: 6px;
+}
+
+.auth-input {
+  width: 568px;
+  height: 41px;
+  background: #e9e2f0;
+  border: 3px solid #7b55a5;
+  border-radius: 4px;
+  padding: 0 15px;
+  font-size: 15px;
+  color: #2c1a41;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input-with-eye {
+  position: relative;
+  width: 568px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+
+.password-conditions-list {
+  margin-top: 8px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.btn-submit-auth {
+  width: 568px;
+  height: 43px;
+  background: #e9e2f0;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 20px;
+  color: #2c1a41;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+
+.btn-submit-auth:hover {
+  background: #ffffff;
+}
+
+/* OTP */
+.otp-step-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.otp-box-wrapper {
+  width: 568px;
+  height: 85px;
+  background: #e9e2f0;
+  border: 3px solid #7b55a5;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.otp-inputs-grid {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.otp-digit-input {
+  width: 45px;
+  height: 45px;
+  background: transparent;
+  border: none;
+  border-bottom: 6px solid #2c1a41;
+  outline: none;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c1a41;
+  padding: 0;
+}
+
+.otp-resend-row {
+  width: 568px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  font-weight: 300;
+  font-size: 14px;
+  color: #e9e2f0;
+  margin-bottom: 20px;
+}
+
+.span-resend-link {
+  color: #e9e2f0;
+  text-decoration: underline;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.span-resend-link:hover {
+  color: #ffffff;
+}
+
+.error-msg-red {
+  color: #ff4d4f;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+  width: 568px;
+}
+
+.otp-tiny-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(233, 226, 240, 0.7);
+  border-top: 1px dashed rgba(123, 85, 165, 0.4);
+  padding-top: 10px;
+  width: 568px;
+}
+
+/* TOAST POPUP GÓC PHẢI BÊN DƯỚI */
+.toast-popup {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #2c1a41;
+  border: 2px solid #2ecc71;
+  color: #e9e2f0;
+  padding: 16px 24px;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  z-index: 99999;
+  animation: slideInRight 0.3s ease-out forwards;
+  font-family: var(--font-main) !important;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.toast-icon {
+  color: #2ecc71;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

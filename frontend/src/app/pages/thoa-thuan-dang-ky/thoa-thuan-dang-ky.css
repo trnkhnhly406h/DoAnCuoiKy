@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.policy-page-bg {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(69, 39, 105, 0.6) 8.17%, #190f26 35.1%, rgba(69, 39, 105, 0.7) 63.94%, #1b1029 88.94%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+.policy-main-wrapper {
+  width: 100%;
+  max-width: 1039px;
+  margin-top: 136px;
+  padding: 10px 15px 40px 15px;
+  box-sizing: border-box;
+}
+
+.policy-content-card {
+  width: 100%;
+  background: #402560;
+  border-radius: 4px;
+  padding: 30px 35px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.policy-header-title {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+  text-align: center; /* Căn giữa tiêu đề THOẢ THUẬN ĐĂNG KÝ & Ngày cập nhật */
+}
+
+.policy-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.policy-last-updated {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.policy-text-body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* TIÊU ĐỀ CÁC MỤC GIỮ ĐẬM */
+.policy-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+}
+
+.policy-section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e9e2f0;
+  margin: 14px 0 8px 0;
+}
+
+/* VĂN BẢN VÀ DANH SÁCH LÀM MỎNG LẠI (FONT-WEIGHT: 300) */
+.intro-p,
+.policy-section p {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 165%;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.2px;
+}
+
+.policy-list {
+  margin: 6px 0 12px 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.policy-list li {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 160%;
+}
+
+.policy-section strong {
+  font-weight: 600;
+  color: #ffffff;
+}

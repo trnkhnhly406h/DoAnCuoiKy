@@ -1,0 +1,333 @@
+.game-hover-popup {
+  position: absolute;
+  left: 100%; /* Sát lề thẻ game */
+  top: 0;
+  margin-left: 12px; /* Dịch sang phải 12px nhẹ nhàng */
+  width: 320px;
+  background-color: #39284b;
+  border: 1px solid #7246a4;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+  z-index: 3000;
+  color: #e9e2f0;
+  font-family: var(--font-main);
+  animation: fadeIn 0.15s ease-in-out;
+  pointer-events: auto;
+}
+
+/* CẦU NỐI ẨN PHỦ KÍN KHỎANG HỞ BÊN TRÁI POP-UP */
+.game-hover-popup::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -20px; /* Phủ kín khoảng hở 20px phía bên trái */
+  width: 20px;
+  background: transparent;
+}
+
+/* KHI POP-UP MỞ SANG TRÁI (CỘT BÊN PHẢI NGOÀI CÙNG) */
+.game-hover-popup.align-left {
+  left: auto !important;
+  right: 100% !important;
+  margin-left: 0;
+  margin-right: 12px;
+}
+
+/* CẦU NỐI ẨN BÊN PHẢI KHI MỞ SANG TRÁI */
+.game-hover-popup.align-left::before {
+  left: auto !important;
+  right: -20px !important; /* Phủ kín khoảng hở 20px phía bên phải */
+  width: 20px;
+}
+
+.popup-arrow {
+  position: absolute;
+  left: -10px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid #39284b;
+}
+
+.game-hover-popup.align-left .popup-arrow {
+  left: auto !important;
+  right: -10px !important;
+  border-right: none !important;
+  border-left: 10px solid #39284b !important;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.game-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  flex: 1;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: 8px;
+}
+
+.popup-actions .icon-btn {
+  font-size: 20px;
+  cursor: pointer;
+  color: #e9e2f0;
+  transition: transform 0.1s, color 0.2s;
+  padding: 2px 4px;
+}
+
+.popup-actions .icon-btn:hover {
+  color: #ffffff;
+  transform: scale(1.2);
+}
+
+.release-date { font-size: 10px; color: #9589a2; margin-bottom: 12px; }
+.game-description { font-size: 12px; line-height: 1.5; color: #d9c9e6; margin-bottom: 14px; }
+.review-box { background-color: #2a1b3b; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; }
+.review-title { display: block; font-size: 10px; color: #9589a2; margin-bottom: 2px; }
+.review-status { 
+  font-size: 11px; 
+  font-weight: 600; 
+  color: #66c0f4; 
+}
+.tags-section { display: flex; flex-direction: column; gap: 6px; }
+.tags-label { font-size: 11px; color: #9589a2; }
+.tags-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-badge { background-color: #2a1b3b; color: #ffffff; font-size: 10px; padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Bổ sung ===== */
+.popup-actions .icon-btn { background: none; border: none; font-family: inherit; line-height: 1; }
+.popup-actions .icon-btn.active { color: #f5c542; }
+.popup-actions .cart-icon.active { color: #a5cd3c; }
+.game-hover-popup {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 12px;
+  width: 320px;
+  background-color: #39284b;
+  border: 1px solid #7246a4;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+  z-index: 3000;
+  color: #e9e2f0;
+  font-family: var(--font-main);
+  animation: fadeIn 0.15s ease-in-out;
+  pointer-events: auto;
+}
+
+.game-hover-popup::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -20px;
+  width: 20px;
+  background: transparent;
+}
+
+.game-hover-popup.align-left {
+  left: auto !important;
+  right: 100% !important;
+  margin-left: 0;
+  margin-right: 12px;
+}
+
+.game-hover-popup.align-left::before {
+  left: auto !important;
+  right: -20px !important;
+  width: 20px;
+}
+
+.popup-arrow {
+  position: absolute;
+  left: -10px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid #39284b;
+}
+
+.game-hover-popup.align-left .popup-arrow {
+  left: auto !important;
+  right: -10px !important;
+  border-right: none !important;
+  border-left: 10px solid #39284b !important;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.game-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  flex: 1;
+}
+
+.clickable-title {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.clickable-title:hover {
+  color: #c0a1db;
+  text-decoration: underline;
+}
+
+.clickable-desc {
+  cursor: pointer;
+}
+
+.clickable-desc:hover {
+  color: #ffffff;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: 8px;
+}
+
+.popup-actions .icon-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  line-height: 1;
+  font-size: 20px;
+  cursor: pointer;
+  color: #e9e2f0;
+  transition: transform 0.1s, color 0.2s;
+  padding: 2px 4px;
+}
+
+.popup-actions .icon-btn:hover {
+  color: #ffffff;
+  transform: scale(1.2);
+}
+
+.popup-actions .icon-btn.active {
+  color: #f5c542;
+}
+
+.popup-actions .cart-icon.active {
+  color: #a5cd3c;
+}
+
+.release-date {
+  font-size: 10px;
+  color: #9589a2;
+  margin-bottom: 12px;
+}
+
+.game-description {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d9c9e6;
+  margin-bottom: 14px;
+}
+
+.review-box {
+  background-color: #2a1b3b;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.review-title {
+  display: block;
+  font-size: 10px;
+  color: #9589a2;
+  margin-bottom: 2px;
+}
+
+.review-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: #c0a1db;
+}
+
+.tags-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tags-label {
+  font-size: 11px;
+  color: #9589a2;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-badge {
+  background-color: #2a1b3b;
+  color: #ffffff;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-detail-link {
+  width: 100%;
+  margin-top: 12px;
+  background-color: #7246a4;
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-detail-link:hover {
+  background-color: #7b55a5;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}.star-icon { color: inherit; }
+
+/* ===== Nhãn thể loại bấm được ===== */
+a.tag, a.tag-badge, a.tag-chip { text-decoration: none; cursor: pointer; transition: background-color 0.15s, color 0.15s; }
+a.tag:hover, a.tag-badge:hover, a.tag-chip:hover { background-color: #9367c1; color: #ffffff; }
+
+/* Icon SVG của nút Danh sách ước / Thêm vào giỏ hàng (assets/*.svg) */
+.popup-actions .card-ico { width: 20px; height: auto; display: block; transition: opacity 0.15s, transform 0.1s; }
+.popup-actions button:hover .card-ico { opacity: 0.85; transform: scale(1.1); }
+.popup-actions .card-check { font-size: 18px; font-weight: 700; line-height: 1; display: block; }
+.popup-actions button { display: inline-flex; align-items: center; justify-content: center; }

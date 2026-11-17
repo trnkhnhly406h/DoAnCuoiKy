@@ -1,0 +1,87 @@
+.sidebar {
+  width: 240px;
+  height: 100%;
+  min-height: calc(100vh - 56px);
+  background-color: #0e0d25;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+  /* Thêm transition co giãn */
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar .cursor-pointer {
+  cursor: pointer;
+}
+
+.sidebar .nav-link {
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar .nav-link.active {
+  background-color: #ffffff !important;
+  color: #1e1b4b !important;
+  font-weight: bold;
+}
+
+.sidebar .nav-link.active i,
+.sidebar .nav-link.active span {
+  color: #1e1b4b !important;
+}
+
+.sidebar .nav-link.active .arrow-icon {
+  color: #1e1b4b !important;
+}
+
+.sidebar .arrow-icon {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar .arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* 3 trang con xổ xuống */
+.sidebar .submenu .submenu-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar .submenu .submenu-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar .submenu .submenu-link.active-sub {
+  color: #ffffff;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================================
+   BỔ SUNG THU GỌN THEO CỜ isCollapsed (GIỮ NGUYÊN STYLE GỐC)
+   ========================================================= */
+
+.sidebar.collapsed {
+  width: 80px !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.sidebar.collapsed .nav-link {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  gap: 0 !important;
+}
+
+.sidebar.collapsed .nav-link i {
+  font-size: 1.35rem !important;
+}

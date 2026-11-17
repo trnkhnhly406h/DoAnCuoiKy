@@ -1,0 +1,160 @@
+<div class="gift-page-bg">
+
+  <section class="gift-main-wrapper">
+    
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb-row">
+      <span (click)="continueShopping()" class="clickable-link">Trang chủ</span>
+      <span class="sep">&gt;</span>
+      <span (click)="backToCart()" class="clickable-link">Giỏ hàng của bạn ({{ cart.cartItems.length }} sản phẩm)</span>
+    </div>
+
+    <h1 class="page-title-main">Giỏ hàng của bạn ({{ cart.cartItems.length }} sản phẩm)</h1>
+
+    <!-- CONTAINER CHÍNH -->
+    <div class="gift-container-panel">
+      
+      <!-- CỘT BÊN TRÁI -->
+      <div class="gift-content-left">
+        
+        <!-- CÁC GAME ĐƯỢC TẶNG -->
+        <div class="game-item-card" *ngFor="let item of cart.giftItems; trackBy: trackById">
+          <img [src]="item.thumb" [alt]="item.title" class="game-thumbnail" appImgFallback>
+
+          <div class="game-info-center">
+            <h2 class="game-title">{{ item.title }}</h2>
+            <div class="gift-badge-tag">
+              <span>Đây là một món quà</span>
+            </div>
+          </div>
+
+          <div class="game-price-right">
+            <div class="discount-box" *ngIf="item.discountPercent > 0">-{{ item.discountPercent }}%</div>
+            <div class="price-stack">
+              <span class="old-price" *ngIf="item.discountPercent > 0">{{ formatMoney(item.originalPrice) }}đ</span>
+              <span class="current-price">{{ formatMoney(item.price) }}đ</span>
+            </div>
+          </div>
+
+          <div class="card-action-links">
+            <span class="action-link" (click)="cart.setCartItemGift(item.id, false)">Không tặng nữa</span>
+          </div>
+        </div>
+
+        <!-- KHUNG NHẬP TÊN IN-GAME / EMAIL (ẨN KHI ĐÃ CHỌN BẠN BÈ) -->
+        <div class="section-box" *ngIf="!friendRecipient">
+          <label class="section-label">Tên người nhận quà (tên tài khoản STEAL / Email):</label>
+          <input 
+            type="text" 
+            class="input-dark-full" 
+            placeholder="Nhập tên tài khoản (vd: khach_vip02) hoặc email..." 
+            [(ngModel)]="recipientInput"
+          />
+          <div class="error-text" *ngIf="errorText">{{ errorText }}</div>
+          <p class="yellow-note-text">
+            * Quà tặng được gửi qua email sẽ tự động hoàn tiền sau 30 ngày nếu không được thêm vào tài khoản Steal. Chỉ các tài khoản Steal trong cùng khu vực với người mua mới có thể chấp nhận quà tặng gửi qua email.
+          </p>
+        </div>
+
+        <!-- HIỂN THỊ TÊN IN-GAME ĐÃ CHỌN TỪ BƯỚC TRƯỚC -->
+        <div class="section-box" *ngIf="friendRecipient">
+          <div class="selected-friend-info">
+            <span class="section-label">Gửi quà tới bạn bè:</span>
+            <img [src]="friendAvatar" class="friend-mini-avatar" alt="Avatar" appImgFallback />
+            <span class="friend-selected-name">{{ friendRecipient }}</span>
+            <span class="action-link" (click)="backToRecipient()">Đổi người nhận</span>
+          </div>
+        </div>
+
+        <!-- KHUNG TIN NHẮN QUÀ TẶNG -->
+        <div class="section-box">
+          <label class="section-label">
+            Tin nhắn quà tặng (tối đa {{ maxMessage }} ký tự, còn lại {{ charsLeft }} ký tự):
+          </label>
+          <textarea 
+            class="textarea-dark" 
+            rows="3" 
+            maxlength="160"
+            placeholder="Nhập lời nhắn gửi tặng..."
+            [(ngModel)]="message">
+          </textarea>
+        </div>
+
+        <!-- THÔNG TIN NGƯỜI GỬI: 5 CON NHÁI & CHỮ KÝ -->
+        <div class="section-box">
+          <div class="sender-row">
+            <span class="section-label">Từ:</span>
+            <div class="sender-avatar-icon">
+              <img [src]="profile.avatar" alt="Avatar" class="avatar-img" appImgFallback>
+            </div>
+            <span class="sender-name">{{ profile.displayName }}</span>
+          </div>
+
+          <label class="section-label margin-top-12">Chữ ký của bạn (Tuỳ chọn):</label>
+          <input 
+            type="text" 
+            class="input-dark-full" 
+            placeholder="(Thêm chữ ký tuỳ chọn)" 
+            [(ngModel)]="signature"
+          />
+        </div>
+
+        <!-- LỰA CHỌN GIAO HÀNG -->
+        <div class="section-box">
+          <div class="section-sub-label">Giao hàng</div>
+          
+          <label class="radio-option-row">
+            <span class="custom-radio checked"></span>
+            <span>Sớm nhất có thể (qua email và qua phần mềm Steal)</span>
+          </label>
+        </div>
+
+        <!-- NÚT 1: DƯỚI CỘT TRÁI (TIẾP TỤC TỚI BƯỚC THANH TOÁN) -->
+        <div class="bottom-navigation-actions">
+          <button class="btn-gray-action" (click)="continueShopping()">Tiếp tục mua sắm</button>
+          
+          <button 
+            class="btn-blue-checkout" 
+            [class.disabled]="!canProceed"
+            [disabled]="!canProceed"
+            (click)="next()">
+            Tiếp tục tới bước thanh toán
+          </button>
+        </div>
+
+      </div>
+
+      <!-- CỘT BÊN PHẢI (SIDEBAR TỔNG TIỀN) -->
+      <div class="gift-sidebar-right">
+        <div class="sidebar-box total-summary-box">
+          <div class="summary-row-top">
+            <span class="summary-label">Tổng ước tính</span>
+            <span class="summary-price">{{ formatMoney(checkout.summary.total) }}đ</span>
+          </div>
+          <div class="tax-note">Thuế tiêu thụ sẽ được tính trong quá trình thanh toán nếu có</div>
+          
+          <!-- NÚT 2: BÊN SIDEBAR PHẢI (TIẾP TỤC TỚI BƯỚC THANH TOÁN) -->
+          <button 
+            class="btn-sidebar-next" 
+            [class.disabled]="!canProceed"
+            [disabled]="!canProceed"
+            (click)="next()">
+            Tiếp tục tới bước thanh toán
+          </button>
+        </div>
+
+        <div class="sidebar-box info-terms-box">
+          <p class="terms-desc">
+            Đơn hàng sản phẩm kỹ thuật số sẽ trao giấy phép sử dụng sản phẩm trên Steal.
+          </p>
+          <p class="terms-link-desc">
+            Để biết đầy đủ điều khoản và điều kiện, vui lòng đọc <a [routerLink]="['/thoa-thuan-dang-ky']" class="blue-link">Thoả thuận đăng ký Steal</a>.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

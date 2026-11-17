@@ -1,0 +1,23 @@
+<div class="admin-wrapper" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <!-- Thanh Header Topbar -->
+  <app-thanh-tren-admin-component
+    [adminEmail]="adminEmail"
+    [adminHoTen]="adminHoTen"
+    (toggleSidebarEvent)="toggleSidebar()"
+    (dangXuatEvent)="dangXuat()">
+  </app-thanh-tren-admin-component>
+
+  <div class="layout-body">
+    <!-- Thanh Bên Sidebar -->
+    <app-thanh-ben-admin-component
+      [isCollapsed]="isSidebarCollapsed"
+      (toggleCollapse)="toggleSidebar()">
+    </app-thanh-ben-admin-component>
+
+    <!-- Khu vực Nội dung chính (Tự động co giãn theo Sidebar) -->
+    <main class="content-body"
+      [class.no-scroll]="router.url.includes('/reviews') || router.url.includes('/settings') || router.url.includes('/users') ">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,220 @@
+<div class="pm-page-bg">
+
+  <section class="pm-main-wrapper" (click)="moDropdown = false">
+
+    <!-- TIÊU ĐỀ -->
+    <div class="pm-top-header">
+      <h1 class="page-title">
+        PHƯƠNG THỨC THANH TOÁN
+      </h1>
+
+      <div class="badge-blue-tab">
+        Thông tin thanh toán
+      </div>
+    </div>
+
+    <!-- MAIN CARD -->
+    <div class="pm-main-card">
+
+      <!-- CỘT TRÁI -->
+      <div class="pm-left-col">
+
+        <!-- PHƯƠNG THỨC THANH TOÁN DROPDOWN -->
+        <div class="field-wrapper">
+
+          <label class="field-label">
+            Hãy lựa chọn một hình thức thanh toán
+          </label>
+
+          <div
+            class="dropdown-select-box"
+            (click)="toggleDropdown($event)">
+
+            <span>{{ phuongThucChon }}</span>
+
+            <svg
+              class="arrow-icon"
+              [class.open]="moDropdown"
+              width="10"
+              height="6"
+              viewBox="0 0 10 6"
+              fill="none">
+              <path
+                d="M1 1L5 5L9 1"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"/>
+            </svg>
+
+            <!-- MENU DROPDOWN -->
+            <div
+              class="dropdown-menu-list"
+              *ngIf="moDropdown"
+              (click)="$event.stopPropagation()">
+
+              <div
+                *ngFor="let item of danhSachPhuongThuc"
+                class="dropdown-menu-item"
+                [class.active]="item === phuongThucChon"
+                (click)="chonPhuongThuc(item, $event)">
+                {{ item }}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <h2 class="pm-sub-title">
+          THÔNG TIN THANH TOÁN
+        </h2>
+
+        <div class="inputs-row">
+
+          <!-- TÊN -->
+          <div class="input-group">
+            <label class="field-label" for="ten">Tên</label>
+            <input
+              id="ten"
+              type="text"
+              class="custom-input-dark"
+              [(ngModel)]="ten"
+              [class.input-invalid]="hienLoiTen"
+              (blur)="onTenBlur()"
+              placeholder="Nhập tên"/>
+            <span id="ten-error" class="field-error-message" *ngIf="hienLoiTen">
+              Vui lòng nhập tên
+            </span>
+          </div>
+
+          <!-- HỌ -->
+          <div class="input-group">
+            <label class="field-label" for="ho">Họ</label>
+            <input
+              id="ho"
+              type="text"
+              class="custom-input-dark"
+              [(ngModel)]="ho"
+              [class.input-invalid]="hienLoiHo"
+              (blur)="onHoBlur()"
+              placeholder="Nhập họ"/>
+            <span id="ho-error" class="field-error-message" *ngIf="hienLoiHo">
+              Vui lòng nhập họ
+            </span>
+          </div>
+
+          <!-- SỐ ĐIỆN THOẠI -->
+          <div class="input-group phone-group">
+            <label class="field-label" for="soDienThoai">Số điện thoại</label>
+            <div class="phone-country-info">
+              <span class="phone-country-name">{{ phoneRule.name }}</span>
+              <span class="phone-country-code">{{ phoneRule.dialCode }}</span>
+            </div>
+
+            <input
+              id="soDienThoai"
+              type="tel"
+              class="custom-input-dark"
+              [class.input-invalid]="hienLoiSoDienThoai"
+              [ngModel]="soDienThoai"
+              (ngModelChange)="onPhoneChange($event)"
+              (blur)="onPhoneBlur()"
+              inputmode="numeric"
+              [placeholder]="'Ví dụ: ' + phoneRule.example"/>
+
+            <span id="phone-error" class="phone-error-message" *ngIf="hienLoiSoDienThoai">
+              {{ soDienThoai ? 'Số điện thoại không đúng định dạng (' + phoneRule.name + ')' : 'Vui lòng nhập số điện thoại' }}
+            </span>
+          </div>
+
+        </div>
+
+        <!-- CHECKBOX LƯU THÔNG TIN -->
+        <div
+          class="checkbox-container"
+          role="checkbox"
+          [attr.aria-checked]="luuThongTin"
+          (click)="luuThongTin = !luuThongTin">
+          <div class="square-checkbox" [class.checked]="luuThongTin"></div>
+          <span class="checkbox-text">
+            Lưu thông tin thanh toán của tôi để dễ dàng thanh toán trong những lần kế tiếp
+          </span>
+        </div>
+
+        <!-- NÚT TIẾP TỤC -->
+        <div class="btn-action-row">
+          <button type="button" class="btn-green-submit" (click)="tiepTuc()">
+            Tiếp tục
+          </button>
+        </div>
+
+      </div>
+
+      <!-- CỘT PHẢI (CLICK VÀO TỪNG ICON ĐỂ CHỌN NHANH) -->
+      <div class="pm-right-col">
+
+        <h2 class="pm-section-title-right">
+          PHƯƠNG THỨC THANH TOÁN
+        </h2>
+
+        <p class="sub-desc-text">
+          Nhấp vào biểu tượng để chọn nhanh hình thức thanh toán:
+        </p>
+
+        <div class="payment-badges-list">
+
+  <!-- MOMO -->
+  <div
+    class="badge-icon momo-bg clickable-badge"
+    [class.selected-badge]="phuongThucChon === 'Momo'"
+    (click)="chonPhuongThuc('Momo', $event)"
+    title="Chọn thanh toán qua MoMo">
+
+    <img
+      src="https://static.ybox.vn/2021/9/4/1631757348918-1631085786958-Thi%E1%BA%BFt%20k%E1%BA%BF%20kh%C3%B4ng%20t%C3%AAn%20-%202021-09-08T002253.248.png"
+      alt="MoMo"
+      class="payment-logo momo-logo"
+    />
+
+  </div>
+
+  <!-- VNPAY -->
+  <div
+    class="badge-icon vnpay-bg clickable-badge"
+    [class.selected-badge]="phuongThucChon === 'VNPay'"
+    (click)="chonPhuongThuc('VNPay', $event)"
+    title="Chọn thanh toán qua VNPay">
+
+    <img
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQULr3Ust3Yw-IS1KvGuHQFys81W1ava9Ohd8gduuRPXA&s"
+      alt="VNPay"
+      class="payment-logo vnpay-logo"
+    />
+
+  </div>
+
+  <!-- PAYPAL -->
+  <div
+    class="badge-icon paypal-bg clickable-badge"
+    [class.selected-badge]="phuongThucChon === 'PayPal'"
+    (click)="chonPhuongThuc('PayPal', $event)"
+    title="Chọn thanh toán qua PayPal">
+
+    <img
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxf1ZEQGd-UC2HqHuhQaFRgjwzgZL7yOl0yhUPd7UklNalHsZ9Ahm58eg&s=10"
+      alt="PayPal"
+      class="payment-logo paypal-logo"
+    />
+
+  </div>
+
+</div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

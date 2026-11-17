@@ -1,0 +1,340 @@
+
+<div class="products-page container-fluid">
+
+  <!-- TIÊU ĐỀ -->
+  <header class="orders-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+    <h1>DANH SÁCH ĐƠN HÀNG</h1>
+
+    <button
+      type="button"
+      class="btn btn-export"
+      (click)="xuatCsv()">
+      <i class="bi bi-file-earmark-excel me-2"></i>
+      Xuất CSV (Excel)
+    </button>
+
+  </header>
+
+  <!-- 5 TAB TRẠNG THÁI -->
+  <nav class="status-tabs" aria-label="Trạng thái đơn hàng">
+
+    <button
+      *ngFor="let tab of tabs"
+      type="button"
+      class="status-tab"
+      [class.active]="tabDangChon === tab.key"
+      (click)="chonTab(tab.key)">
+
+      {{ tab.label }}
+
+    </button>
+
+  </nav>
+
+  <!-- BỘ LỌC -->
+  <section class="filter-section">
+
+    <div class="filters-row">
+
+      <!-- TÌM KIẾM -->
+      <label class="search-box">
+        <i class="bi bi-search"></i>
+
+        <input
+          type="search"
+          class="form-control"
+          [(ngModel)]="tuKhoa"
+          (keyup.enter)="apDungBoLoc()"
+          placeholder="Tìm mã đơn, khách hàng, game..." />
+      </label>
+
+      <!-- PHƯƠNG THỨC THANH TOÁN -->
+      <select
+        class="filter-select"
+        [(ngModel)]="phuongThucLoc"
+        aria-label="Phương thức thanh toán">
+
+        <option value="">
+          Tất cả phương thức thanh toán
+        </option>
+
+        <option
+          *ngFor="let method of cacPhuongThuc"
+          [value]="method">
+          {{ nhanPhuongThuc(method) }}
+        </option>
+
+      </select>
+
+      <!-- SẮP XẾP -->
+      <select
+        class="filter-select"
+        [(ngModel)]="sapXep"
+        (ngModelChange)="trangHienTai = 1"
+        aria-label="Sắp xếp">
+
+        <option value="moi_nhat">Mới nhất</option>
+        <option value="cu_nhat">Cũ nhất</option>
+        <option value="gia_tang">Giá tăng dần</option>
+        <option value="gia_giam">Giá giảm dần</option>
+
+      </select>
+
+      <!-- NÚT LỌC -->
+      <div class="filter-actions">
+
+        <button
+          type="button"
+          class="btn btn-apply"
+          (click)="apDungBoLoc()">
+          Áp dụng
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-reset"
+          (click)="datLaiBoLoc()">
+          Đặt lại
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- BÁO LỖI API -->
+  <div
+    *ngIf="loiTaiDuLieu"
+    class="alert alert-danger"
+    role="alert">
+
+    {{ loiTaiDuLieu }}
+
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-danger ms-2"
+      (click)="taiDanhSachDonHang()">
+      Thử lại
+    </button>
+
+  </div>
+
+  <!-- SỐ LƯỢNG ĐƠN -->
+  <div class="table-toolbar d-flex justify-content-between align-items-center gap-3">
+
+    <div class="order-count">
+      {{
+        dangTaiDuLieu
+          ? 'Đang tải đơn hàng...'
+          : 'Có ' + danhSachSauLoc.length + ' dòng đơn hàng / yêu cầu'
+      }}
+    </div>
+
+  </div>
+
+  <!-- BẢNG ĐƠN HÀNG -->
+  <div class="orders-table-wrap table-responsive">
+
+    <table class="table orders-table align-middle">
+
+      <thead>
+        <tr>
+          <th>Mã đơn hàng</th>
+          <th>Tên khách hàng</th>
+          <th>Tên game</th>
+          <th class="text-end">Tổng đơn / Tiền hoàn</th>
+          <th>Phương thức thanh toán</th>
+          <th>Trạng thái</th>
+          <th class="text-center">Chi tiết</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr
+          class="order-row"
+          *ngFor="let don of danhSachTrangHienTai"
+          (click)="moChiTiet(don)">
+
+          <!-- MÃ ĐƠN -->
+          <td class="order-id">
+            {{ don.maDonHang }}
+            <div *ngIf="don.maYeuCau" class="refund-request-code">
+              {{ don.maYeuCau }}
+            </div>
+          </td>
+
+          <!-- KHÁCH HÀNG -->
+          <td>
+            {{ don.tenKhachHang }}
+          </td>
+
+          <!-- TÊN GAME -->
+          <td
+            class="game-name"
+            [title]="don.tenGame">
+            {{ don.tenGame }}
+          </td>
+
+          <!-- TỔNG TIỀN -->
+          <td class="amount-cell text-end">
+            {{ dinhDangTien(don.tongTien) }} ₫
+            <div *ngIf="don.idYeuCau" class="refund-request-amount">
+              {{ don.trangThai === 'cho_xu_ly' ? 'Dự kiến hoàn' :
+                 don.trangThai === 'da_hoan_tien' ? 'Đã ghi nhận hoàn' : 'Giá game sau giảm' }}:
+              {{ dinhDangTien(don.trangThai === 'da_hoan_tien'
+                   ? don.soTienHoan : don.soTienHoanDuKien) }} ₫
+            </div>
+          </td>
+
+          <!-- THANH TOÁN -->
+          <td>
+            <span
+              class="payment-badge"
+              [ngClass]="{
+                'payment-momo':
+                  don.phuongThucThanhToan.toLowerCase() === 'momo',
+                'payment-paypal':
+                  don.phuongThucThanhToan.toLowerCase() === 'paypal',
+                'payment-vnpay':
+                  don.phuongThucThanhToan.toLowerCase() === 'vnpay'
+              }">
+
+              {{ nhanPhuongThuc(don.phuongThucThanhToan) }}
+
+            </span>
+          </td>
+
+          <!-- TRẠNG THÁI -->
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'status-order-success':
+                  don.trangThai === 'thanh_cong',
+
+                'status-order-pending':
+                  don.trangThai === 'cho_xu_ly',
+
+                'status-order-approved':
+                  don.trangThai === 'da_hoan_tien',
+
+                'status-order-rejected':
+                  don.trangThai === 'tu_choi_hoan_tien'
+              }">
+
+              {{ nhanTrangThai(don.trangThai) }}
+
+            </span>
+          </td>
+
+          <!-- CHI TIẾT -->
+          <td
+            class="action-cell text-center"
+            (click)="$event.stopPropagation()">
+
+            <button
+              type="button"
+              class="icon-action"
+              title="Xem chi tiết"
+              (click)="moChiTiet(don)">
+
+              <i class="bi bi-eye-fill"></i>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+        <!-- KHÔNG CÓ KẾT QUẢ -->
+        <tr
+          *ngIf="!dangTaiDuLieu && !danhSachTrangHienTai.length">
+
+          <td colspan="7" class="empty-state">
+
+            <i class="bi bi-inbox"></i>
+
+            <strong>
+              Không tìm thấy đơn hàng
+            </strong>
+
+            <span>
+              Thử thay đổi tab hoặc bộ lọc.
+            </span>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- PHÂN TRANG -->
+  <footer
+    class="pagination-footer"
+    *ngIf="tongSoTrang > 1">
+
+    <span>
+      Trang {{ trangHienTai }} / {{ tongSoTrang }}
+    </span>
+
+    <nav aria-label="Phân trang đơn hàng">
+
+      <ul class="pagination mb-0">
+
+        <!-- TRƯỚC -->
+        <li
+          class="page-item"
+          [class.disabled]="trangHienTai === 1">
+
+          <button
+            type="button"
+            class="page-link"
+            [disabled]="trangHienTai === 1"
+            (click)="trangTruoc()">
+
+            <i class="bi bi-chevron-left"></i>
+
+          </button>
+
+        </li>
+
+        <!-- SỐ TRANG -->
+        <li class="page-item active">
+
+          <span class="page-link">
+            {{ trangHienTai }}
+          </span>
+
+        </li>
+
+        <!-- SAU -->
+        <li
+          class="page-item"
+          [class.disabled]="trangHienTai === tongSoTrang">
+
+          <button
+            type="button"
+            class="page-link"
+            [disabled]="trangHienTai === tongSoTrang"
+            (click)="trangSau()">
+
+            <i class="bi bi-chevron-right"></i>
+
+          </button>
+
+        </li>
+
+      </ul>
+
+    </nav>
+
+  </footer>
+
+</div>

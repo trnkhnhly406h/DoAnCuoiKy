@@ -1,0 +1,99 @@
+.admin-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #131525;
+}
+
+.layout-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* KÍCH THƯỚC SIDEBAR MẶC ĐỊNH */
+app-thanh-ben-admin-component {
+  width: 240px;
+  min-width: 240px;
+  height: 100%;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* KHI THU GỌN SIDEBAR (CHỈ CÒN 80PX) */
+.admin-wrapper.sidebar-collapsed app-thanh-ben-admin-component {
+  width: 80px !important;
+  min-width: 80px !important;
+}
+
+/* KHU VỰC NỘI DUNG MẶC ĐỊNH (ÁP DỤNG CHO DASHBOARD & HẦU HẾT CÁC TRANG) */
+.content-body {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto; /* Mặc định 1 thanh cuộn duy nhất */
+  overflow-x: hidden;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #43468e 10%, #1a213b 88%);
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ÉP THẺ COMPONENT CON TRONG CONTENT-BODY PHỦ KÍN NỀN */
+.content-body > * {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important; /* Luôn căn nội dung từ đỉnh trên cùng */
+  align-items: stretch !important;
+  width: 100%;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  box-sizing: border-box;
+}
+
+/* CLASS TẮT SCROLL NGOÀI (DÀNH RIÊNG CHO TRANG ĐÁNH GIÁ & CẤU HÌNH) */
+.content-body.no-scroll {
+  overflow-y: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-body.no-scroll > * {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* RESPONSIVE KHI TÁCH ĐÔI MÀN HÌNH HOẶC DƯỚI 1200PX */
+@media (max-width: 1200px) {
+  app-thanh-ben-admin-component {
+    width: 80px !important;
+    min-width: 80px !important;
+  }
+  
+  .content-body {
+    padding: 1rem;
+  }
+}
+
+/* RESPONSIVE CHO ĐIỆN THOẠI HẸP (DƯỚI 576PX) */
+@media (max-width: 576px) {
+  .layout-body {
+    flex-direction: column;
+  }
+
+  app-thanh-ben-admin-component {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto;
+  }
+
+  .content-body {
+    padding: 0.75rem;
+    overflow-x: auto;
+  }
+}

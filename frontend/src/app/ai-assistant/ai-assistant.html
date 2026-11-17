@@ -1,0 +1,48 @@
+@if (open()) {
+  <section class="ai-panel" role="dialog" aria-label="Trợ lý AI">
+    <header class="ai-head">
+      <span class="ai-title">🤖 Trợ lý AI <small>(giả lập)</small></span>
+      <span>
+        <button type="button" class="ai-icon" (click)="clear()" title="Xóa cuộc trò chuyện">🗑</button>
+        <button type="button" class="ai-icon" (click)="toggle()" aria-label="Đóng">✕</button>
+      </span>
+    </header>
+
+    <div class="ai-body">
+      @for (m of messages(); track $index) {
+        <div class="ai-msg" [class.me]="m.from === 'user'">
+          @if (m.image) { <img class="ai-img" [src]="m.image" alt="Ảnh đã gửi" /> }
+          @if (m.text) { <div>{{ m.text }}</div> }
+          <span class="ai-time">{{ m.time }}</span>
+        </div>
+      }
+      @if (typing()) {
+        <div class="ai-msg typing">Đang trả lời…</div>
+      }
+    </div>
+
+    <div class="ai-suggest">
+      @for (q of questions; track q) {
+        <button type="button" (click)="send(q)">{{ q }}</button>
+      }
+    </div>
+
+    @if (pendingImage(); as img) {
+      <div class="ai-preview">
+        <img [src]="img" alt="Ảnh chờ gửi" />
+        <button type="button" (click)="removeImage()" aria-label="Bỏ ảnh">✕</button>
+      </div>
+    }
+    @if (imageError()) { <div class="ai-error">{{ imageError() }}</div> }
+
+    <div class="ai-input">
+      <label class="ai-attach" title="Gửi ảnh">📎
+        <input type="file" accept="image/*" hidden (change)="onFile($event)" />
+      </label>
+      <input type="text" placeholder="Nhập câu hỏi..." [value]="input()" (input)="onInput($event)" (keydown.enter)="send()" />
+      <button type="button" (click)="send()" [disabled]="(!input().trim() && !pendingImage()) || typing()">Gửi</button>
+    </div>
+  </section>
+}
+
+<button type="button" class="ai-fab" (click)="toggle()" aria-label="Mở trợ lý AI" title="Trợ lý AI">🤖</button>

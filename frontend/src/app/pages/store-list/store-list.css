@@ -1,0 +1,335 @@
+.store-page-layout {
+  max-width: 1239px;
+  margin: 20px auto;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  font-family: var(--font-main);
+}
+
+/* Sidebar bên trái chuẩn Figma #382a48 */
+.store-sidebar {
+  width: 200px;
+  background-color: #382a48;
+  border-radius: 4px;
+  position: sticky;
+  top: 120px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #e9e2f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.sidebar-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-menu li.active {
+  color: #ffffff;
+  background-color: #3d235c;
+  border-left-color: #7246a4;
+}
+
+/* Khung hiển thị danh sách bên phải chuẩn Figma #3d235c */
+.store-main-area {
+  flex: 1;
+}
+
+.category-title-card {
+  background-color: #301d46;
+  padding: 16px 20px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.category-title-card h2 {
+  font-size: 18px;
+  color: #e9e2f0;
+  margin: 0 0 4px 0;
+}
+
+.category-title-card p {
+  font-size: 12px;
+  color: #9589a2;
+  margin: 0;
+}
+
+.games-vertical-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Hàng Game chuẩn Figma #7246a4 */
+.store-game-item {
+  display: flex;
+  align-items: center;
+  background-color: #7246a4;
+  padding: 10px 16px;
+  border-radius: 4px;
+  gap: 16px;
+  height: 122px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.game-thumb {
+  width: 261px;
+  height: 107px;
+  background-color: #d9d9d9;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 2px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.game-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.game-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 107px;
+  padding: 2px 0;
+}
+
+.game-details h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e9e2f0;
+  margin: 0;
+  text-shadow: 1.5px 1.5px 4px #583684;
+}
+
+.release-date {
+  font-size: 10px;
+  color: #e9e2f0;
+}
+
+.review-box {
+  background-color: #362548;
+  padding: 4px 8px;
+  border-radius: 3px;
+  display: inline-flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.review-title {
+  font-size: 9px;
+  color: #e9e2f0;
+}
+
+.review-text {
+  font-size: 8px;
+  color: #c0a1db;
+}
+
+.tags-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tag-label {
+  font-size: 10px;
+  color: #e9e2f0;
+}
+
+.tag-badge {
+  background-color: #362548;
+  color: #e9e2f0;
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 5px;
+  box-shadow: 0.5px 0.5px 4px #e9e2f0;
+}
+
+.game-actions-price {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 107px;
+  padding: 2px 0;
+}
+
+.top-icons {
+  display: flex;
+  gap: 12px;
+}
+
+.top-icons .icon-star, 
+.top-icons .icon-cart {
+  font-size: 20px;
+  cursor: pointer;
+  color: #e9e2f0;
+}
+
+.price-box {
+  display: flex;
+  align-items: center;
+  background-color: #000000;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.discount-badge {
+  background-color: #a5cd3c;
+  color: #000000;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.original-price {
+  font-size: 10px;
+  text-decoration: line-through;
+  color: #9589a2;
+  padding: 4px 6px;
+}
+
+.price-val {
+  font-size: 12px;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-weight: 700;
+}
+
+.free-badge {
+  background-color: #362548;
+  color: #e9e2f0;
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* Ô hiển thị Số thứ tự 1-10 màu xám sáng chuẩn Figma #d9d9d9 */
+.rank-number-box {
+  width: 70px;
+  height: 107px;
+  background-color: #d9d9d9;
+  color: #382a48;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* ===== Bổ sung ===== */
+.sidebar-menu li:focus-visible { outline: 2px solid #c0a1db; outline-offset: -2px; }
+
+.top-icons button {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1;
+}
+.top-icons button:hover { color: #ffffff; }
+.top-icons button.active { color: #f5c542; }
+.top-icons button:focus-visible { outline: 2px solid #c0a1db; outline-offset: 2px; }
+
+.bottom-price { display: flex; justify-content: flex-end; }
+
+.owned-badge {
+  background-color: #362548;
+  color: #a5cd3c;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.empty-state {
+  background-color: #301d46;
+  border: 1px dashed #7246a4;
+  border-radius: 4px;
+  padding: 40px 20px;
+  text-align: center;
+  color: #9589a2;
+  font-size: 14px;
+}
+.empty-state p { margin: 0 0 16px; line-height: 1.5; }
+.btn-back-store {
+  background-color: #7b55a5;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-back-store:hover { background-color: #9468c1; }
+
+.store-game-item { height: auto; min-height: 122px; }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .store-page-layout { flex-direction: column; padding: 0 12px; }
+  .store-sidebar { width: 100%; position: static; }
+  .sidebar-menu { display: flex; overflow-x: auto; }
+  .sidebar-menu li { white-space: nowrap; border-left: none; border-bottom: 4px solid transparent; }
+  .sidebar-menu li.active { border-bottom-color: #7246a4; }
+  .store-main-area { width: 100%; }
+}
+
+@media (max-width: 640px) {
+  .store-game-item { flex-wrap: wrap; height: auto; }
+  .game-thumb { width: 100%; height: 160px; }
+  .game-details, .game-actions-price { height: auto; width: 100%; flex: none; gap: 8px; }
+  .game-actions-price { flex-direction: row-reverse; align-items: center; }
+  .rank-number-box { width: 100%; height: 40px; }
+}
+.store-game-item {
+  position: relative;
+  cursor: pointer;
+}
+
+.store-game-item .hover-card-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 280px;
+  z-index: 3000;
+}
+
+.store-game-item:hover {
+  z-index: 2500;
+}
+
+.store-game-item:hover .hover-card-container {
+  display: block;
+}
+/* ===== Nhãn thể loại bấm được ===== */
+a.tag, a.tag-badge, a.tag-chip { text-decoration: none; cursor: pointer; transition: background-color 0.15s, color 0.15s; }
+a.tag:hover, a.tag-badge:hover, a.tag-chip:hover { background-color: #9367c1; color: #ffffff; }
+
+/* Icon SVG của nút Danh sách ước / Thêm vào giỏ hàng (assets/*.svg) */
+.top-icons .card-ico { width: 20px; height: auto; display: block; transition: opacity 0.15s, transform 0.1s; }
+.top-icons button:hover .card-ico { opacity: 0.85; transform: scale(1.1); }
+.top-icons .card-check { font-size: 18px; font-weight: 700; line-height: 1; display: block; }
+.top-icons button { display: inline-flex; align-items: center; justify-content: center; }
+
+.game-actions-price .sq-actions { justify-content: flex-end; }

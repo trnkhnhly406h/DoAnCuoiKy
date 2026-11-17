@@ -1,0 +1,411 @@
+<div class="library-container">
+  <!-- BÁO YÊU CẦU ĐĂNG NHẬP NẾU CHƯA LOG IN -->
+  <app-login-required 
+    *ngIf="!isLoggedIn" 
+    message="Bạn cần đăng nhập tài khoản STEAL để truy cập Thư viện trò chơi.">
+  </app-login-required>
+
+  <div class="library-layout" *ngIf="isLoggedIn">
+    <!-- ================= THANH CUỘN BÊN TRÁI (SIDEBAR) ================= -->
+    <aside class="library-sidebar">
+      <div class="sidebar-top-tools">
+        <div class="search-input-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            placeholder="Tìm kiếm trong Thư viện..." 
+          />
+          <button *ngIf="searchQuery" class="btn-clear-search" (click)="searchQuery = ''">✕</button>
+        </div>
+
+        <div class="sort-bar-row">
+          <label class="sort-label">XẾP THEO:</label>
+          <select [(ngModel)]="sortBy" class="sort-select">
+            <option value="name-asc">Tên (A-Z)</option>
+            <option value="name-desc">Tên (Z-A)</option>
+            <option value="recent">Thời gian tải / Mới nhất</option>
+          </select>
+        </div>
+      </div>
+
+      <button 
+        class="sidebar-all-games-btn" 
+        [class.active]="selectedGame === null"
+        (click)="selectGame(null)"
+      >
+        <span class="btn-icon">🎮</span>
+        <span class="btn-text">Tất cả trò chơi</span>
+        <span class="game-count-badge">{{ libraryGames.length }}</span>
+      </button>
+
+      <div class="sidebar-section-divider">DANH SÁCH GAME ĐÃ TẢI</div>
+
+      <div class="sidebar-games-scroll">
+        <div *ngIf="filteredSortedGames.length === 0" class="sidebar-empty-hint">
+          Không tìm thấy game nào.
+        </div>
+
+        <div 
+          *ngFor="let game of filteredSortedGames" 
+          class="sidebar-game-item"
+          [class.active]="selectedGame?.id === game.id"
+          (click)="selectGame(game)"
+        >
+          <img [src]="game.coverImage" appImgFallback [alt]="game.title" class="game-mini-thumb" />
+          <div class="game-item-info">
+            <div class="game-item-title">{{ game.title }}</div>
+            <div class="game-item-status" *ngIf="isPlaying && selectedGame?.id === game.id">
+              <span class="status-pulse">●</span> Đang chạy...
+            </div>
+            <div class="game-item-status" *ngIf="isLaunching && selectedGame?.id === game.id">
+              Khởi động {{ launchProgress | number:'1.0-0' }}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= MÀN HÌNH BÊN PHẢI (MAIN CONTENT) ================= -->
+    <section class="library-main-panel">
+      <!-- TRƯỜNG HỢP 1: XEM "TẤT CẢ TRÒ CHƠI" (GRID VIEW) -->
+      <div *ngIf="selectedGame === null" class="all-games-grid-view">
+        <div class="grid-view-header">
+          <h2>TẤT CẢ TRÒ CHƠI ({{ libraryGames.length }})</h2>
+          <p>Chọn một trò chơi ở danh sách bên trái hoặc nhấn vào thẻ để xem chi tiết.</p>
+        </div>
+
+        <div *ngIf="libraryGames.length === 0" class="empty-library-card">
+          <div class="empty-icon">🎮</div>
+          <h3>Thư viện trò chơi của bạn đang trống!</h3>
+          <p>Hãy khám phá cửa hàng STEAL để nhận game miễn phí hoặc mua các tựa game hấp dẫn.</p>
+          <a routerLink="/" class="btn-go-store">Đến Cửa Hàng Ngay</a>
+        </div>
+
+        <div class="games-poster-grid" *ngIf="libraryGames.length > 0">
+          <div 
+            *ngFor="let game of libraryGames" 
+            class="poster-card"
+            (click)="selectGame(game)"
+          >
+            <img [src]="game.coverImage" appImgFallback [alt]="game.title" class="poster-img" />
+            <div class="poster-overlay">
+              <div class="poster-title">{{ game.title }}</div>
+              <button class="btn-quick-view">▶ Xem trang game</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRƯỜNG HỢP 2: XEM CHI TIẾT GAME ĐƯỢC CHỌN -->
+      <div *ngIf="selectedGame !== null" class="game-detail-view">
+        <!-- Banner Ảnh Bìa Game + Điều khiển Chạy Game -->
+        <div class="game-hero-banner" [style.backgroundImage]="'url(' + (selectedGame?.coverImage || '') + ')'">
+          <div class="hero-banner-gradient">
+            <div class="hero-content-box">
+              <h1 class="game-title-lg">{{ selectedGame?.title }}</h1>
+              
+              <div class="game-tags-row">
+                <span *ngFor="let slug of selectedGame?.genres || []" class="genre-tag">
+                  {{ catalogService.genreLabel(slug) }}
+                </span>
+              </div>
+
+              <!-- Thanh điều khiển Mở / Dừng Game + Nút HOÀN TIỀN -->
+              <div class="launch-control-bar">
+                <button 
+                  *ngIf="!isLaunching && !isPlaying" 
+                  class="btn-play-game" 
+                  (click)="launchGame()"
+                >
+                  ▶ CHƠI GAME
+                </button>
+
+                <div *ngIf="isLaunching" class="launching-status-wrapper">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-fill" [style.width.%]="launchProgress"></div>
+                  </div>
+                  <div class="progress-text-row">
+                    <span>⚡ ĐANG KHỞI ĐỘNG GAME... ({{ launchProgress | number:'1.0-0' }}%)</span>
+                    <button class="btn-cancel-launch" (click)="stopGame()">DỪNG</button>
+                  </div>
+                </div>
+
+                <div *ngIf="isPlaying" class="playing-status-wrapper">
+                  <div class="running-pill">
+                    <span class="status-dot">●</span> ĐANG CHẠY ({{ formattedPlayTime }})
+                  </div>
+                  <button class="btn-stop-game" (click)="stopGame()">⏹ DỪNG GAME</button>
+                  <button class="btn-open-window" (click)="showGameWindow = true">🗗 Mở cửa sổ game</button>
+                </div>
+
+                <!-- NÚT HOÀN TIỀN GAME (KIỂM TRA ĐIỀU KIỆN <= 2 GIỜ) -->
+                <div class="refund-action-container">
+                  <button 
+                    *ngIf="isEligibleForRefund" 
+                    class="btn-refund-active" 
+                    (click)="openRefundModal()"
+                    title="Yêu cầu hoàn tiền trong vòng 2 giờ chơi đầu tiên"
+                  >
+                    ↩ HOÀN TIỀN GAME (Đã chơi: {{ currentPlayedHours }}h / 2.0h)
+                  </button>
+
+                  <button 
+                    *ngIf="!isEligibleForRefund" 
+                    class="btn-refund-disabled" 
+                    disabled
+                  >
+                    🔒 KHÔNG THỂ HOÀN TIỀN ({{ refundBlockedReason }})
+                  </button>
+                </div>
+              </div>
+
+              <!-- Thông số thời gian chơi & thành tựu -->
+              <div class="game-stats-bar">
+                <div class="stat-item">
+                  <span class="stat-label">TỔNG THỜI GIAN CHƠI</span>
+                  <span class="stat-val">{{ currentPlayedHours }} giờ</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">LẦN CUỐI CHƠI</span>
+                  <span class="stat-val">{{ lastPlayedLabel }}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">NGÀY SỞ HỮU</span>
+                  <span class="stat-val">{{ purchaseInfo?.date | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">ĐÃ THANH TOÁN</span>
+                  <span class="stat-val text-green">{{ purchaseInfo?.paid }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BẢNG TIN BÊN DƯỚI (LỊCH SỬ / BẠN BÈ / THÔNG BÁO) -->
+        <div class="game-sub-content-grid">
+          <div class="content-left-col">
+            <section class="info-card-block">
+              <h3>📜 HOẠT ĐỘNG & LỊCH SỬ TRUY CẬP</h3>
+              <div class="activity-feed-list">
+                <div *ngFor="let act of activities" class="activity-item-row">
+                  <img [src]="act.avatar" [alt]="act.user" class="user-avatar-sm" appImgFallback />
+                  <div class="activity-info">
+                    <div class="activity-text">
+                      <strong>{{ act.user }}</strong> {{ act.action }}
+                    </div>
+                    <div class="activity-time">{{ act.time }}</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="info-card-block">
+              <h3>📰 TIN TỨC & BẢN CẬP NHẬT GAME</h3>
+              <div class="news-feed-list">
+                <div *ngFor="let item of news" class="news-item">
+                  <div class="news-header">
+                    <span class="news-title">{{ item.title }}</span>
+                    <span class="news-date">{{ item.date }}</span>
+                  </div>
+                  <p class="news-summary">{{ item.summary }}</p>
+                </div>
+              </div>
+            </section>
+
+            <app-game-reviews
+              *ngIf="selectedGame"
+              [gameId]="selectedGame.id"
+              [mongoGameId]="selectedGame.mongoId || ''"
+              [canWrite]="true">
+            </app-game-reviews>
+          </div>
+
+          <div class="content-right-col">
+            <section class="info-card-block">
+              <h3>🌟 BẠN BÈ CỦA BẠN</h3>
+              <div class="friend-wishlist-notice">
+                <div class="notice-box">
+                  <span class="notice-icon">💖</span>
+                  <div class="notice-text" *ngIf="chat.friendsList.length > 0; else noFriendsTpl">
+                    Bạn có <strong>{{ chat.friendsList.length }} bạn bè</strong>, trong đó <strong>{{ onlineFriends.length }}</strong> đang trực tuyến. Hãy rủ họ chơi <em>{{ selectedGame?.title }}</em> cùng nhé!
+                  </div>
+                  <ng-template #noFriendsTpl>
+                    <div class="notice-text">Bạn chưa có bạn bè nào. <a [routerLink]="['/tro-chuyen']" [queryParams]="{ tab: 'them-ban' }">Thêm bạn bè</a> để chơi chung!</div>
+                  </ng-template>
+                </div>
+              </div>
+            </section>
+
+            <section class="info-card-block" *ngIf="onlineFriends.length > 0">
+              <h3>🎮 BẠN BÈ ĐANG TRỰC TUYẾN</h3>
+              <div class="friends-owned-list">
+                <div class="friend-owned-chip" *ngFor="let friend of onlineFriends" role="button" tabindex="0"
+                     (click)="chat.openDirectChat(friend)" (keydown.enter)="chat.openDirectChat(friend)" title="Nhắn tin">
+                  <img [src]="friend.avatar" [alt]="friend.username" appImgFallback />
+                  <span>{{ friend.username }}</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= KHUNG ĐỀ XUẤT GAME BÊN DƯỚI THƯ VIỆN ================= -->
+  <section class="library-recommendations-section" *ngIf="isLoggedIn">
+    <div class="recommend-header-row">
+      <div class="header-left">
+        <h2>🔥 ĐỀ XUẤT TRÒ CHƠI DÀNH CHO BẠN</h2>
+        <p>Khám phá thêm các tựa game nổi bật được ưa chuộng nhất trên STEAL Store</p>
+      </div>
+      <button class="btn-refresh-recommend" (click)="refreshRecommendations()">
+        🔄 Làm mới đề xuất
+      </button>
+    </div>
+
+    <div class="recommend-games-grid">
+      <div 
+        *ngFor="let game of recommendedGames" 
+        class="recommend-card"
+        (click)="goToGameDetail(game)"
+      >
+        <div class="card-thumb-wrapper">
+          <img [src]="game.coverImage" appImgFallback [alt]="game.title" class="recommend-thumb" />
+          <span *ngIf="isGameOwned(game.id)" class="owned-badge">Đã sở hữu</span>
+          <div class="price-overlay-tag">
+            <span *ngIf="game.discountPercent > 0" class="discount-pill">-{{ game.discountPercent }}%</span>
+            <span class="price-text" *ngIf="!game.isFree">{{ game.finalPrice | number }}đ</span>
+            <span class="price-text free" *ngIf="game.isFree">Miễn phí</span>
+          </div>
+        </div>
+
+        <div class="recommend-card-info">
+          <div class="recommend-game-title">{{ game.title }}</div>
+          <div class="recommend-game-genres">
+            <span *ngFor="let g of game.genres.slice(0, 2)" class="mini-genre">
+              {{ catalogService.genreLabel(g) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODAL 1: HỘP THOẠI HỎI LÝ DO HOÀN TIỀN ================= -->
+  <div class="refund-modal-overlay" *ngIf="showRefundModal">
+    <div class="refund-modal-card">
+      <div class="modal-header">
+        <h3>↩ YÊU CẦU HOÀN TIỀN GAME</h3>
+        <button class="btn-close-modal" (click)="closeRefundModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="game-refund-notice">
+          Bạn đang yêu cầu hoàn tiền cho tựa game: <strong>{{ selectedGame?.title }}</strong>.<br/>
+          <small class="text-hint">Thời gian đã chơi: {{ currentPlayedHours }} giờ (Đáp ứng điều kiện &le; 2.0 giờ).</small>
+        </p>
+
+        <label class="form-title">Vui lòng chọn lý do hoàn tiền:</label>
+        <div class="reasons-radio-list">
+          <label *ngFor="let reason of presetRefundReasons; let idx = index" class="radio-option-item">
+            <input 
+              type="radio" 
+              name="refundReason" 
+              [value]="(idx + 1).toString()" 
+              [(ngModel)]="selectedRefundReason" 
+            />
+            <span class="radio-label-text">{{ idx + 1 }}. {{ reason }}</span>
+          </label>
+
+          <!-- Tùy chọn lý do khác -->
+          <label class="radio-option-item">
+            <input 
+              type="radio" 
+              name="refundReason" 
+              value="custom" 
+              [(ngModel)]="selectedRefundReason" 
+            />
+            <span class="radio-label-text">6. Lý do khác (Tự nhập chi tiết)</span>
+          </label>
+        </div>
+
+        <!-- Ô nhập lý do khác -->
+        <div *ngIf="selectedRefundReason === 'custom'" class="custom-reason-box">
+          <textarea 
+            [(ngModel)]="customRefundReason" 
+            rows="3" 
+            placeholder="Vui lòng nhập lý do cụ thể khiến bạn muốn hoàn trả trò chơi này..."
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel-modal" (click)="closeRefundModal()">Hủy bỏ</button>
+        <button class="btn-confirm-refund" (click)="submitRefund()">Xác nhận Hoàn tiền</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: POPUP THÔNG BÁO HOÀN TIỀN CSS GAMING STEAL (THAY THẾ ALERT) ================= -->
+  <div class="refund-modal-overlay" *ngIf="showRefundResultModal" (click)="closeRefundResultModal()">
+    <div class="refund-modal-card result-modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header" [class.success-header]="refundResultType === 'success'">
+        <h3>
+          <span *ngIf="refundResultType === 'warning'">⚠️</span>
+          <span *ngIf="refundResultType === 'success'">✅</span>
+          <span *ngIf="refundResultType === 'error'">❌</span>
+          {{ refundResultTitle }}
+        </h3>
+        <button type="button" class="btn-close-modal" (click)="closeRefundResultModal()">✕</button>
+      </div>
+
+      <div class="modal-body text-center py-4">
+        <!-- Vòng tròn icon nổi bật -->
+        <div class="result-icon-circle mb-3" [ngClass]="refundResultType">
+          <span *ngIf="refundResultType === 'warning'">⏱️</span>
+          <span *ngIf="refundResultType === 'success'">🎉</span>
+          <span *ngIf="refundResultType === 'error'">🚫</span>
+        </div>
+        
+        <!-- Nội dung thông báo lấy trực tiếp từ Database -->
+        <p class="result-message-text">{{ refundResultMessage }}</p>
+        
+        <!-- Gợi ý chính sách hoàn tiền STEAL -->
+        <p class="result-sub-hint text-hint" *ngIf="refundResultType === 'warning'">
+          Theo chính sách của STEAL, trò chơi chỉ được chấp nhận hoàn tiền trong vòng 14 ngày kể từ ngày mua và thời lượng chơi chưa vượt quá 2.0 giờ.
+        </p>
+      </div>
+
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn-confirm-refund px-4" (click)="closeRefundResultModal()">
+          Đã hiểu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MÀN HÌNH GIẢ LẬP GAME ĐANG CHẠY ================= -->
+  <div class="game-sim-modal-overlay" *ngIf="showGameWindow">
+    <div class="game-sim-window">
+      <div class="sim-window-header">
+        <span class="sim-title">🎮 STEAL GAME SIMULATOR — {{ selectedGame?.title }}</span>
+        <button class="btn-close-sim" (click)="closeGameWindow()">✕ Thu nhỏ</button>
+      </div>
+
+      <div class="sim-window-body">
+        <div class="sim-game-art" [style.backgroundImage]="'url(' + (selectedGame?.coverImage || '') + ')'">
+          <div class="sim-game-overlay">
+            <div class="sim-status-title">TRÒ CHƠI ĐANG ĐƯỢC THỰC THI</div>
+            <div class="sim-timer-badge">⏱ Thời gian phiên: {{ formattedPlayTime }}</div>
+            <p class="sim-hint-text">Màn hình game đang chạy giả lập. Hãy tận hưởng trải nghiệm đỉnh cao!</p>
+
+            <button class="btn-exit-sim-game" (click)="stopGame()">THOÁT GAME</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

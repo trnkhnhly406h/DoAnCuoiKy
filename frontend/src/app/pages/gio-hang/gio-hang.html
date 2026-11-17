@@ -1,0 +1,133 @@
+<div class="cart-page-bg" (click)="closeMenus()">
+
+  <section class="cart-main-wrapper">
+    <div class="cart-breadcrumb">
+      <a [routerLink]="['/']" class="crumb-link">Trang chủ</a>
+      <span class="crumb-sep">&gt;</span>
+      <span class="crumb-current">Giỏ hàng của bạn ({{ cart.cartItems.length }} sản phẩm)</span>
+    </div>
+
+    <h1 class="cart-page-title">Giỏ hàng của bạn ({{ cart.cartItems.length }} sản phẩm)</h1>
+
+    <div class="cart-body-layout">
+      
+      <!-- CỘT BÊN TRÁI -->
+      <div class="cart-left-content">
+
+        <div class="cart-items-list" *ngIf="cart.cartItems.length > 0; else gioHangRong">
+          <div class="cart-item-card" *ngFor="let item of cart.cartItems; trackBy: trackById">
+            
+            <a [routerLink]="['/game', item.id]"><img [src]="item.thumb" [alt]="item.title" class="item-thumb" appImgFallback></a>
+
+            <div class="item-center-info">
+              <h3 class="item-title"><a [routerLink]="['/game', item.id]">{{ item.title }}</a></h3>
+
+              <div class="gift-option-wrapper">
+                <button class="gift-dropdown-btn" (click)="toggleMenu(item, $event)">
+                  <span>{{ item.forGift ? 'Đây là một món quà' : 'Cho tài khoản của tôi' }}</span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </button>
+
+                <div class="gift-dropdown-menu" *ngIf="openMenuId === item.id" (click)="$event.stopPropagation()">
+                  <div class="gift-menu-item" (click)="chooseType(item, false)">
+                    Cho tài khoản của tôi
+                  </div>
+                  <div class="gift-menu-item" (click)="chooseType(item, true)">
+                    Đây là một món quà
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="item-right-price">
+              <div class="price-discount-box">
+                <span class="discount-badge" *ngIf="item.discountPercent > 0">-{{ item.discountPercent }}%</span>
+                <div class="price-stack">
+                  <span class="original-price" *ngIf="item.discountPercent > 0">{{ formatMoney(item.originalPrice) }}đ</span>
+                  <span class="final-price">{{ formatMoney(item.price) }}đ</span>
+                </div>
+              </div>
+
+              <div class="item-actions">
+                <button class="action-btn" (click)="remove(item.id)">Gỡ bỏ</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <ng-template #gioHangRong>
+          <div class="empty-cart-msg">
+            Giỏ hàng của bạn đang trống.
+          </div>
+        </ng-template>
+
+        <div class="cart-bottom-actions">
+          <button class="btn-continue-shopping" (click)="continueShopping()">Tiếp tục mua sắm</button>
+          <!-- Dynamic label cho nút dưới giỏ -->
+          <button class="btn-continue-gift" (click)="proceed()" [disabled]="cart.cartItems.length === 0">
+            {{ checkoutLabel }}
+          </button>
+        </div>
+
+        <!-- KHUYẾN NGHỊ CHO BẠN -->
+        <div class="recommend-section" *ngIf="recommended.length > 0">
+          <h2 class="recommend-title">Khuyến nghị cho bạn</h2>
+
+          <div class="recommend-grid">
+            <div class="rec-card" *ngFor="let rec of recommended; trackBy: trackById" (click)="addRecommended(rec)">
+              <div class="rec-thumb-container">
+                <img [src]="rec.coverImage" [alt]="rec.title" class="rec-thumb" appImgFallback>
+                <span class="rec-hover-add">+ Thêm vào giỏ</span>
+              </div>
+              <div class="rec-title-name">{{ rec.title }}</div>
+              <div class="rec-price-bar">
+                <span class="rec-discount">-{{ rec.discountPercent }}%</span>
+                <div class="rec-prices">
+                  <span class="rec-old-price">{{ formatMoney(rec.originalPrice) }}đ</span>
+                  <span class="rec-new-price">{{ formatMoney(rec.finalPrice) }}đ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CỘT BÊN PHẢI SIDEBAR -->
+      <div class="cart-right-sidebar">
+
+        <div class="summary-box">
+          <div class="summary-row">
+            <span class="summary-label">Tổng ước tính</span>
+            <span class="summary-amount">{{ formatMoney(cart.cartTotalPrice) }}đ</span>
+          </div>
+
+          <p class="summary-tax-note">Thuế tiêu thụ sẽ được tính trong quá trình thanh toán nếu có</p>
+
+          <!-- Dynamic label cho nút bên sidebar -->
+          <button class="btn-checkout-primary" (click)="proceed()" [disabled]="cart.cartItems.length === 0">
+            {{ checkoutLabel }}
+          </button>
+        </div>
+
+        <div class="terms-sidebar-box">
+          <p class="terms-desc">
+            Đơn hàng sản phẩm kỹ thuật số sẽ trao giấy phép sử dụng sản phẩm trên Steal.
+          </p>
+          <p class="terms-desc">
+            Để biết đầy đủ điều khoản và điều kiện, vui lòng đọc
+          </p>
+          <a [routerLink]="['/thoa-thuan-dang-ky']" class="terms-link-highlight">
+            Thoả thuận đăng ký Steal
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+</div>

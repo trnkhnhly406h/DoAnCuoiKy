@@ -1,0 +1,26 @@
+<!-- Khu quản trị: nạp Bootstrap + nền riêng, không dùng header/footer của cửa hàng -->
+<app-admin-styles *ngIf="isAdmin()"></app-admin-styles>
+
+<app-header *ngIf="!isAdmin()"></app-header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<app-footer *ngIf="!isAdmin()"></app-footer>
+<app-global-chat-dock *ngIf="!isAdmin()"></app-global-chat-dock>
+
+<!-- Cửa sổ đăng nhập / đăng ký của khách hàng (dùng chung cho toàn cửa hàng) -->
+<ng-container *ngIf="!isAdmin()">
+  <ng-container *ngIf="authModal$ | async as modal">
+    <app-dang-nhap *ngIf="modal === 'login'"></app-dang-nhap>
+    <app-dang-ky *ngIf="modal === 'register'"></app-dang-ky>
+  </ng-container>
+</ng-container>
+
+<!-- Toast + hộp thoại xác nhận nằm ngoài header/trang để luôn nằm trên cùng -->
+<!-- Trợ lý AI giả lập: nổi góc phải, dùng cho cả customer lẫn admin -->
+<app-ai-assistant [mode]="isAdmin() ? 'admin' : 'customer'"></app-ai-assistant>
+
+<app-toast></app-toast>
+<app-confirm-dialog></app-confirm-dialog>

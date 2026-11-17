@@ -1,0 +1,631 @@
+.game-detail-page {
+  background-color: #28183b;
+  color: #d4c3e2;
+  font-family: var(--font-main);
+  min-height: 100vh;
+  padding: 30px 16px;
+}
+
+.detail-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* TIÊU ĐỀ GAME */
+.game-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.game-header-title h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.age-rating-badge {
+  background-color: #c0392b;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* GRID MEDIA */
+.media-summary-grid {
+  display: grid;
+  grid-template-columns: 640px 1fr;
+  gap: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 24px;
+}
+
+.left-media-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.main-preview-viewport {
+  width: 100%;
+  height: 360px;
+  background-color: #000000;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-player, .preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.thumbnails-carousel {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.thumb-card {
+  position: relative;
+  width: 116px;
+  height: 65px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  opacity: 0.6;
+  transition: all 0.2s;
+  background-color: #1b1028;
+}
+
+.thumb-card:hover, .thumb-card.active {
+  opacity: 1;
+  border-color: #af84d6;
+}
+
+.thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-icon-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.wishlist-action-bar {
+  display: flex;
+  margin-top: 4px;
+}
+
+.btn-wishlist-large {
+  background-color: #412563;
+  color: #af84d6;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-wishlist-large:hover {
+  background-color: #512c7f;
+  color: #ffffff;
+}
+
+.btn-wishlist-large.in-wishlist {
+  background-color: #7246a4;
+  color: #ffffff;
+}
+
+.right-summary-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cover-image-box {
+  width: 100%;
+  height: 180px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.game-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.short-description {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #b3aaba;
+  margin: 0;
+}
+
+.meta-info-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.meta-row { display: flex; justify-content: space-between; }
+.meta-label { color: #625176; font-weight: bold; }
+.meta-val { color: #978da2; }
+.text-blue { color: #af84d6; }
+.text-link { color: #af84d6; cursor: pointer; }
+
+.tags-heading {
+  display: block;
+  font-size: 11px;
+  color: #625176;
+  margin-bottom: 6px;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-chip {
+  background-color: rgba(176, 133, 215, 0.1);
+  color: #af84d6;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+/* ================= KHUNG MUA GAME & GIẢM GIÁ ================= */
+.purchase-banner-card {
+  background: linear-gradient(90deg, rgba(42, 27, 59, 0.95), rgba(65, 37, 99, 0.95));
+  border-radius: 4px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border: 1px solid #412563;
+}
+
+.purchase-info h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.sale-event-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #a4d007;
+  margin: 0;
+}
+
+.free-notice {
+  font-size: 12px;
+  color: #a4d007;
+  margin: 0;
+}
+
+.purchase-actions-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #000000;
+  padding: 4px 6px 4px 12px;
+  border-radius: 4px;
+}
+
+.owned-status-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+}
+
+.owned-label {
+  font-size: 12px;
+  color: #48bb78;
+  font-weight: 700;
+}
+
+.btn-go-library {
+  background-color: #7b55a5;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 3px;
+}
+
+.price-display-tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* KHUNG GIẢM GIÁ GÓC PHẢI */
+.discount-badge {
+  background-color: #4c6b22;
+  color: #a4d007;
+  font-size: 18px;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 2px;
+}
+
+.price-numbers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.original-price {
+  font-size: 11px;
+  text-decoration: line-through;
+  color: #626366;
+}
+
+.final-price {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.final-price.highlight-sale {
+  color: #a4d007;
+  font-size: 15px;
+}
+
+.btn-buy-group {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-add-cart, .btn-buy-now {
+  border: none;
+  border-radius: 2px;
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.btn-add-cart {
+  background: linear-gradient(to bottom, #6fa720 5%, #588a1b 95%);
+  color: #d2efa9;
+}
+
+.btn-buy-now {
+  background: linear-gradient(to bottom, #9075ad 5%, #5d3f83 95%);
+  color: #ffffff;
+}
+
+.btn-add-cart:hover, .btn-buy-now:hover {
+  filter: brightness(1.2);
+}
+
+/* KHUNG MÔ TẢ & CẤU HÌNH */
+.detail-block-card {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-title {
+  font-size: 14px;
+  color: #ffffff;
+  border-bottom: 1px solid #412563;
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 14px;
+  letter-spacing: 1px;
+}
+
+.rich-text-content p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #b3aaba;
+}
+
+.sys-reqs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.reqs-title {
+  font-size: 12px;
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.reqs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reqs-list li { color: #978da2; line-height: 1.4; }
+.reqs-list strong { color: #b3aaba; }
+
+/* ================= KHUNG 20 ĐỀ XUẤT CHÂN TRANG ================= */
+.detail-recommendations-section {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #412563;
+}
+
+.recommend-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.header-left h2 {
+  font-size: 18px;
+  color: #ffffff;
+  margin: 0 0 4px;
+  letter-spacing: 0.5px;
+}
+
+.header-left p {
+  font-size: 12px;
+  color: #9589a2;
+  margin: 0;
+}
+
+.btn-refresh-recommend {
+  background-color: #412563;
+  border: 1px solid #af84d6;
+  color: #af84d6;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-refresh-recommend:hover {
+  background-color: #af84d6;
+  color: #28183b;
+}
+
+.recommend-games-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.recommend-card {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.recommend-card:hover {
+  transform: translateY(-4px);
+  border-color: #af84d6;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.card-thumb-wrapper {
+  position: relative;
+  height: 140px;
+  width: 100%;
+  background-color: #1b1028;
+}
+
+.recommend-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.owned-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.price-overlay-tag {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  background-color: #000000;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.discount-pill {
+  background-color: #4c6b22;
+  color: #a4d007;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 6px;
+}
+
+.price-text {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+}
+
+.price-text.free { color: #a4d007; }
+
+.recommend-card-info { padding: 12px; }
+
+.recommend-game-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+
+.recommend-game-genres { display: flex; gap: 4px; }
+
+.mini-genre {
+  font-size: 10px;
+  color: #9589a2;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+@media (max-width: 960px) {
+  .media-summary-grid { grid-template-columns: 1fr; }
+  .recommend-games-grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* ===== Bổ sung ===== */
+.not-found-box { text-align: center; padding: 80px 20px; color: #e9e2f0; }
+.not-found-box h1 { margin: 0 0 12px; }
+.not-found-box p { color: #9589a2; margin: 0 0 24px; }
+.filter-notice {
+  background-color: rgba(255, 152, 0, 0.12); border: 1px solid #ff9800; color: #ffcf8a;
+  padding: 10px 16px; border-radius: 4px; font-size: 13px; margin-bottom: 16px;
+}
+.filter-notice a { color: #c0a1db; text-decoration: underline; }
+.thumb-card:focus-visible, .recommend-card:focus-visible { outline: 2px solid #c0a1db; outline-offset: 2px; }
+.btn-wishlist-large, .btn-add-cart, .btn-buy-now, .btn-refresh-recommend { font-family: inherit; }
+
+@media (max-width: 900px) {
+  .media-summary-grid { grid-template-columns: 1fr; }
+  .purchase-banner-card { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .sys-reqs-grid { grid-template-columns: 1fr; }
+  .recommend-games-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.free-label { font-size: 20px; font-weight: 800; color: #a5cd3c; }
+.genre-tags-wrapper { margin-top: 16px; }
+.reqs-column { min-width: 0; }
+
+/* ===== Nhãn thể loại bấm được ===== */
+a.tag, a.tag-badge, a.tag-chip { text-decoration: none; cursor: pointer; transition: background-color 0.15s, color 0.15s; }
+a.tag:hover, a.tag-badge:hover, a.tag-chip:hover { background-color: #9367c1; color: #ffffff; }
+
+.rec-sq-actions { position: absolute; right: 8px; bottom: 36px; }
+/* Đảm bảo thẻ game đề xuất không bị cắt popup */
+.recommend-card {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.recommend-card:hover {
+  z-index: 2500 !important;
+}
+
+/* Ẩn hiện Hover Card khi di chuột */
+.recommend-card .hover-card-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+}
+
+.recommend-card:hover .hover-card-container {
+  display: block;
+}
+/* 1. Nâng cao z-index của 2 nút Thêm giỏ hàng (+) và Yêu thích (★) trên thẻ game 
+   để người dùng luôn bấm được trực tiếp */
+.recommend-card .rec-sq-actions {
+  z-index: 3100 !important;
+  position: absolute;
+  right: 8px;
+  bottom: 36px;
+  pointer-events: auto !important;
+}
+
+/* 1. Nút Thêm giỏ hàng (+) và Yêu thích (★) nổi trên thẻ game nhưng không vượt Header */
+.recommend-card .rec-sq-actions {
+  z-index: 20 !important;
+  position: absolute;
+  right: 8px;
+  bottom: 36px;
+  pointer-events: auto !important;
+}
+
+.recommend-card .rec-sq-actions .sq-btn {
+  position: relative;
+  z-index: 25 !important;
+  cursor: pointer;
+}
+
+/* 2. Popup hover card chỉ nổi trên nội dung trang (z-index: 50) */
+.recommend-card {
+  position: relative;
+  overflow: visible !important;
+}
+
+.recommend-card:hover {
+  z-index: 40 !important;
+}
+
+.recommend-card .hover-card-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.recommend-card:hover .hover-card-container {
+  display: block;
+}
+
+.recommend-card .hover-card-container app-game-hover-card,
+.recommend-card .hover-card-container .game-hover-popup {
+  pointer-events: auto !important;
+}

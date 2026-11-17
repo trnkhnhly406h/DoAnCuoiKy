@@ -1,0 +1,110 @@
+<app-login-required *ngIf="!auth.isLoggedIn" message="Bạn cần đăng nhập tài khoản STEAL để xem hồ sơ của người dùng khác."></app-login-required>
+
+<div class="profile-container" *ngIf="auth.isLoggedIn">
+  <ng-container *ngIf="profile as p; else notFound">
+    <div class="profile-card">
+      <div class="user-info-banner">
+        <img [src]="p.user.avatar" [alt]="p.user.username" class="profile-avatar avatar-img" appImgFallback />
+        <div class="user-details-box">
+          <div class="user-title-row">
+            <span class="user-display-name">{{ p.user.username }}</span>
+            <span class="online-dot" [class.on]="p.user.isOnline">{{ p.user.isOnline ? '● Đang trực tuyến' : (p.user.lastOnlineText || 'Rời mạng') }}</span>
+          </div>
+          <div class="user-location" *ngIf="p.isFriend">{{ flag }} {{ p.country }}</div>
+          <p class="user-bio" *ngIf="p.isFriend && p.bio">{{ p.bio }}</p>
+          <p class="user-bio muted" *ngIf="!p.isFriend && p.relation !== 'blocked'">Kết bạn để xem tiểu sử, game và danh sách ước của {{ p.user.username }}.</p>
+          <p class="user-bio muted" *ngIf="p.relation === 'blocked'">Bạn đã chặn người dùng này.</p>
+
+          <div class="relation-actions">
+            <ng-container [ngSwitch]="p.relation">
+              <ng-container *ngSwitchCase="'friend'">
+                <button type="button" class="btn-rel primary" (click)="message()">💬 Nhắn tin</button>
+                <button type="button" class="btn-rel" (click)="unfriend()">Hủy kết bạn</button>
+              </ng-container>
+              <button *ngSwitchCase="'sent'" type="button" class="btn-rel" (click)="cancelRequest()">Hủy lời mời đã gửi</button>
+              <ng-container *ngSwitchCase="'incoming'">
+                <button type="button" class="btn-rel primary" (click)="accept()">Chấp nhận lời mời</button>
+                <button type="button" class="btn-rel" (click)="decline()">Từ chối</button>
+              </ng-container>
+              <button *ngSwitchCase="'blocked'" type="button" class="btn-rel" (click)="unblock()">Bỏ chặn</button>
+              <button *ngSwitchDefault type="button" class="btn-rel primary" (click)="addFriend()">＋ Thêm bạn</button>
+            </ng-container>
+            <button *ngIf="p.relation !== 'blocked'" type="button" class="btn-rel danger" (click)="block()">Chặn</button>
+          </div>
+        </div>
+      </div>
+
+      <ng-container *ngIf="p.isFriend">
+        <!-- GAME HAY CHƠI -->
+        <div class="profile-section">
+          <div class="profile-section-head">
+            <h3 class="section-title">Game hay chơi ({{ p.libraryHidden ? 0 : p.libraryIds.length }})</h3>
+          </div>
+          <div class="empty-section-banner" *ngIf="p.libraryHidden"><p>🔒 {{ p.user.username }} đã ẩn thư viện game.</p></div>
+          <ng-container *ngIf="!p.libraryHidden">
+            <div class="games-grid" *ngIf="p.libraryIds.length > 0">
+              <a class="game-tile" *ngFor="let g of games(p.libraryIds); trackBy: trackById" [routerLink]="['/game', g.id]">
+                <img [src]="g.coverImage" [alt]="g.title" appImgFallback />
+                <div class="game-tile-title">{{ g.title }}</div>
+              </a>
+            </div>
+            <div class="empty-section-banner" *ngIf="p.libraryIds.length === 0"><p>Người này chưa sở hữu game nào.</p></div>
+          </ng-container>
+        </div>
+
+        <!-- DANH SÁCH ƯỚC -->
+        <!-- DANH SÁCH ƯỚC -->
+        <div class="profile-section">
+          <div class="profile-section-head">
+            <h3 class="section-title">Danh sách ước ({{ p.wishlistHidden ? 0 : p.wishlistIds.length }})</h3>
+          </div>
+          <div class="empty-section-banner" *ngIf="p.wishlistHidden"><p>🔒 {{ p.user.username }} đã ẩn danh sách ước.</p></div>
+          <ng-container *ngIf="!p.wishlistHidden">
+            <div class="games-grid" *ngIf="p.wishlistIds.length > 0">
+              <div class="game-tile-wrapper" *ngFor="let g of games(p.wishlistIds); let i = index; trackBy: trackById">
+                <a class="game-tile" [routerLink]="['/game', g.id]">
+                  <img [src]="g.coverImage" [alt]="g.title" appImgFallback />
+                  <div class="game-tile-title">{{ g.title }}</div>
+                </a>
+                <!-- HOVER CARD VỚI CHẾ ĐỘ MUA TẶNG BẠN BÈ -->
+                <app-game-hover-card 
+                  class="hover-card-container" 
+                  [game]="g" 
+                  [isFriendWishlist]="true"
+                  [friendRecipient]="p.user.username"
+                  [position]="(i % 3 === 2) ? 'left' : 'right'">
+                </app-game-hover-card>
+              </div>
+            </div>
+            <div class="empty-section-banner" *ngIf="p.wishlistIds.length === 0"><p>Danh sách ước của người này đang trống.</p></div>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!-- BẠN CHUNG -->
+      <div class="profile-section" *ngIf="p.relation !== 'blocked'">
+        <div class="profile-section-head">
+          <h3 class="section-title">Bạn chung ({{ p.mutualFriends.length }}) · {{ p.friendCount }} bạn bè</h3>
+        </div>
+        <div class="friends-list" *ngIf="p.mutualFriends.length > 0">
+          <a class="friend-item" *ngFor="let f of p.mutualFriends; trackBy: trackById" [routerLink]="['/nguoi-dung', f.id]">
+            <img [src]="f.avatar" [alt]="f.username" class="friend-avatar" appImgFallback />
+            <div class="friend-info"><span class="friend-name">{{ f.username }}</span></div>
+          </a>
+        </div>
+        <div class="empty-section-banner" *ngIf="p.mutualFriends.length === 0"><p>Hai bạn chưa có bạn chung.</p></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #notFound>
+    <div class="profile-card new-user-card">
+      <div class="avatar-placeholder-big">🔍</div>
+      <div class="new-user-welcome">
+        <h2>Không tìm thấy người dùng</h2>
+        <p>Người dùng này không tồn tại hoặc đã bị xóa.</p>
+        <button class="btn-setup-now" [routerLink]="['/tro-chuyen']" [queryParams]="{ tab: 'them-ban' }">Tìm bạn bè</button>
+      </div>
+    </div>
+  </ng-template>
+</div>

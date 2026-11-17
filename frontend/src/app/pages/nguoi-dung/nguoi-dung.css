@@ -1,0 +1,32 @@
+.online-dot { font-size: 12px; color: #9589a2; }
+.online-dot.on { color: #a5cd3c; }
+.muted { opacity: .8; font-style: italic; }
+.relation-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.btn-rel { padding: 7px 14px; border-radius: 4px; font-weight: 600; font-size: 13px; background: rgba(197, 169, 220, .15); color: #c5a9dc; border: 1px solid rgba(197, 169, 220, .35); }
+.btn-rel:hover { background: rgba(197, 169, 220, .28); }
+.btn-rel.primary { background: #7448a6; color: #ffffff; border-color: #9367c1; }
+.btn-rel.primary:hover { background: #9367c1; }
+.btn-rel.danger { color: #e57373; border-color: rgba(229, 115, 115, .4); background: transparent; }
+.btn-rel.danger:hover { background: #e53e3e; color: #ffffff; }
+a.game-tile, a.friend-item { text-decoration: none; color: inherit; cursor: pointer; }
+/* Định vị popup hover card trên danh sách ước bạn bè */
+.game-tile-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.game-tile-wrapper .hover-card-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+}
+
+.game-tile-wrapper:hover {
+  z-index: 2500;
+}
+
+.game-tile-wrapper:hover .hover-card-container {
+  display: block;
+}
