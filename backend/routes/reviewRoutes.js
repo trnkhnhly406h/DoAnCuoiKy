@@ -351,13 +351,29 @@ router.post(
             game._id.toString()
         );
 
-      if (!hasPurchased) {
-        return res.status(403).json({
-          success: false,
-          message:
-            'Bạn phải mua game và có game trong Library mới được đánh giá.'
-        });
+      const isFreeGame =
+  game.laGameMienPhi === true ||
+  Number(game.giaHienTai) === 0;
+
+  if (!hasPurchased && !isFreeGame) {
+    return res.status(403).json({
+      success: false,
+      message:
+        'Tài khoản chưa sở hữu game này trên MongoDB. Vui lòng kiểm tra Thư viện và đơn hàng.'
+    });
+  }
+  
+  // Game miễn phí: đồng bộ quyền sở hữu vào MongoDB
+  if (!hasPurchased && isFreeGame) {
+    await User.updateOne(
+      { _id: user._id },
+      {
+        $addToSet: {
+          danhSachGameDaMua: game._id
+        }
       }
+    );
+  }
 
       let review = await Review.findOne({
         maGame: game._id,
