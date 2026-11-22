@@ -4,6 +4,9 @@ const authMiddleware = require('../middleware/authMiddleware');
 const adminMiddleware = require('../middleware/adminMiddleware');
 const router = express.Router();
 
+const Order = require('../models/Order');
+const RefundRequest = require('../models/RefundRequest');
+
 
 // =====================================================
 // GET /api/store/games
@@ -193,19 +196,72 @@ const game = await Game.findOne({
 // ADMIN - QUẢN LÝ TRÒ CHƠI
 // ========================================
 
-// 1. LẤY TẤT CẢ TRÒ CHƠI (KỂ CẢ GAME ĐANG ẨN)
+
+// 1. LẤY TẤT CẢ TRÒ CHƠI KÈM SỐ LƯỢT BÁN
 router.get(
   '/admin/games',
   authMiddleware,
   adminMiddleware,
   async (req, res) => {
     try {
-      const games = await Game.find().sort({ createdAt: -1 });
+      // Lấy game, đơn thành công và yêu cầu hoàn đã duyệt
+      const [games, orders, refunds] = await Promise.all([
+        Game.find()
+          .sort({ createdAt: -1 })
+          .lean(),
+
+        Order.find({
+          trangThai: 'completed'
+        })
+          .select('_id sanPham.maGame')
+          .lean(),
+
+        RefundRequest.find({
+          trangThaiHoanTien: 'approved'
+        })
+          .select('maDonHang maGame')
+          .lean()
+      ]);
+
+      // Xác định từng game đã được hoàn trong mỗi đơn
+      const refundedItems = new Set(
+        refunds.map(refund =>
+          `${refund.maDonHang}:${refund.maGame}`
+        )
+      );
+
+      // Thống kê số lượt bán theo mã game
+      const salesMap = new Map();
+
+      for (const order of orders) {
+        for (const item of order.sanPham || []) {
+          const maGame = String(item.maGame);
+
+          const key = `${order._id}:${maGame}`;
+
+          // Không tính game đã được duyệt hoàn tiền
+          if (refundedItems.has(key)) {
+            continue;
+          }
+
+          salesMap.set(
+            maGame,
+            (salesMap.get(maGame) || 0) + 1
+          );
+        }
+      }
+
+      // Bổ sung lượt bán vào dữ liệu trả về Angular
+      const data = games.map(game => ({
+        ...game,
+        luotBan: salesMap.get(String(game.maGame)) || 0
+      }));
 
       return res.status(200).json({
         success: true,
-        data: games
+        data
       });
+
     } catch (error) {
       console.error('Lỗi lấy danh sách trò chơi:', error);
 
@@ -216,6 +272,7 @@ router.get(
     }
   }
 );
+
 
 
 // 2. THÊM TRÒ CHƠI
